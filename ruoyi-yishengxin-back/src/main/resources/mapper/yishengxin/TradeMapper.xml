@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.TradeMapper">
+    
+    <resultMap type="Trade" id="TradeResult">
+        <result property="id"    column="id"    />
+        <result property="low"    column="low"    />
+        <result property="high"    column="high"    />
+        <result property="maxDeliverDay"    column="max_deliver_day"    />
+        <result property="minDeliverTime"    column="min_deliver_time"    />
+        <result property="maxTradeDay"    column="max_trade_day"    />
+        <result property="maxTradeTime"    column="max_trade_time"    />
+        <result property="hkdCharge"    column="hkd_charge"    />
+        <result property="sslCharge"    column="ssl_charge"    />
+        <result property="minLockPosition"    column="min_lock_position"    />
+        <result property="lockMultipleNumber"    column="lock_multiple_number"    />
+        <result property="lockBreakCharge"    column="lock_break_charge"    />
+        <result property="oneRate"    column="one_rate"    />
+        <result property="threeRate"    column="three_rate"    />
+        <result property="sixRate"    column="six_rate"    />
+        <result property="twelveRate"    column="twelve_rate"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectTradeVo">
+        select id, low, high, max_deliver_day, min_deliver_time, max_trade_day, max_trade_time, hkd_charge, ssl_charge, min_lock_position, lock_multiple_number, lock_break_charge, one_rate, three_rate, six_rate, twelve_rate, create_by, create_time, update_by, update_time, remark from ysx_trade
+    </sql>
+	
+    <select id="selectTradeList" parameterType="Trade" resultMap="TradeResult">
+        <include refid="selectTradeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="low != null  and low != '' "> and low = #{low}</if>
+             <if test="high != null  and high != '' "> and high = #{high}</if>
+             <if test="maxDeliverDay != null  and maxDeliverDay != '' "> and max_deliver_day = #{maxDeliverDay}</if>
+             <if test="minDeliverTime != null  and minDeliverTime != '' "> and min_deliver_time = #{minDeliverTime}</if>
+             <if test="maxTradeDay != null  and maxTradeDay != '' "> and max_trade_day = #{maxTradeDay}</if>
+             <if test="maxTradeTime != null  and maxTradeTime != '' "> and max_trade_time = #{maxTradeTime}</if>
+             <if test="hkdCharge != null  and hkdCharge != '' "> and hkd_charge = #{hkdCharge}</if>
+             <if test="sslCharge != null  and sslCharge != '' "> and ssl_charge = #{sslCharge}</if>
+             <if test="minLockPosition != null  and minLockPosition != '' "> and min_lock_position = #{minLockPosition}</if>
+             <if test="lockMultipleNumber != null  and lockMultipleNumber != '' "> and lock_multiple_number = #{lockMultipleNumber}</if>
+             <if test="lockBreakCharge != null  and lockBreakCharge != '' "> and lock_break_charge = #{lockBreakCharge}</if>
+             <if test="oneRate != null  and oneRate != '' "> and one_rate = #{oneRate}</if>
+             <if test="threeRate != null  and threeRate != '' "> and three_rate = #{threeRate}</if>
+             <if test="sixRate != null  and sixRate != '' "> and six_rate = #{sixRate}</if>
+             <if test="twelveRate != null  and twelveRate != '' "> and twelve_rate = #{twelveRate}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectTradeById" parameterType="Integer" resultMap="TradeResult">
+        <include refid="selectTradeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTrade" parameterType="Trade" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_trade
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="low != null  and low != ''  ">low,</if>
+			<if test="high != null  and high != ''  ">high,</if>
+			<if test="maxDeliverDay != null  and maxDeliverDay != ''  ">max_deliver_day,</if>
+			<if test="minDeliverTime != null  and minDeliverTime != ''  ">min_deliver_time,</if>
+			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
+			<if test="maxTradeTime != null  and maxTradeTime != ''  ">max_trade_time,</if>
+			<if test="hkdCharge != null  and hkdCharge != ''  ">hkd_charge,</if>
+			<if test="sslCharge != null  and sslCharge != ''  ">ssl_charge,</if>
+			<if test="minLockPosition != null  and minLockPosition != ''  ">min_lock_position,</if>
+			<if test="lockMultipleNumber != null  and lockMultipleNumber != ''  ">lock_multiple_number,</if>
+			<if test="lockBreakCharge != null  and lockBreakCharge != ''  ">lock_break_charge,</if>
+			<if test="oneRate != null  and oneRate != ''  ">one_rate,</if>
+			<if test="threeRate != null  and threeRate != ''  ">three_rate,</if>
+			<if test="sixRate != null  and sixRate != ''  ">six_rate,</if>
+			<if test="twelveRate != null  and twelveRate != ''  ">twelve_rate,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="low != null  and low != ''  ">#{low},</if>
+			<if test="high != null  and high != ''  ">#{high},</if>
+			<if test="maxDeliverDay != null  and maxDeliverDay != ''  ">#{maxDeliverDay},</if>
+			<if test="minDeliverTime != null  and minDeliverTime != ''  ">#{minDeliverTime},</if>
+			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
+			<if test="maxTradeTime != null  and maxTradeTime != ''  ">#{maxTradeTime},</if>
+			<if test="hkdCharge != null  and hkdCharge != ''  ">#{hkdCharge},</if>
+			<if test="sslCharge != null  and sslCharge != ''  ">#{sslCharge},</if>
+			<if test="minLockPosition != null  and minLockPosition != ''  ">#{minLockPosition},</if>
+			<if test="lockMultipleNumber != null  and lockMultipleNumber != ''  ">#{lockMultipleNumber},</if>
+			<if test="lockBreakCharge != null  and lockBreakCharge != ''  ">#{lockBreakCharge},</if>
+			<if test="oneRate != null  and oneRate != ''  ">#{oneRate},</if>
+			<if test="threeRate != null  and threeRate != ''  ">#{threeRate},</if>
+			<if test="sixRate != null  and sixRate != ''  ">#{sixRate},</if>
+			<if test="twelveRate != null  and twelveRate != ''  ">#{twelveRate},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTrade" parameterType="Trade">
+        update ysx_trade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="low != null  and low != ''  ">low = #{low},</if>
+            <if test="high != null  and high != ''  ">high = #{high},</if>
+            <if test="maxDeliverDay != null  and maxDeliverDay != ''  ">max_deliver_day = #{maxDeliverDay},</if>
+            <if test="minDeliverTime != null  and minDeliverTime != ''  ">min_deliver_time = #{minDeliverTime},</if>
+            <if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day = #{maxTradeDay},</if>
+            <if test="maxTradeTime != null  and maxTradeTime != ''  ">max_trade_time = #{maxTradeTime},</if>
+            <if test="hkdCharge != null  and hkdCharge != ''  ">hkd_charge = #{hkdCharge},</if>
+            <if test="sslCharge != null  and sslCharge != ''  ">ssl_charge = #{sslCharge},</if>
+            <if test="minLockPosition != null  and minLockPosition != ''  ">min_lock_position = #{minLockPosition},</if>
+            <if test="lockMultipleNumber != null  and lockMultipleNumber != ''  ">lock_multiple_number = #{lockMultipleNumber},</if>
+            <if test="lockBreakCharge != null  and lockBreakCharge != ''  ">lock_break_charge = #{lockBreakCharge},</if>
+            <if test="oneRate != null  and oneRate != ''  ">one_rate = #{oneRate},</if>
+            <if test="threeRate != null  and threeRate != ''  ">three_rate = #{threeRate},</if>
+            <if test="sixRate != null  and sixRate != ''  ">six_rate = #{sixRate},</if>
+            <if test="twelveRate != null  and twelveRate != ''  ">twelve_rate = #{twelveRate},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTradeById" parameterType="Integer">
+        delete from ysx_trade where id = #{id}
+    </delete>
+	
+    <delete id="deleteTradeByIds" parameterType="String">
+        delete from ysx_trade where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

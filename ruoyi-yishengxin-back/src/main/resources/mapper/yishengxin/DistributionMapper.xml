@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.DistributionMapper">
+    
+    <resultMap type="Distribution" id="DistributionResult">
+        <result property="id"    column="id"    />
+        <result property="charge"    column="charge"    />
+        <result property="parentCharge"    column="parent_charge"    />
+        <result property="grandparentCharge"    column="grandparent_charge"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectDistributionVo">
+        select id, charge, parent_charge, grandparent_charge, create_by, create_time, update_by, update_time, remark from ysx_distribution
+    </sql>
+	
+    <select id="selectDistributionList" parameterType="Distribution" resultMap="DistributionResult">
+        <include refid="selectDistributionVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="charge != null  and charge != '' "> and charge = #{charge}</if>
+             <if test="parentCharge != null  and parentCharge != '' "> and parent_charge = #{parentCharge}</if>
+             <if test="grandparentCharge != null  and grandparentCharge != '' "> and grandparent_charge = #{grandparentCharge}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectDistributionById" parameterType="Integer" resultMap="DistributionResult">
+        <include refid="selectDistributionVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDistribution" parameterType="Distribution" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_distribution
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="charge != null  and charge != ''  ">charge,</if>
+			<if test="parentCharge != null  and parentCharge != ''  ">parent_charge,</if>
+			<if test="grandparentCharge != null  and grandparentCharge != ''  ">grandparent_charge,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="charge != null  and charge != ''  ">#{charge},</if>
+			<if test="parentCharge != null  and parentCharge != ''  ">#{parentCharge},</if>
+			<if test="grandparentCharge != null  and grandparentCharge != ''  ">#{grandparentCharge},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateDistribution" parameterType="Distribution">
+        update ysx_distribution
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="charge != null  and charge != ''  ">charge = #{charge},</if>
+            <if test="parentCharge != null  and parentCharge != ''  ">parent_charge = #{parentCharge},</if>
+            <if test="grandparentCharge != null  and grandparentCharge != ''  ">grandparent_charge = #{grandparentCharge},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteDistributionById" parameterType="Integer">
+        delete from ysx_distribution where id = #{id}
+    </delete>
+	
+    <delete id="deleteDistributionByIds" parameterType="String">
+        delete from ysx_distribution where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

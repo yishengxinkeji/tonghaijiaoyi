@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-trade-edit" th:object="${trade}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">跌幅谷值：</label>
+				<div class="col-sm-8">
+					<input id="low" name="low" th:field="*{low}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">涨幅峰值：</label>
+				<div class="col-sm-8">
+					<input id="high" name="high" th:field="*{high}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">每天最大互转量：</label>
+				<div class="col-sm-8">
+					<input id="maxDeliverDay" name="maxDeliverDay" th:field="*{maxDeliverDay}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">每笔最低互转量：</label>
+				<div class="col-sm-8">
+					<input id="minDeliverTime" name="minDeliverTime" th:field="*{minDeliverTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">每天最大交易量：</label>
+				<div class="col-sm-8">
+					<input id="maxTradeDay" name="maxTradeDay" th:field="*{maxTradeDay}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">每笔最大额：</label>
+				<div class="col-sm-8">
+					<input id="maxTradeTime" name="maxTradeTime" th:field="*{maxTradeTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">卖HKD手续费：</label>
+				<div class="col-sm-8">
+					<input id="hkdCharge" name="hkdCharge" th:field="*{hkdCharge}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">卖SSL手续费：</label>
+				<div class="col-sm-8">
+					<input id="sslCharge" name="sslCharge" th:field="*{sslCharge}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓最低值：</label>
+				<div class="col-sm-8">
+					<input id="minLockPosition" name="minLockPosition" th:field="*{minLockPosition}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓整数倍限制：</label>
+				<div class="col-sm-8">
+					<input id="lockMultipleNumber" name="lockMultipleNumber" th:field="*{lockMultipleNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">中途中断锁仓手续费：</label>
+				<div class="col-sm-8">
+					<input id="lockBreakCharge" name="lockBreakCharge" th:field="*{lockBreakCharge}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">1个月利率：</label>
+				<div class="col-sm-8">
+					<input id="oneRate" name="oneRate" th:field="*{oneRate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">3个月利率：</label>
+				<div class="col-sm-8">
+					<input id="threeRate" name="threeRate" th:field="*{threeRate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">6个月利率：</label>
+				<div class="col-sm-8">
+					<input id="sixRate" name="sixRate" th:field="*{sixRate}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">12个月利率：</label>
+				<div class="col-sm-8">
+					<input id="twelveRate" name="twelveRate" th:field="*{twelveRate}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/trade";
+		$("#form-trade-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-trade-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

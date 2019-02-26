@@ -26,6 +26,7 @@
 		<swagger.version>2.7.0</swagger.version>
 		<pagehelper.boot.version>1.2.5</pagehelper.boot.version>
 		<oshi.version>3.9.1</oshi.version>
+		<lombok.version>1.18.4</lombok.version>
 	</properties>
 
     <dependencyManagement>
@@ -47,6 +48,7 @@
 		<module>ruoyi-quartz</module>
 		<module>ruoyi-generator</module>
         <module>ruoyi-common</module>
+		<module>ruoyi-yishengxin-back</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -66,6 +66,23 @@ spring:
     restart:
       # 热部署开关
       enabled: true
+  #spring-redis的配置
+  redis:
+    run: false #是否开启 位于RedisUtils
+    host: 122.114.239.176
+    port: 6379
+    password:
+    database: 0
+    lettuce:
+      shutdown-timeout: 200ms
+      pool:
+        max-active: 7
+        max-idle: 7
+        min-idle: 2
+        max-wait: -1ms
+    expireTime: 900     #缓存有效时间15分钟
+    keyPrefix: ruoyi
+    listFlush: true
 
 # MyBatis
 mybatis:
@@ -127,8 +144,8 @@ gen:
   # 作者
   author: ruoyi
   # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
-  packageName: com.ruoyi.system
+  packageName: com.ruoyi.yishengxin
   # 自动去除表前缀，默认是true
   autoRemovePre: true
   # 表前缀(类名不会包含表前缀)
-  tablePrefix: sys_
+  tablePrefix: ysx_

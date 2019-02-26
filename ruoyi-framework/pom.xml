@@ -111,6 +111,12 @@
 			<version>${ruoyi.version}</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.ruoyi</groupId>
+			<artifactId>ruoyi-yishengxin-back</artifactId>
+			<version>${ruoyi.version}</version>
+		</dependency>
+
 		<!-- pagehelper 分页插件 -->
 		<dependency>
 			<groupId>com.github.pagehelper</groupId>
