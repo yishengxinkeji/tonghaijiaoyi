@@ -120,7 +120,7 @@ public class SysUserServiceImpl implements ISysUserService {
         // 删除用户与角色关联
         userRoleMapper.deleteUserRoleByUserId(userId);
         // 删除用户与岗位表
-        userPostMapper.deleteUserPostByUserId(userId);
+        //userPostMapper.deleteUserPostByUserId(userId);
         return userMapper.deleteUserById(userId);
     }
 
@@ -152,7 +152,7 @@ public class SysUserServiceImpl implements ISysUserService {
         // 新增用户信息
         int rows = userMapper.insertUser(user);
         // 新增用户岗位关联
-        insertUserPost(user);
+        //insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
         return rows;
@@ -172,9 +172,9 @@ public class SysUserServiceImpl implements ISysUserService {
         // 新增用户与角色管理
         insertUserRole(user);
         // 删除用户与岗位关联
-        userPostMapper.deleteUserPostByUserId(userId);
+        //userPostMapper.deleteUserPostByUserId(userId);
         // 新增用户与岗位管理
-        insertUserPost(user);
+        //insertUserPost(user);
         return userMapper.updateUser(user);
     }
 

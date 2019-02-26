@@ -1,0 +1,54 @@
+package com.ruoyi.yishengxin.service;
+
+import com.ruoyi.yishengxin.domain.RollMessage;
+
+import java.util.List;
+
+/**
+ * 滚动消息 服务层
+ *
+ * @author ruoyi
+ * @date 2019-02-26
+ */
+public interface IRollMessageService {
+    /**
+     * 查询滚动消息信息
+     *
+     * @param id 滚动消息ID
+     * @return 滚动消息信息
+     */
+    public RollMessage selectRollMessageById(Integer id);
+
+    /**
+     * 查询滚动消息列表
+     *
+     * @param rollMessage 滚动消息信息
+     * @return 滚动消息集合
+     */
+    public List<RollMessage> selectRollMessageList(RollMessage rollMessage);
+
+    /**
+     * 新增滚动消息
+     *
+     * @param rollMessage 滚动消息信息
+     * @return 结果
+     */
+    public int insertRollMessage(RollMessage rollMessage);
+
+    /**
+     * 修改滚动消息
+     *
+     * @param rollMessage 滚动消息信息
+     * @return 结果
+     */
+    public int updateRollMessage(RollMessage rollMessage);
+
+    /**
+     * 删除滚动消息信息
+     *
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+    public int deleteRollMessageByIds(String ids);
+
+}

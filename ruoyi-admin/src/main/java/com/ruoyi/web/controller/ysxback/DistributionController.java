@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxback;
 
 import java.util.List;
 
+import com.ruoyi.framework.util.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -74,7 +75,6 @@ public class DistributionController extends BaseController {
         if(distributions.size() > 0){
             return prefix + "/message";
         }
-
         return prefix + "/add";
     }
 
@@ -86,6 +86,7 @@ public class DistributionController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Distribution distribution) {
+        distribution.setCreateBy(ShiroUtils.getLoginName());
         return toAjax(distributionService.insertDistribution(distribution));
     }
 
@@ -107,6 +108,7 @@ public class DistributionController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Distribution distribution) {
+        distribution.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(distributionService.updateDistribution(distribution));
     }
 

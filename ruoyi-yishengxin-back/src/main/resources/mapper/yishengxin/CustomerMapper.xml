@@ -44,18 +44,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="customerType != null  and customerType != ''  ">customer_type,</if>
 			<if test="phone != null  and phone != ''  ">phone,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
-			<if test="updateTime != null  ">update_time,</if>
+			create_time,
+
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="customerType != null  and customerType != ''  ">#{customerType},</if>
 			<if test="phone != null  and phone != ''  ">#{phone},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-			<if test="createTime != null  ">#{createTime},</if>
-			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
-			<if test="updateTime != null  ">#{updateTime},</if>
+			sysdate(),
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
          </trim>
     </insert>
@@ -65,10 +62,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="customerType != null  and customerType != ''  ">customer_type = #{customerType},</if>
             <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
-            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
-            <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            update_time = sysdate(),
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
         </trim>
         where id = #{id}

@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxback;
 
 import java.util.List;
 
+import com.ruoyi.framework.util.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,7 +82,7 @@ public class CustomerController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Customer customer) {
-
+        customer.setCreateBy(ShiroUtils.getLoginName());
         return toAjax(customerService.insertCustomer(customer));
     }
 
@@ -103,6 +104,7 @@ public class CustomerController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Customer customer) {
+        customer.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(customerService.updateCustomer(customer));
     }
 

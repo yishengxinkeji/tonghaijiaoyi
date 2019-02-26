@@ -83,9 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sixRate != null  and sixRate != ''  ">six_rate,</if>
 			<if test="twelveRate != null  and twelveRate != ''  ">twelve_rate,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
-			<if test="updateTime != null  ">update_time,</if>
+			create_time,
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -105,9 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sixRate != null  and sixRate != ''  ">#{sixRate},</if>
 			<if test="twelveRate != null  and twelveRate != ''  ">#{twelveRate},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-			<if test="createTime != null  ">#{createTime},</if>
-			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
-			<if test="updateTime != null  ">#{updateTime},</if>
+			sysdate(),
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
          </trim>
     </insert>
@@ -130,10 +126,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="threeRate != null  and threeRate != ''  ">three_rate = #{threeRate},</if>
             <if test="sixRate != null  and sixRate != ''  ">six_rate = #{sixRate},</if>
             <if test="twelveRate != null  and twelveRate != ''  ">twelve_rate = #{twelveRate},</if>
-            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
-            <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            update_time = sysdate(),
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
         </trim>
         where id = #{id}

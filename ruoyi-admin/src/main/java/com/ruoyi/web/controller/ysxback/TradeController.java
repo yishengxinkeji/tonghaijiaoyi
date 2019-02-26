@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxback;
 
 import java.util.List;
 
+import com.ruoyi.framework.util.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -71,8 +72,8 @@ public class TradeController extends BaseController {
     @GetMapping("/add")
     public String add() {
         List<Trade> trades = tradeService.selectTradeList(new Trade());
-        if(trades.size() > 0){
-            return prefix + "/message";
+        if(trades.size() > 0) {
+            return  prefix + "/message";
         }
         return prefix + "/add";
     }
@@ -85,6 +86,7 @@ public class TradeController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(Trade trade) {
+        trade.setCreateBy(ShiroUtils.getLoginName());
         return toAjax(tradeService.insertTrade(trade));
     }
 
@@ -106,6 +108,7 @@ public class TradeController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Trade trade) {
+        trade.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(tradeService.updateTrade(trade));
     }
 
