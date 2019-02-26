@@ -1,7 +1,9 @@
 package com.ruoyi.yishengxin.mapper;
 
 import com.ruoyi.yishengxin.domain.Customer;
-import java.util.List;	
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
 
 /**
  * 客服设置 数据层
@@ -17,6 +19,7 @@ public interface CustomerMapper
      * @param id 客服设置ID
      * @return 客服设置信息
      */
+
 	public Customer selectCustomerById(Integer id);
 	
 	/**
