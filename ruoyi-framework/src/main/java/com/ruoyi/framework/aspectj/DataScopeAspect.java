@@ -49,6 +49,8 @@ public class DataScopeAspect {
         handleDataScope(point);
     }
 
+
+    //当前系统目前还不需要数据权限,所以先注释关键部分
     protected void handleDataScope(final JoinPoint joinPoint) {
         // 获得注解
         DataScope controllerDataScope = getAnnotationLog(joinPoint);
@@ -57,12 +59,13 @@ public class DataScopeAspect {
         }
         // 获取当前的用户
         SysUser currentUser = ShiroUtils.getSysUser();
-        if (currentUser != null) {
+        /*if (currentUser != null) {
             // 如果是超级管理员，则不过滤数据
             if (!currentUser.isAdmin()) {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.tableAlias());
             }
-        }
+        }*/
+
     }
 
     /**

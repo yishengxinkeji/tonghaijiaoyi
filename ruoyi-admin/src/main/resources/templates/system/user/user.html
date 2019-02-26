@@ -7,7 +7,7 @@
 <link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
 
 <body class="gray-bg">
-	<div class="ui-layout-west">
+	<!--<div class="ui-layout-west">
 		<div class="main-content">
 			<div class="box box-main">
 				<div class="box-header">
@@ -26,7 +26,7 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
 	
 	<div class="container-div ui-layout-center">
 		<div class="row">
@@ -138,10 +138,6 @@
 		            title: '用户名称'
 		        },
 		        {
-		            field: 'dept.deptName',
-		            title: '部门'
-		        },
-		        {
 		            field: 'email',
 		            title: '邮箱',
 		            visible: false
@@ -178,7 +174,7 @@
 		    $.table.init(options);
 		}
 		
-		function queryDeptTree()
+		/*function queryDeptTree()
 		{
 			var url = ctx + "system/dept/treeData";
 			var options = {
@@ -193,7 +189,7 @@
 				$("#parentId").val(treeNode.pId);
 				$.table.search();
 			}
-		}
+		}*/
 		
 		$('#btnExpand').click(function() {
 			$._tree.expandAll(true);
@@ -212,10 +208,10 @@
 		});
 
 		/* 用户管理-部门 */
-		function dept() {
+		/*function dept() {
 			var url = ctx + "system/dept";
 			createMenuItem(url, "部门管理");
-		}
+		}*/
 
 		/* 用户管理-重置密码 */
 		function resetPwd(userId) {

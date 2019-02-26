@@ -100,7 +100,7 @@ public class SysUserController extends BaseController {
     @GetMapping("/add")
     public String add(ModelMap mmap) {
         mmap.put("roles", roleService.selectRoleAll());
-        mmap.put("posts", postService.selectPostAll());
+       // mmap.put("posts", postService.selectPostAll());
         return prefix + "/add";
     }
 
@@ -129,7 +129,7 @@ public class SysUserController extends BaseController {
     public String edit(@PathVariable("userId") Long userId, ModelMap mmap) {
         mmap.put("user", userService.selectUserById(userId));
         mmap.put("roles", roleService.selectRolesByUserId(userId));
-        mmap.put("posts", postService.selectPostsByUserId(userId));
+        //mmap.put("posts", postService.selectPostsByUserId(userId));
         return prefix + "/edit";
     }
 
