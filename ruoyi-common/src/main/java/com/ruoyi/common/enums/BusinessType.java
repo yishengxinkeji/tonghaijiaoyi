@@ -55,4 +55,13 @@ public enum BusinessType {
      * 清空
      */
     CLEAN,
+    /**
+     * 冻结
+     */
+    FROZEN,
+
+    /**
+     * 充值
+     */
+    RECHARGE,
 }

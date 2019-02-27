@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.VipUserMapper">
+    
+    <resultMap type="VipUser" id="VipUserResult">
+        <result property="id"    column="id"    />
+        <result property="phone"    column="phone"    />
+        <result property="loginPassword"    column="login_password"    />
+        <result property="tradePassword"    column="trade_password"    />
+        <result property="avater"    column="avater"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="extensionCode"    column="extension_code"    />
+        <result property="recommendCode"    column="recommend_code"    />
+        <result property="moneyCode"    column="money_code"    />
+        <result property="inviteLink"    column="invite_link"    />
+        <result property="sslMoney"    column="ssl_money"    />
+        <result property="hkdMoney"    column="hkd_money"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="isFrozen"    column="is_frozen"    />
+        <result property="maxTradeDay"    column="max_trade_day"    />
+        <result property="salt"    column="salt"    />
+    </resultMap>
+	
+	<sql id="selectVipUserVo">
+        select id, phone, salt, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_id, is_frozen, max_trade_day from ysx_vip_user
+    </sql>
+	
+    <select id="selectVipUserList" parameterType="VipUser" resultMap="VipUserResult">
+        <include refid="selectVipUserVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="loginPassword != null  and loginPassword != '' "> and login_password = #{loginPassword}</if>
+             <if test="tradePassword != null  and tradePassword != '' "> and trade_password = #{tradePassword}</if>
+             <if test="avater != null  and avater != '' "> and avater = #{avater}</if>
+             <if test="nickname != null  and nickname != '' "> and nickname = #{nickname}</if>
+             <if test="extensionCode != null  and extensionCode != '' "> and extension_code = #{extensionCode}</if>
+             <if test="recommendCode != null  and recommendCode != '' "> and recommend_code = #{recommendCode}</if>
+             <if test="moneyCode != null  and moneyCode != '' "> and money_code = #{moneyCode}</if>
+             <if test="inviteLink != null  and inviteLink != '' "> and invite_link = #{inviteLink}</if>
+             <if test="sslMoney != null  and sslMoney != '' "> and ssl_money = #{sslMoney}</if>
+             <if test="hkdMoney != null  and hkdMoney != '' "> and hkd_money = #{hkdMoney}</if>
+             <if test="parentId != null  and parentId != '' "> and parent_id = #{parentId}</if>
+             <if test="isFrozen != null  and isFrozen != '' "> and is_frozen = #{isFrozen}</if>
+             <if test="maxTradeDay != null  and maxTradeDay != '' "> and max_trade_day = #{maxTradeDay}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipUserById" parameterType="Integer" resultMap="VipUserResult">
+        <include refid="selectVipUserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipUser" parameterType="VipUser" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="phone != null  and phone != ''  ">phone,</if>
+            <if test="salt != null  and salt != '' "> and salt = #{salt}</if>
+			<if test="loginPassword != null  and loginPassword != ''  ">login_password,</if>
+			<if test="tradePassword != null  and tradePassword != ''  ">trade_password,</if>
+			<if test="avater != null  and avater != ''  ">avater,</if>
+			<if test="nickname != null  and nickname != ''  ">nickname,</if>
+			<if test="extensionCode != null  and extensionCode != ''  ">extension_code,</if>
+			<if test="recommendCode != null  and recommendCode != ''  ">recommend_code,</if>
+			<if test="moneyCode != null  and moneyCode != ''  ">money_code,</if>
+			<if test="inviteLink != null  and inviteLink != ''  ">invite_link,</if>
+			<if test="sslMoney != null  and sslMoney != ''  ">ssl_money,</if>
+			<if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money,</if>
+			<if test="parentId != null  and parentId != ''  ">parent_id,</if>
+			<if test="isFrozen != null  and isFrozen != ''  ">is_frozen,</if>
+			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+            <if test="salt != null  and salt != ''  ">#{salt},</if>
+			<if test="loginPassword != null  and loginPassword != ''  ">#{loginPassword},</if>
+			<if test="tradePassword != null  and tradePassword != ''  ">#{tradePassword},</if>
+			<if test="avater != null  and avater != ''  ">#{avater},</if>
+			<if test="nickname != null  and nickname != ''  ">#{nickname},</if>
+			<if test="extensionCode != null  and extensionCode != ''  ">#{extensionCode},</if>
+			<if test="recommendCode != null  and recommendCode != ''  ">#{recommendCode},</if>
+			<if test="moneyCode != null  and moneyCode != ''  ">#{moneyCode},</if>
+			<if test="inviteLink != null  and inviteLink != ''  ">#{inviteLink},</if>
+			<if test="sslMoney != null  and sslMoney != ''  ">#{sslMoney},</if>
+			<if test="hkdMoney != null  and hkdMoney != ''  ">#{hkdMoney},</if>
+			<if test="parentId != null  and parentId != ''  ">#{parentId},</if>
+			<if test="isFrozen != null  and isFrozen != ''  ">#{isFrozen},</if>
+			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipUser" parameterType="VipUser">
+        update ysx_vip_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="salt != null  and salt != ''  ">salt = #{salt},</if>
+            <if test="loginPassword != null  and loginPassword != ''  ">login_password = #{loginPassword},</if>
+            <if test="tradePassword != null  and tradePassword != ''  ">trade_password = #{tradePassword},</if>
+            <if test="avater != null  and avater != ''  ">avater = #{avater},</if>
+            <if test="nickname != null  and nickname != ''  ">nickname = #{nickname},</if>
+            <if test="extensionCode != null  and extensionCode != ''  ">extension_code = #{extensionCode},</if>
+            <if test="recommendCode != null  and recommendCode != ''  ">recommend_code = #{recommendCode},</if>
+            <if test="moneyCode != null  and moneyCode != ''  ">money_code = #{moneyCode},</if>
+            <if test="inviteLink != null  and inviteLink != ''  ">invite_link = #{inviteLink},</if>
+            <if test="sslMoney != null  and sslMoney != ''  ">ssl_money = #{sslMoney},</if>
+            <if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money = #{hkdMoney},</if>
+            <if test="parentId != null  and parentId != ''  ">parent_id = #{parentId},</if>
+            <if test="isFrozen != null  and isFrozen != ''  ">is_frozen = #{isFrozen},</if>
+            <if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day = #{maxTradeDay},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipUserById" parameterType="Integer">
+        delete from ysx_vip_user where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipUserByIds" parameterType="String">
+        delete from ysx_vip_user where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -60,4 +60,14 @@ public class Constants {
      * 排序的方向 "desc" 或者 "asc".
      */
     public static String IS_ASC = "isAsc";
+
+    /**
+     * 是
+     */
+    public static final String YES = "Y";
+
+    /**
+     * 否
+     */
+    public static final String NO = "N";
 }

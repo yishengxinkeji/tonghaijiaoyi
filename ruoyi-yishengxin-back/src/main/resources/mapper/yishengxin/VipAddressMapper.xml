@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.VipAddressMapper">
+    
+    <resultMap type="VipAddress" id="VipAddressResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="phone"    column="phone"    />
+        <result property="receivUser"    column="receivUser"    />
+        <result property="addressDetail"    column="addressDetail"    />
+        <result property="isDefault"    column="is_default"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="district"    column="district"    />
+    </resultMap>
+	
+	<sql id="selectVipAddressVo">
+        select id, vip_id, phone, receivUser, addressDetail, is_default, create_by, create_time, update_by, update_time, remark, province, city, district from ysx_vip_address
+    </sql>
+	
+    <select id="selectVipAddressList" parameterType="VipAddress" resultMap="VipAddressResult">
+        <include refid="selectVipAddressVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="receivUser != null  and receivUser != '' "> and receivUser = #{receivUser}</if>
+             <if test="addressDetail != null  and addressDetail != '' "> and addressDetail = #{addressDetail}</if>
+             <if test="isDefault != null  and isDefault != '' "> and is_default = #{isDefault}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="province != null  and province != '' "> and province = #{province}</if>
+             <if test="city != null  and city != '' "> and city = #{city}</if>
+             <if test="district != null  and district != '' "> and district = #{district}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipAddressById" parameterType="Integer" resultMap="VipAddressResult">
+        <include refid="selectVipAddressVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipAddress" parameterType="VipAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_address
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="receivUser != null  and receivUser != ''  ">receivUser,</if>
+			<if test="addressDetail != null  and addressDetail != ''  ">addressDetail,</if>
+			<if test="isDefault != null  and isDefault != ''  ">is_default,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="province != null  and province != ''  ">province,</if>
+			<if test="city != null  and city != ''  ">city,</if>
+			<if test="district != null  and district != ''  ">district,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="receivUser != null  and receivUser != ''  ">#{receivUser},</if>
+			<if test="addressDetail != null  and addressDetail != ''  ">#{addressDetail},</if>
+			<if test="isDefault != null  and isDefault != ''  ">#{isDefault},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="province != null  and province != ''  ">#{province},</if>
+			<if test="city != null  and city != ''  ">#{city},</if>
+			<if test="district != null  and district != ''  ">#{district},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipAddress" parameterType="VipAddress">
+        update ysx_vip_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="receivUser != null  and receivUser != ''  ">receivUser = #{receivUser},</if>
+            <if test="addressDetail != null  and addressDetail != ''  ">addressDetail = #{addressDetail},</if>
+            <if test="isDefault != null  and isDefault != ''  ">is_default = #{isDefault},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate(),
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="province != null  and province != ''  ">province = #{province},</if>
+            <if test="city != null  and city != ''  ">city = #{city},</if>
+            <if test="district != null  and district != ''  ">district = #{district},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipAddressById" parameterType="Integer">
+        delete from ysx_vip_address where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipAddressByIds" parameterType="String">
+        delete from ysx_vip_address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

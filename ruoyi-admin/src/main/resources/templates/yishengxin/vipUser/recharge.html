@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-vipUser-add">
+			<input id="id" name="id" th:value="${id}"  type="hidden">
+			<div class="form-group">
+				<h1 style="display: flex;justify-content: center">温馨提醒: 只填写需要充值的部分</h1>
+				<label class="col-sm-3 control-label">SSL充值：</label>
+				<div class="col-sm-8">
+					<input id="sslMoney" name="sslMoney" class="form-control" type="text">
+				</div>
+				<label class="col-sm-3 control-label">HKD充值：</label>
+				<div class="col-sm-8">
+					<input id="hkdMoney" name="hkdMoney" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/vipUser"
+		$("#form-vipUser-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/recharge", $('#form-vipUser-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

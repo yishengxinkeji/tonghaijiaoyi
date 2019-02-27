@@ -27,6 +27,7 @@
 		<pagehelper.boot.version>1.2.5</pagehelper.boot.version>
 		<oshi.version>3.9.1</oshi.version>
 		<lombok.version>1.18.4</lombok.version>
+		<hutool.version>4.3.2</hutool.version>
 	</properties>
 
     <dependencyManagement>
