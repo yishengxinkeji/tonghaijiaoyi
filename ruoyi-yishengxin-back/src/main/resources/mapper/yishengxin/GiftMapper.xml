@@ -13,10 +13,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="newType"    column="new_type"    />
+        <result property="dayType"    column="day_type"    />
     </resultMap>
 	
 	<sql id="selectGiftVo">
-        select id, new_gift, day_gift, create_by, create_time, update_by, update_time, remark from ysx_gift
+        select id, new_gift, day_gift, create_by, create_time, update_by, update_time, remark,new_Type,day_Type from ysx_gift
     </sql>
 	
     <select id="selectGiftList" parameterType="Gift" resultMap="GiftResult">
@@ -25,6 +27,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="newGift != null "> and new_gift = #{newGift}</if>
              <if test="dayGift != null "> and day_gift = #{dayGift}</if>
+             <if test="newType != null "> and new_type = #{newType}</if>
+             <if test="dayType != null "> and day_type = #{dayType}</if>
              <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
              <if test="createTime != null "> and create_time = #{createTime}</if>
              <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
@@ -43,6 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="newGift != null  ">new_gift,</if>
 			<if test="dayGift != null  ">day_gift,</if>
+            <if test="newType != null  ">new_type,</if>
+            <if test="dayType != null  ">day_type,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
 			create_time,
 			<if test="remark != null  and remark != ''  ">remark,</if>
@@ -50,6 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="newGift != null  ">#{newGift},</if>
 			<if test="dayGift != null  ">#{dayGift},</if>
+            <if test="newType != null  ">#{newType},</if>
+            <if test="dayType != null  ">#{dayType},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
 			sysdate(),
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
@@ -61,6 +69,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="newGift != null  ">new_gift = #{newGift},</if>
             <if test="dayGift != null  ">day_gift = #{dayGift},</if>
+            <if test="newType != null  ">new_type = #{newType},</if>
+            <if test="dayType != null  ">day_type = #{dayType},</if>
             <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>

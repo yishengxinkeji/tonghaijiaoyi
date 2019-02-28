@@ -1,5 +1,7 @@
 package com.ruoyi.framework.util;
 
+import com.ruoyi.common.config.Global;
+import com.ruoyi.common.json.JSON;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.crypto.SecureRandomNumberGenerator;
 import org.apache.shiro.mgt.RealmSecurityManager;
@@ -11,6 +13,9 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.framework.shiro.realm.UserRealm;
 import com.ruoyi.system.domain.SysUser;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * shiro 工具类
@@ -80,4 +85,5 @@ public class ShiroUtils {
         String hex = secureRandom.nextBytes(3).toHex();
         return hex;
     }
+
 }

@@ -10,6 +10,8 @@ ruoyi:
   profile: D:/profile/
   # 获取ip地址开关
   addressEnabled: true
+  jwt:
+    outTime: 172800   #jwt token有效期s
 
 # 开发环境配置
 server:
@@ -68,8 +70,8 @@ spring:
       enabled: true
   #spring-redis的配置
   redis:
-    run: false #是否开启 位于RedisUtils
-    host: 122.114.239.176
+    run: true #是否开启 位于RedisUtils
+    host: localhost
     port: 6379
     password:
     database: 0
@@ -80,7 +82,7 @@ spring:
         max-idle: 7
         min-idle: 2
         max-wait: -1ms
-    expireTime: 900     #缓存有效时间15分钟
+    expireTime: 172800     #缓存有效时间1天
     keyPrefix: ruoyi
     listFlush: true
 

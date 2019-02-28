@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-vipProfitDetail-edit" th:object="${vipProfitDetail}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input id="vipId" name="vipId" th:field="*{vipId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">会员头像：</label>
+				<div class="col-sm-8">
+					<input id="vipAvater" name="vipAvater" th:field="*{vipAvater}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">会员昵称：</label>
+				<div class="col-sm-8">
+					<input id="vipName" name="vipName" th:field="*{vipName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">收益描述：</label>
+				<div class="col-sm-8">
+					<input id="profitDescription" name="profitDescription" th:field="*{profitDescription}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">时间：</label>
+				<div class="col-sm-8">
+					<input id="profitDate" name="profitDate" th:field="*{profitDate}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/vipProfitDetail";
+		$("#form-vipProfitDetail-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-vipProfitDetail-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

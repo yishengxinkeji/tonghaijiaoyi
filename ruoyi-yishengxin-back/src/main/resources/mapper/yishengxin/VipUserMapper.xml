@@ -17,14 +17,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="inviteLink"    column="invite_link"    />
         <result property="sslMoney"    column="ssl_money"    />
         <result property="hkdMoney"    column="hkd_money"    />
-        <result property="parentId"    column="parent_id"    />
+        <result property="parentCode"    column="parent_code"    />
         <result property="isFrozen"    column="is_frozen"    />
         <result property="maxTradeDay"    column="max_trade_day"    />
         <result property="salt"    column="salt"    />
+        <result property="newReceive"    column="new_receive"    />
     </resultMap>
 	
 	<sql id="selectVipUserVo">
-        select id, phone, salt, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_id, is_frozen, max_trade_day from ysx_vip_user
+        select id, phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day from ysx_vip_user
     </sql>
 	
     <select id="selectVipUserList" parameterType="VipUser" resultMap="VipUserResult">
@@ -42,9 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="inviteLink != null  and inviteLink != '' "> and invite_link = #{inviteLink}</if>
              <if test="sslMoney != null  and sslMoney != '' "> and ssl_money = #{sslMoney}</if>
              <if test="hkdMoney != null  and hkdMoney != '' "> and hkd_money = #{hkdMoney}</if>
-             <if test="parentId != null  and parentId != '' "> and parent_id = #{parentId}</if>
+             <if test="parentCode != null  and parentCode != '' "> and parent_code = #{parentCode}</if>
              <if test="isFrozen != null  and isFrozen != '' "> and is_frozen = #{isFrozen}</if>
              <if test="maxTradeDay != null  and maxTradeDay != '' "> and max_trade_day = #{maxTradeDay}</if>
+             <if test="newReceive != null  and newReceive != '' "> and new_receive = #{newReceive}</if>
          </where>
     </select>
     
@@ -57,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into ysx_vip_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="phone != null  and phone != ''  ">phone,</if>
-            <if test="salt != null  and salt != '' "> and salt = #{salt}</if>
+            <if test="salt != null  and salt != '' "> salt,</if>
 			<if test="loginPassword != null  and loginPassword != ''  ">login_password,</if>
 			<if test="tradePassword != null  and tradePassword != ''  ">trade_password,</if>
 			<if test="avater != null  and avater != ''  ">avater,</if>
@@ -68,9 +70,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="inviteLink != null  and inviteLink != ''  ">invite_link,</if>
 			<if test="sslMoney != null  and sslMoney != ''  ">ssl_money,</if>
 			<if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money,</if>
-			<if test="parentId != null  and parentId != ''  ">parent_id,</if>
+			<if test="parentCode != null  and parentCode != ''  ">parent_code,</if>
 			<if test="isFrozen != null  and isFrozen != ''  ">is_frozen,</if>
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
+            <if test="newReceive != null  and newReceive != ''  ">new_receive,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="phone != null  and phone != ''  ">#{phone},</if>
@@ -85,9 +88,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="inviteLink != null  and inviteLink != ''  ">#{inviteLink},</if>
 			<if test="sslMoney != null  and sslMoney != ''  ">#{sslMoney},</if>
 			<if test="hkdMoney != null  and hkdMoney != ''  ">#{hkdMoney},</if>
-			<if test="parentId != null  and parentId != ''  ">#{parentId},</if>
+			<if test="parentCode != null  and parentCode != ''  ">#{parentCode},</if>
 			<if test="isFrozen != null  and isFrozen != ''  ">#{isFrozen},</if>
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
+            <if test="newReceive != null  and newReceive != ''  ">#{newReceive},</if>
          </trim>
     </insert>
 	 
@@ -106,11 +110,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="inviteLink != null  and inviteLink != ''  ">invite_link = #{inviteLink},</if>
             <if test="sslMoney != null  and sslMoney != ''  ">ssl_money = #{sslMoney},</if>
             <if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money = #{hkdMoney},</if>
-            <if test="parentId != null  and parentId != ''  ">parent_id = #{parentId},</if>
+            <if test="parentCode != null  and parentCode != ''  ">parent_code = #{parentCode},</if>
             <if test="isFrozen != null  and isFrozen != ''  ">is_frozen = #{isFrozen},</if>
             <if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day = #{maxTradeDay},</if>
+            <if test="newReceive != null  and newReceive != ''  ">new_receive = #{newReceive},</if>
         </trim>
-        where id = #{id}
+        <where>
+            <if test="phone != null  and phone != ''  ">phone = #{phone}</if>
+            <if test="id != null  and id != ''  ">id = #{id}</if>
+        </where>
     </update>
 
 	<delete id="deleteVipUserById" parameterType="Integer">

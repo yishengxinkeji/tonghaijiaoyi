@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.VipProfitDetailMapper">
+    
+    <resultMap type="VipProfitDetail" id="VipProfitDetailResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="vipAvater"    column="vip_avater"    />
+        <result property="vipName"    column="vip_name"    />
+        <result property="profitDescription"    column="profit_description"    />
+        <result property="profitDate"    column="profit_date"    />
+    </resultMap>
+	
+	<sql id="selectVipProfitDetailVo">
+        select id, vip_id, vip_avater, vip_name, profit_description, profit_date from ysx_vip_profit_detail
+    </sql>
+	
+    <select id="selectVipProfitDetailList" parameterType="VipProfitDetail" resultMap="VipProfitDetailResult">
+        <include refid="selectVipProfitDetailVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="vipAvater != null  and vipAvater != '' "> and vip_avater = #{vipAvater}</if>
+             <if test="vipName != null  and vipName != '' "> and vip_name = #{vipName}</if>
+             <if test="profitDescription != null  and profitDescription != '' "> and profit_description = #{profitDescription}</if>
+             <if test="profitDate != null  and profitDate != '' "> and profit_date = #{profitDate}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipProfitDetailById" parameterType="Integer" resultMap="VipProfitDetailResult">
+        <include refid="selectVipProfitDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipProfitDetail" parameterType="VipProfitDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_profit_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="vipAvater != null  and vipAvater != ''  ">vip_avater,</if>
+			<if test="vipName != null  and vipName != ''  ">vip_name,</if>
+			<if test="profitDescription != null  and profitDescription != ''  ">profit_description,</if>
+			<if test="profitDate != null  and profitDate != ''  ">profit_date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="vipAvater != null  and vipAvater != ''  ">#{vipAvater},</if>
+			<if test="vipName != null  and vipName != ''  ">#{vipName},</if>
+			<if test="profitDescription != null  and profitDescription != ''  ">#{profitDescription},</if>
+			<if test="profitDate != null  and profitDate != ''  ">#{profitDate},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipProfitDetail" parameterType="VipProfitDetail">
+        update ysx_vip_profit_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="vipAvater != null  and vipAvater != ''  ">vip_avater = #{vipAvater},</if>
+            <if test="vipName != null  and vipName != ''  ">vip_name = #{vipName},</if>
+            <if test="profitDescription != null  and profitDescription != ''  ">profit_description = #{profitDescription},</if>
+            <if test="profitDate != null  and profitDate != ''  ">profit_date = #{profitDate},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipProfitDetailById" parameterType="Integer">
+        delete from ysx_vip_profit_detail where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipProfitDetailByIds" parameterType="String">
+        delete from ysx_vip_profit_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

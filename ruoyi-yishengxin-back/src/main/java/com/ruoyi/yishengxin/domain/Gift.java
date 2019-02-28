@@ -22,11 +22,17 @@ public class Gift extends BaseEntity {
     /**
      * 新人礼包金额
      */
-    private Double newGift;
+    private String newGift;
     /**
      * 每日分享礼包金额
      */
-    private Double dayGift;
+    private String dayGift;
+
+    //新人礼包类型
+    private String newType;
+    //每日分享礼包类型
+    private String dayType;
+
 
 
 }

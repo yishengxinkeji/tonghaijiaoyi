@@ -50,5 +50,11 @@ public interface IVipUserService
      * @return 结果
      */
 	public int deleteVipUserByIds(String ids);
+
+	/**
+	 * 新人领取礼包
+	 * @param vipUser
+	 */
+	public void newReceiveGift(VipUser vipUser,String giftType,String giftNumber);
 	
 }

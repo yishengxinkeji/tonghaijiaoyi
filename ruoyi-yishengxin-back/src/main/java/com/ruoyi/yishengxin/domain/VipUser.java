@@ -70,9 +70,9 @@ public class VipUser extends BaseEntity {
      */
     private String hkdMoney;
     /**
-     * 上级会员ID
+     * 上级推广码
      */
-    private String parentId;
+    private String parentCode;
     /**
      * 是否冻结 Y 是 N 否
      */
@@ -81,6 +81,11 @@ public class VipUser extends BaseEntity {
      * 每日最大交易量,默认-1
      */
     private String maxTradeDay;
+
+    /**
+     * 新人礼包是否领取  Y 已领 N 未领
+     */
+    private String newReceive;
 
 
 }

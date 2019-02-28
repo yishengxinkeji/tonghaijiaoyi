@@ -147,4 +147,12 @@ public class Global {
     public static String getTablePrefix() {
         return StringUtils.nvl(getConfig("gen.tablePrefix"), "sys_");
     }
+
+    /**
+     * jwt token有效期s
+     * @return
+     */
+    public static int getJwtOutTime() {
+        return Integer.valueOf(getConfig("ruoyi.jwt.outTime"));
+    }
 }
