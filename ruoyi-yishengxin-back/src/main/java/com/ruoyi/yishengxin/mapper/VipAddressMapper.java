@@ -59,4 +59,9 @@ public interface VipAddressMapper {
      */
     public int deleteVipAddressByIds(String[] ids);
 
+    /**
+     * 将该用户所有的地址改为非默认
+     * @param vipId
+     */
+    void updateDefaultAddress(Integer vipId);
 }

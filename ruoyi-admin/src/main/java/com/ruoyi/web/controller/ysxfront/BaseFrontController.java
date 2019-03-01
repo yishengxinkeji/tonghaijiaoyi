@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.ysxfront;
 
+import cn.hutool.core.io.FileTypeUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.yishengxin.domain.VipUser;
 import com.ruoyi.yishengxin.service.IVipUserService;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.File;
 import java.util.List;
 
 /**
@@ -43,8 +46,26 @@ public class BaseFrontController {
         }
 
         return userList.get(0);
-
     }
+
+    //判断文件格式,可能后续会改,目前只支持这几种
+
+    /**
+     * 判断用户类型
+     * @param filetype  文件后缀
+     * @param type  为了后续扩展,传入不同type,进行不同判断
+     * @return
+     */
+    protected boolean fileType(String filetype,String type){
+        if(type.equals("pic")){
+            if(filetype.equalsIgnoreCase("jpg") || filetype.equalsIgnoreCase("png")
+                    || filetype.equalsIgnoreCase("jpeg")){
+                return true;
+            }
+        }
+        return false;
+    }
+
 
 
 

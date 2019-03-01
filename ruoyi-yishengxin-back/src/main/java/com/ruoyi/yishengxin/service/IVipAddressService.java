@@ -50,5 +50,10 @@ public interface IVipAddressService
      * @return 结果
      */
 	public int deleteVipAddressByIds(String ids);
-	
+
+	/**
+	 * 将该用户的所有地址改为非默认
+	 * @param vipId
+	 */
+    void updateDefaultAddress(Integer vipId);
 }

@@ -75,4 +75,9 @@ public class VipAddressServiceImpl implements IVipAddressService {
         return vipAddressMapper.deleteVipAddressByIds(Convert.toStrArray(ids));
     }
 
+    @Override
+    public void updateDefaultAddress(Integer vipId) {
+        vipAddressMapper.updateDefaultAddress(vipId);
+    }
+
 }

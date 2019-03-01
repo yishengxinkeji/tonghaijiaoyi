@@ -10,8 +10,6 @@ ruoyi:
   profile: D:/profile/
   # 获取ip地址开关
   addressEnabled: true
-  jwt:
-    outTime: 172800   #jwt token有效期s
 
 # 开发环境配置
 server:

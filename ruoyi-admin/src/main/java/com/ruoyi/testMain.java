@@ -2,6 +2,7 @@ package com.ruoyi;
 
 import cn.hutool.core.codec.Base64Decoder;
 import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.core.io.FileTypeUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
@@ -48,6 +49,10 @@ public class testMain {
 
         /*String s = IdUtil.randomUUID();
         System.out.println(s);*/
+
+        File file = new File("D:\\profile\\avatar\\01d24d16.jpg");
+        String type = FileTypeUtil.getType(file);
+        System.out.println(type);
 
     }
 }

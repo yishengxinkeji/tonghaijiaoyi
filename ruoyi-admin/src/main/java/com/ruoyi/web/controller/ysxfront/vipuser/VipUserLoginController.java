@@ -137,13 +137,15 @@ public class VipUserLoginController extends BaseFrontController {
      * @param verification      验证码
      * @param password  密码
      * @param confirm   确认密码
+     * @Param type  密码类型  login,trade
      * @return
      */
     @PostMapping("/forgetPassword")
     public ResponseResult forgetPassword(@RequestParam("phone") String phone,
                                          @RequestParam("verification") String verification,
                                          @RequestParam("password") String password,
-                                         @RequestParam("confirm") String confirm){
+                                         @RequestParam("confirm") String confirm,
+                                         @RequestParam("type") String type){
 
         //跳过验证码环节
         //TODO
@@ -160,9 +162,12 @@ public class VipUserLoginController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.PHONE_NOTEXIST_ERROR);
         }
 
-        String loginPassword= DigestUtils.md5Hex(password + userList.get(0).getSalt());
-        vipUser.setLoginPassword(loginPassword);
-
+        String newpassword= DigestUtils.md5Hex(password + userList.get(0).getSalt());
+        if(type.equalsIgnoreCase("login")){
+            vipUser.setLoginPassword(newpassword);
+        }else if(type.equalsIgnoreCase("trade")){
+            vipUser.setTradePassword(newpassword);
+        }
         vipUserService.updateVipUser(vipUser);
         return ResponseResult.responseResult(ResponseEnum.SUCCESS);
     }

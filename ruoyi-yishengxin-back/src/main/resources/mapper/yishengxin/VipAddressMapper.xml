@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectVipAddressVo">
-        select id, vip_id, phone, receivUser, addressDetail, is_default, create_by, create_time, update_by, update_time, remark, province, city, district from ysx_vip_address
+        select id, vip_id, phone, receivUser, addressDetail, is_default, province, city, district from ysx_vip_address
     </sql>
 	
     <select id="selectVipAddressList" parameterType="VipAddress" resultMap="VipAddressResult">
@@ -96,6 +96,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="district != null  and district != ''  ">district = #{district},</if>
         </trim>
         where id = #{id}
+    </update>
+
+    <update id="updateDefaultAddress" parameterType="Integer">
+        update ysx_vip_address set is_default="N" where vip_id = #{vipId}
     </update>
 
 	<delete id="deleteVipAddressById" parameterType="Integer">
