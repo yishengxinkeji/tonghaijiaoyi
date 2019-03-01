@@ -11,11 +11,11 @@ public enum ResponseEnum {
     VIP_PASSWORD_ERROR("1006","密码错误"),
     VIP_GIFT_RECEIVE("1007","礼包已领取"),
     VIP_TOKEN_FAIL("9999","需重新登陆"),
-
-
+    GOODS_NULL("2001","数据为空"),
+    COODS_COLLECTION_PARAMETER("2002","传参有误"),
+    COODS_COLLECTION_ADD("2003","收藏添加失败"),
+    COODS_COLLECTION_DELECT("2004","收藏删除失败"),
     FAIL("500","失败");
-
-
 
 
     private final String code;
