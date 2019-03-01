@@ -100,11 +100,19 @@ public class Global {
     }
 
     /**
-     * 获取头像上传路径
+     * 获取后台头像上传路径
      */
     public static String getAvatarPath() {
         return getConfig("ruoyi.profile") + "avatar/";
     }
+
+    /**
+     * 获取前台图片上传路径
+     */
+    public static String getFrontPath() {
+        return getConfig("ruoyi.profile") + "front/";
+    }
+
 
     /**
      * 获取下载路径

@@ -107,11 +107,21 @@ public class VipUserServiceImpl implements IVipUserService {
             detail.setProfitType(ProfitType.SELF.getCode());
         }
         try{
-            String s = "n"+null;
             vipUserMapper.updateVipUser(vipUser);
             vipProfitDetailMapper.insertVipProfitDetail(detail);
         }catch (Exception e){
+            e.printStackTrace();
             throw new VipUserException();
         }
+    }
+
+    @Override
+    public List<VipUser> selectUserByParentCode(VipUser oneUser) {
+        return vipUserMapper.selectUserByParentCode(oneUser);
+    }
+
+    @Override
+    public List<VipUser> selectUserByGrandParentCode(VipUser oneUser) {
+        return vipUserMapper.selectUserByGrandParentCode(oneUser);
     }
 }

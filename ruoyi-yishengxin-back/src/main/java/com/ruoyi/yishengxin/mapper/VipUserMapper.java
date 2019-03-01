@@ -58,5 +58,18 @@ public interface VipUserMapper
      * @return 结果
      */
 	public int deleteVipUserByIds(String[] ids);
-	
+
+	/**
+	 * 查询用户下的一级会员
+	 * @param oneUser
+	 * @return
+	 */
+    List<VipUser> selectUserByParentCode(VipUser oneUser);
+
+	/**
+	 * 查询用户的二级会员
+	 * @param oneUser
+	 * @return
+	 */
+	List<VipUser> selectUserByGrandParentCode(VipUser oneUser);
 }
