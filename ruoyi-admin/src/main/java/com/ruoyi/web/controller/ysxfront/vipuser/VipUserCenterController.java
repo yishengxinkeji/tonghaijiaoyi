@@ -9,6 +9,7 @@ import com.ruoyi.framework.util.JwtUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.service.IVipProfitDetailService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +31,9 @@ public class VipUserCenterController extends BaseFrontController {
 
     @Autowired
     private IVipUserService vipUserService;
+
+    @Autowired
+    private IVipProfitDetailService vipProfitDetailService;
 
     /**
      * 个人信息
@@ -173,8 +177,8 @@ public class VipUserCenterController extends BaseFrontController {
         map.put("one",list_map1);
         map.put("two",list_map2);
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
-
     }
+
 
 
 
