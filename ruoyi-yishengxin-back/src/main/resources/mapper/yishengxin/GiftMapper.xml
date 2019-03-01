@@ -71,7 +71,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dayGift != null  ">day_gift = #{dayGift},</if>
             <if test="newType != null  ">new_type = #{newType},</if>
             <if test="dayType != null  ">day_type = #{dayType},</if>
-            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
             update_time = sysdate()

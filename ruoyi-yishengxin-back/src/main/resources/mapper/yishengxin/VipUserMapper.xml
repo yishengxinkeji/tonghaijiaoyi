@@ -22,10 +22,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="maxTradeDay"    column="max_trade_day"    />
         <result property="salt"    column="salt"    />
         <result property="newReceive"    column="new_receive"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
     </resultMap>
-	
 	<sql id="selectVipUserVo">
-        select id, phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day from ysx_vip_user
+        select id, phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day,
+         create_time,create_by,update_by,update_time from ysx_vip_user
     </sql>
 	
     <select id="selectVipUserList" parameterType="VipUser" resultMap="VipUserResult">
@@ -47,9 +52,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="isFrozen != null  and isFrozen != '' "> and is_frozen = #{isFrozen}</if>
              <if test="maxTradeDay != null  and maxTradeDay != '' "> and max_trade_day = #{maxTradeDay}</if>
              <if test="newReceive != null  and newReceive != '' "> and new_receive = #{newReceive}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
          </where>
     </select>
-    
+
+    <!--查询用户的一级会员-->
+    <select id="selectUserByParentCode" parameterType="VipUser" resultMap="VipUserResult">
+       select id,phone,avater,nickname,create_time from ysx_vip_user where parent_code=#{parentCode}
+    </select>
+    <!--查询用户的二级会员-->
+    <select id="selectUserByGrandParentCode" parameterType="VipUser" resultMap="VipUserResult">
+        select id,phone,avater,nickname,create_time from ysx_vip_user where parent_code in(select recommend_code from ysx_vip_user where parent_code = #{parentCode})
+    </select>
+
+
+
     <select id="selectVipUserById" parameterType="Integer" resultMap="VipUserResult">
         <include refid="selectVipUserVo"/>
         where id = #{id}
@@ -74,6 +95,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="isFrozen != null  and isFrozen != ''  ">is_frozen,</if>
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
             <if test="newReceive != null  and newReceive != ''  ">new_receive,</if>
+            <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            create_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="phone != null  and phone != ''  ">#{phone},</if>
@@ -92,6 +115,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="isFrozen != null  and isFrozen != ''  ">#{isFrozen},</if>
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
             <if test="newReceive != null  and newReceive != ''  ">#{newReceive},</if>
+            <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            sysdate()
          </trim>
     </insert>
 	 
@@ -114,10 +139,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isFrozen != null  and isFrozen != ''  ">is_frozen = #{isFrozen},</if>
             <if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day = #{maxTradeDay},</if>
             <if test="newReceive != null  and newReceive != ''  ">new_receive = #{newReceive},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            update_time = sysdate()
         </trim>
         <where>
-            <if test="phone != null  and phone != ''  ">phone = #{phone}</if>
-            <if test="id != null  and id != ''  ">id = #{id}</if>
+            <if test="phone != null  and phone != ''  ">and phone = #{phone}</if>
+            <if test="id != null  and id != ''  ">and id = #{id}</if>
         </where>
     </update>
 

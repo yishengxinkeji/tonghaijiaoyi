@@ -1,37 +1,33 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
 import cn.hutool.core.codec.Base64Encoder;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
-import com.ruoyi.common.base.AjaxResult;
+import cn.hutool.extra.qrcode.QrCodeUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.exception.frontException.VipUserException;
 import com.ruoyi.common.json.JSON;
+import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.JwtUtils;
-import com.ruoyi.framework.util.RedisConfig;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.Gift;
 import com.ruoyi.yishengxin.domain.VipUser;
 import com.ruoyi.yishengxin.service.IGiftService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +35,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/front/vipUser")
-public class VipUserLoginController {
+public class VipUserLoginController extends BaseFrontController {
 
     @Autowired
     private IVipUserService vipUserService;
@@ -64,7 +60,7 @@ public class VipUserLoginController {
                                    @RequestParam("inviCode") String inviCode){
 
         //跳过验证码环节
-
+        //TODO
 
 
         //手机号码不正确
@@ -89,10 +85,20 @@ public class VipUserLoginController {
         //推荐码
         String exten = StringUtils.get8UUID();
         new_User.setRecommendCode(exten);
+
+        if(!FileUtil.exist(Global.getFrontPath())){
+            FileUtil.mkdir(Global.getFrontPath());
+        }
+        //使用hutool生成一个默认的二维码,文件名默认为推广码.jpg
+        File file = QrCodeUtil.generate(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
+        new_User.setExtensionCode(file.getName());
+
         //钱包地址
         new_User.setMoneyCode(IdUtil.simpleUUID());
         //邀请链接
-        new_User.setInviteLink(Base64Encoder.encode(CustomerConstants.PRE_INVI_LINK+exten));
+       // new_User.setInviteLink(Base64Encoder.encode(CustomerConstants.PRE_INVI_LINK+exten));
+        new_User.setInviteLink(Global.getConfig(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten));
+
 
         new_User.setHkdMoney("0");
         new_User.setSslMoney("0");
@@ -140,6 +146,7 @@ public class VipUserLoginController {
                                          @RequestParam("confirm") String confirm){
 
         //跳过验证码环节
+        //TODO
 
         if(!password.equals(confirm)){
             return ResponseResult.responseResult(ResponseEnum.PHONE_DIFFERENT_ERROR);
@@ -169,7 +176,7 @@ public class VipUserLoginController {
      */
     @PostMapping("/login")
     public ResponseResult login(@RequestParam("phone") String phone,
-                                @RequestParam("password") String password, HttpServletRequest request, HttpServletResponse response){
+                                @RequestParam("password") String password){
 
         //手机号码不正确
         if(!pattern.matcher(phone).matches()){
@@ -191,7 +198,7 @@ public class VipUserLoginController {
         }
 
         try{
-            token = JwtUtils.createToken(JSON.toJSONString(vipUser), Global.getJwtOutTime());
+            token = IdUtil.randomUUID();
             RedisUtils.setJson(token,userList.get(0), Long.parseLong(Global.getConfig("spring.redis.expireTime")));
 
         } catch (Exception e) {
@@ -210,9 +217,8 @@ public class VipUserLoginController {
     @PostMapping("/registerGift")
     public ResponseResult registerGift(@RequestParam("token") String token){
         try{
-            String s = JwtUtils.verifyToken(token);
-            VipUser vipUser = RedisUtils.getJson(token, VipUser.class);
-            if(s == null || vipUser == null){
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
@@ -244,13 +250,11 @@ public class VipUserLoginController {
 
     /**
      * 领取礼包
-     * @param request
+     * @param token
      * @return
      */
     @PostMapping("/receiveGift")
-    public ResponseResult receiveGift(HttpServletRequest request){
-
-
+    public ResponseResult receiveGift(@RequestParam("token") String token){
 
         String giftType = "";
         String giftNumber = "";
@@ -261,30 +265,51 @@ public class VipUserLoginController {
             giftType = gifts.get(0).getNewType();
             giftNumber = gifts.get(0).getNewGift();
         }
+        try {
+            VipUser vipUser = userExist(token);
 
-        VipUser vipUser = (VipUser) request.getSession().getAttribute("vipUser");
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
 
-        if(vipUser.getNewReceive().equals(CustomerConstants.YES)){
-            //说明该用户已经领取了
-            return ResponseResult.responseResult(ResponseEnum.VIP_GIFT_RECEIVE);
-        }
-        if(giftType.equals(CustomerConstants.SSL)){
-            double sslmoney = NumberUtil.add(Double.parseDouble(vipUser.getSslMoney()), Double.parseDouble(giftNumber));
-            vipUser.setSslMoney(String.valueOf(sslmoney));
-        }else if(giftType.equals(CustomerConstants.HKD)){
-            double hkdmoney = NumberUtil.add(Double.parseDouble(vipUser.getHkdMoney()), Double.parseDouble(giftNumber));
-            vipUser.setHkdMoney(String.valueOf(hkdmoney));
-        }
-        vipUser.setNewReceive(CustomerConstants.YES);
-        try{
+            if(vipUser.getNewReceive().equals(CustomerConstants.YES)){
+                //说明该用户已经领取了
+                return ResponseResult.responseResult(ResponseEnum.VIP_GIFT_RECEIVE);
+            }
+            if(giftType.equals(CustomerConstants.SSL)){
+                double sslmoney = NumberUtil.add(Double.parseDouble(vipUser.getSslMoney()), Double.parseDouble(giftNumber));
+                vipUser.setSslMoney(String.valueOf(sslmoney));
+            }else if(giftType.equals(CustomerConstants.HKD)){
+                double hkdmoney = NumberUtil.add(Double.parseDouble(vipUser.getHkdMoney()), Double.parseDouble(giftNumber));
+                vipUser.setHkdMoney(String.valueOf(hkdmoney));
+            }
+            vipUser.setNewReceive(CustomerConstants.YES);
+
             vipUserService.newReceiveGift(vipUser,giftType,giftNumber);
-        } catch (VipUserException e){
+            RedisUtils.setJson(token,vipUser, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseResult.error("领取失败");
         }
-
-        request.getSession().setAttribute("vipUser",vipUser);
         return ResponseResult.success();
     }
 
 
+    /**
+     * 扫描二维码过来注册的
+     * @param inviCode     推广码
+     * @return
+     */
+    @GetMapping("/inviteRegister/{inviCode}")
+    public ResponseResult inviteRegister(@RequestParam("inviCode") String inviCode){
+
+       VipUser vipUser = new VipUser();
+       vipUser.setRecommendCode(inviCode);
+       List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
+       if(userList.size() == 0){
+           //说明该邀请码用户不存在
+           return ResponseResult.responseResult(ResponseEnum.VIP_USER_INVITE);
+       }
+       return ResponseResult.success();
+    }
 }

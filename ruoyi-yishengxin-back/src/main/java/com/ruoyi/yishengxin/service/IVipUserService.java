@@ -56,5 +56,17 @@ public interface IVipUserService
 	 * @param vipUser
 	 */
 	public void newReceiveGift(VipUser vipUser,String giftType,String giftNumber);
-	
+
+
+	/**
+	 * 根据父级用户查找下一级
+	 */
+	List<VipUser> selectUserByParentCode(VipUser oneUser);
+
+	/**
+	 * 根据父级用户查询第二级会员
+	 * @param oneUser
+	 * @return
+	 */
+	List<VipUser> selectUserByGrandParentCode(VipUser oneUser);
 }
