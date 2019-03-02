@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
-import com.ruoyi.yishengxin.domain.VipUser;
 import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.service.IGoodsService;
 
@@ -31,7 +30,8 @@ public class GoodsController extends BaseFrontController {
     public ResponseResult showsGoods(){
 
         List<Goods> goods = iGoodsService.selectGoods();
-       if ( null == goods) {
+
+        if ( null == goods) {
            return ResponseResult.responseResult(ResponseEnum.SUCCESS,"数据为空");
        }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goods);

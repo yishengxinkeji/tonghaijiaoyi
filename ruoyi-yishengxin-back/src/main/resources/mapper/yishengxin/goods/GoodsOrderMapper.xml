@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsOrderMapper">
+    
+    <resultMap type="GoodsOrder" id="GoodsOrderResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="goodsName"    column="goodsName"    />
+        <result property="goodsDetails"    column="goodsDetails"    />
+        <result property="goodsPrice"    column="goodsPrice"    />
+        <result property="goodsSoldNumber"    column="goodsSoldNumber"    />
+        <result property="goodsOrderTotalAmount"    column="goodsOrderTotalAmount"    />
+        <result property="goodsPicture"    column="goodsPicture"    />
+        <result property="goodsStatus"    column="goodsStatus"    />
+        <result property="orderNumber"    column="orderNumber"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectGoodsOrderVo">
+        select id, uid, goodsName, goodsDetails, goodsPrice, goodsSoldNumber, goodsOrderTotalAmount, goodsPicture, goodsStatus, orderNumber, create_by, create_time, update_by, update_time, remark from ysx_goods_order
+    </sql>
+	
+    <select id="selectGoodsOrderList" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="uid != null "> and uid = #{uid}</if>
+             <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
+             <if test="goodsDetails != null  and goodsDetails != '' "> and goodsDetails = #{goodsDetails}</if>
+             <if test="goodsPrice != null "> and goodsPrice = #{goodsPrice}</if>
+             <if test="goodsSoldNumber != null "> and goodsSoldNumber = #{goodsSoldNumber}</if>
+             <if test="goodsOrderTotalAmount != null "> and goodsOrderTotalAmount = #{goodsOrderTotalAmount}</if>
+             <if test="goodsPicture != null  and goodsPicture != '' "> and goodsPicture = #{goodsPicture}</if>
+             <if test="goodsStatus != null  and goodsStatus != '' "> and goodsStatus = #{goodsStatus}</if>
+             <if test="orderNumber != null  and orderNumber != '' "> and orderNumber = #{orderNumber}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectGoodsOrderById" parameterType="Integer" resultMap="GoodsOrderResult">
+        <include refid="selectGoodsOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGoodsOrder" parameterType="GoodsOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_goods_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">uid,</if>
+			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
+			<if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails,</if>
+			<if test="goodsPrice != null  ">goodsPrice,</if>
+			<if test="goodsSoldNumber != null  ">goodsSoldNumber,</if>
+			<if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount,</if>
+			<if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture,</if>
+			<if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus,</if>
+			<if test="orderNumber != null  and orderNumber != ''  ">orderNumber,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">#{uid},</if>
+			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
+			<if test="goodsDetails != null  and goodsDetails != ''  ">#{goodsDetails},</if>
+			<if test="goodsPrice != null  ">#{goodsPrice},</if>
+			<if test="goodsSoldNumber != null  ">#{goodsSoldNumber},</if>
+			<if test="goodsOrderTotalAmount != null  ">#{goodsOrderTotalAmount},</if>
+			<if test="goodsPicture != null  and goodsPicture != ''  ">#{goodsPicture},</if>
+			<if test="goodsStatus != null  and goodsStatus != ''  ">#{goodsStatus},</if>
+			<if test="orderNumber != null  and orderNumber != ''  ">#{orderNumber},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsOrder" parameterType="GoodsOrder">
+        update ysx_goods_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null  ">uid = #{uid},</if>
+            <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
+            <if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails = #{goodsDetails},</if>
+            <if test="goodsPrice != null  ">goodsPrice = #{goodsPrice},</if>
+            <if test="goodsSoldNumber != null  ">goodsSoldNumber = #{goodsSoldNumber},</if>
+            <if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount = #{goodsOrderTotalAmount},</if>
+            <if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture = #{goodsPicture},</if>
+            <if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus = #{goodsStatus},</if>
+            <if test="orderNumber != null  and orderNumber != ''  ">orderNumber = #{orderNumber},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsOrderById" parameterType="Integer">
+        delete from ysx_goods_order where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsOrderByIds" parameterType="String">
+        delete from ysx_goods_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

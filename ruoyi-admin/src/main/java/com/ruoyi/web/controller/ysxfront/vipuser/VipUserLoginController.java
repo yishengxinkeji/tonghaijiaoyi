@@ -1,6 +1,5 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
-import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
