@@ -1,7 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
-import com.ruoyi.yishengxin.domain.Goods;
-import org.apache.ibatis.annotations.Select;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 
 import java.util.List;
 

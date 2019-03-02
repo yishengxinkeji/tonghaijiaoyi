@@ -1,6 +1,6 @@
-package com.ruoyi.yishengxin.mapper;
+package com.ruoyi.yishengxin.mapper.goods;
 
-import com.ruoyi.yishengxin.domain.Goods;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;

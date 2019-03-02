@@ -1,4 +1,4 @@
-package com.ruoyi.yishengxin.domain;
+package com.ruoyi.yishengxin.domain.goods;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

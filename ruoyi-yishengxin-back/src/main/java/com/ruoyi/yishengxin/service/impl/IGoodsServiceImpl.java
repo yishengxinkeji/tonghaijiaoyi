@@ -1,7 +1,7 @@
 package com.ruoyi.yishengxin.service.impl;
 
-import com.ruoyi.yishengxin.domain.Goods;
-import com.ruoyi.yishengxin.mapper.GoodsMapper;
+import com.ruoyi.yishengxin.domain.goods.Goods;
+import com.ruoyi.yishengxin.mapper.goods.GoodsMapper;
 import com.ruoyi.yishengxin.service.IGoodsService;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
