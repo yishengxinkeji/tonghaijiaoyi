@@ -18,7 +18,7 @@ import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.Gift;
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGiftService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
