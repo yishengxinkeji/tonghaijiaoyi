@@ -18,8 +18,13 @@ public class CustomerConstants {
      */
     public static final String NO = "N";
 
+    /**
+     * 服务器地址
+     */
+    public static final String SERVER_LINK = IpUtils.getHostIp() + ":" + Global.getConfig("server.port");
+
     //邀请链接前缀,后面加上个人的推广码
-    public static final String PRE_INVI_LINK = IpUtils.getHostIp() + ":" + Global.getConfig("server.port") + "/"+"front/vipUser/invite/";
+    public static final String PRE_INVI_LINK = SERVER_LINK + "/front/vipUser/invite/";
 
     /**
      * SSL
@@ -35,6 +40,11 @@ public class CustomerConstants {
      * 收益描述模版  给我带来3个SSL资产的收益
      */
     public static final String PROFIT_TEMPLATE = "给我带来: %s 个 %s 资产的收益";
+
+    //用户中心客服中的兑换与购买
+    //等待兑换,已完成
+    public static final String EXCHANGE_BUY_STATUS_WAIT = "1";
+    public static final String EXCHANGE_BUY_STATUS_DEAL = "2";
 
 
 

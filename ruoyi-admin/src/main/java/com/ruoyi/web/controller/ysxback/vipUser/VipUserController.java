@@ -1,15 +1,11 @@
-package com.ruoyi.web.controller.ysxback;
+package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.json.JSONObject;
 import com.ruoyi.framework.util.ShiroUtils;
-import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +13,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.common.page.TableDataInfo;

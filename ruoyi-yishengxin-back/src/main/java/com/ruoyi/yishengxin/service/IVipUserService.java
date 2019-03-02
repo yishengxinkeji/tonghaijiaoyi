@@ -1,6 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import java.util.List;
 
 /**

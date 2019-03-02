@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.ysxback;
+package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.util.List;
 
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.yishengxin.domain.VipProfitDetail;
+import com.ruoyi.yishengxin.domain.vipUser.VipProfitDetail;
 import com.ruoyi.yishengxin.service.IVipProfitDetailService;
 import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.common.page.TableDataInfo;

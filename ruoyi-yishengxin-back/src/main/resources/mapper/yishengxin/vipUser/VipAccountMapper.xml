@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipAccountMapper">
+    
+    <resultMap type="VipAccount" id="VipAccountResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="accountType"    column="account_type"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="accountNumber"    column="account_number"    />
+        <result property="accountImg"    column="account_img"    />
+        <result property="isDefault"    column="is_Default"    />
+    </resultMap>
+	
+	<sql id="selectVipAccountVo">
+        select id, vip_id, account_type, account_name, account_number, account_img, is_Default from ysx_vip_account
+    </sql>
+	
+    <select id="selectVipAccountList" parameterType="VipAccount" resultMap="VipAccountResult">
+        <include refid="selectVipAccountVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="accountType != null  and accountType != '' "> and account_type = #{accountType}</if>
+             <if test="accountName != null  and accountName != '' "> and account_name = #{accountName}</if>
+             <if test="accountNumber != null  and accountNumber != '' "> and account_number = #{accountNumber}</if>
+             <if test="accountImg != null  and accountImg != '' "> and account_img = #{accountImg}</if>
+             <if test="isDefault != null  and isDefault != '' "> and is_Default = #{isDefault}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipAccountById" parameterType="Integer" resultMap="VipAccountResult">
+        <include refid="selectVipAccountVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipAccount" parameterType="VipAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_account
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="accountType != null  and accountType != ''  ">account_type,</if>
+			<if test="accountName != null  and accountName != ''  ">account_name,</if>
+			<if test="accountNumber != null  and accountNumber != ''  ">account_number,</if>
+			<if test="accountImg != null  and accountImg != ''  ">account_img,</if>
+			<if test="isDefault != null  and isDefault != ''  ">is_Default,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="accountType != null  and accountType != ''  ">#{accountType},</if>
+			<if test="accountName != null  and accountName != ''  ">#{accountName},</if>
+			<if test="accountNumber != null  and accountNumber != ''  ">#{accountNumber},</if>
+			<if test="accountImg != null  and accountImg != ''  ">#{accountImg},</if>
+			<if test="isDefault != null  and isDefault != ''  ">#{isDefault},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipAccount" parameterType="VipAccount">
+        update ysx_vip_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="accountType != null  and accountType != ''  ">account_type = #{accountType},</if>
+            <if test="accountName != null  and accountName != ''  ">account_name = #{accountName},</if>
+            <if test="accountNumber != null  and accountNumber != ''  ">account_number = #{accountNumber},</if>
+            <if test="accountImg != null  and accountImg != ''  ">account_img = #{accountImg},</if>
+            <if test="isDefault != null  and isDefault != ''  ">is_Default = #{isDefault},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateDefaultAccount" parameterType="Integer">
+        update ysx_vip_account set is_default="N" where vip_id = #{vipId}
+    </update>
+
+	<delete id="deleteVipAccountById" parameterType="Integer">
+        delete from ysx_vip_account where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipAccountByIds" parameterType="String">
+        delete from ysx_vip_account where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

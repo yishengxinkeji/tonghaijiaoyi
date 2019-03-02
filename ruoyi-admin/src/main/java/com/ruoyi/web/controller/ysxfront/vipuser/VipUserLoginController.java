@@ -1,6 +1,5 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
-import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -10,23 +9,18 @@ import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.json.JSON;
-import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.util.JwtUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.Gift;
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGiftService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -141,11 +135,13 @@ public class VipUserLoginController extends BaseFrontController {
      * @return
      */
     @PostMapping("/forgetPassword")
-    public ResponseResult forgetPassword(@RequestParam("phone") String phone,
+    public ResponseResult forgetPassword(
+                                         @RequestParam("phone") String phone,
                                          @RequestParam("verification") String verification,
                                          @RequestParam("password") String password,
                                          @RequestParam("confirm") String confirm,
-                                         @RequestParam("type") String type){
+                                         @RequestParam("type") String type,
+                                         @RequestParam("token") String token){
 
         //跳过验证码环节
         //TODO

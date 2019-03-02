@@ -3,8 +3,8 @@ package com.ruoyi.yishengxin.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.yishengxin.mapper.VipProfitDetailMapper;
-import com.ruoyi.yishengxin.domain.VipProfitDetail;
+import com.ruoyi.yishengxin.mapper.vipUser.VipProfitDetailMapper;
+import com.ruoyi.yishengxin.domain.vipUser.VipProfitDetail;
 import com.ruoyi.yishengxin.service.IVipProfitDetailService;
 import com.ruoyi.common.support.Convert;
 

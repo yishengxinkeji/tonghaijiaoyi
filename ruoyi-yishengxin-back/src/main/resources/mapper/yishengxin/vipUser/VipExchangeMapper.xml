@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipExchangeMapper">
+    
+    <resultMap type="VipExchange" id="VipExchangeResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="exchangeAmount"    column="exchange_amount"    />
+        <result property="exchangeCharge"    column="exchange_charge"    />
+        <result property="exchangeMoney"    column="exchange_money"    />
+        <result property="exchangeAccount"    column="exchange_account"    />
+        <result property="exchangeTime"    column="exchange_time"    />
+        <result property="exchangeStatus"    column="exchange_status"    />
+        <result property="exchangeDetail"    column="exchange_detail"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectVipExchangeVo">
+        select id, vip_id, exchange_amount, exchange_charge, exchange_money, exchange_account, exchange_time, exchange_status, exchange_detail, create_time from ysx_vip_exchange
+    </sql>
+	
+    <select id="selectVipExchangeList" parameterType="VipExchange" resultMap="VipExchangeResult">
+        <include refid="selectVipExchangeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="exchangeAmount != null  and exchangeAmount != '' "> and exchange_amount = #{exchangeAmount}</if>
+             <if test="exchangeCharge != null  and exchangeCharge != '' "> and exchange_charge = #{exchangeCharge}</if>
+             <if test="exchangeMoney != null  and exchangeMoney != '' "> and exchange_money = #{exchangeMoney}</if>
+             <if test="exchangeAccount != null  and exchangeAccount != '' "> and exchange_account = #{exchangeAccount}</if>
+             <if test="exchangeTime != null  and exchangeTime != '' "> and exchange_time = #{exchangeTime}</if>
+             <if test="exchangeStatus != null  and exchangeStatus != '' "> and exchange_status = #{exchangeStatus}</if>
+             <if test="exchangeDetail != null  and exchangeDetail != '' "> and exchange_detail = #{exchangeDetail}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+        ${params.exchange}
+    </select>
+    
+    <select id="selectVipExchangeById" parameterType="Integer" resultMap="VipExchangeResult">
+        <include refid="selectVipExchangeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipExchange" parameterType="VipExchange" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_exchange
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="exchangeAmount != null  and exchangeAmount != ''  ">exchange_amount,</if>
+			<if test="exchangeCharge != null  and exchangeCharge != ''  ">exchange_charge,</if>
+			<if test="exchangeMoney != null  and exchangeMoney != ''  ">exchange_money,</if>
+			<if test="exchangeAccount != null  and exchangeAccount != ''  ">exchange_account,</if>
+			<if test="exchangeTime != null  and exchangeTime != ''  ">exchange_time,</if>
+			<if test="exchangeStatus != null  and exchangeStatus != ''  ">exchange_status,</if>
+			<if test="exchangeDetail != null  and exchangeDetail != ''  ">exchange_detail,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+            create_time
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="exchangeAmount != null  and exchangeAmount != ''  ">#{exchangeAmount},</if>
+			<if test="exchangeCharge != null  and exchangeCharge != ''  ">#{exchangeCharge},</if>
+			<if test="exchangeMoney != null  and exchangeMoney != ''  ">#{exchangeMoney},</if>
+			<if test="exchangeAccount != null  and exchangeAccount != ''  ">#{exchangeAccount},</if>
+			<if test="exchangeTime != null  and exchangeTime != ''  ">#{exchangeTime},</if>
+			<if test="exchangeStatus != null  and exchangeStatus != ''  ">#{exchangeStatus},</if>
+			<if test="exchangeDetail != null  and exchangeDetail != ''  ">#{exchangeDetail},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+            sysdate()
+         </trim>
+    </insert>
+	 
+    <update id="updateVipExchange" parameterType="VipExchange">
+        update ysx_vip_exchange
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="exchangeAmount != null  and exchangeAmount != ''  ">exchange_amount = #{exchangeAmount},</if>
+            <if test="exchangeCharge != null  and exchangeCharge != ''  ">exchange_charge = #{exchangeCharge},</if>
+            <if test="exchangeMoney != null  and exchangeMoney != ''  ">exchange_money = #{exchangeMoney},</if>
+            <if test="exchangeAccount != null  and exchangeAccount != ''  ">exchange_account = #{exchangeAccount},</if>
+            <if test="exchangeTime != null  and exchangeTime != ''  ">exchange_time = #{exchangeTime},</if>
+            <if test="exchangeStatus != null  and exchangeStatus != ''  ">exchange_status = #{exchangeStatus},</if>
+            <if test="exchangeDetail != null  and exchangeDetail != ''  ">exchange_detail = #{exchangeDetail},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate(),
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipExchangeById" parameterType="Integer">
+        delete from ysx_vip_exchange where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipExchangeByIds" parameterType="String">
+        delete from ysx_vip_exchange where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

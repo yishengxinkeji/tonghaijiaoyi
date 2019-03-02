@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipFeedbackMapper">
+    
+    <resultMap type="VipFeedback" id="VipFeedbackResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+	
+	<sql id="selectVipFeedbackVo">
+        select id, vip_id, content from ysx_vip_feedback
+    </sql>
+	
+    <select id="selectVipFeedbackList" parameterType="VipFeedback" resultMap="VipFeedbackResult">
+        <include refid="selectVipFeedbackVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipFeedbackById" parameterType="Integer" resultMap="VipFeedbackResult">
+        <include refid="selectVipFeedbackVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipFeedback" parameterType="VipFeedback" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_feedback
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipFeedback" parameterType="VipFeedback">
+        update ysx_vip_feedback
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipFeedbackById" parameterType="Integer">
+        delete from ysx_vip_feedback where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipFeedbackByIds" parameterType="String">
+        delete from ysx_vip_feedback where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

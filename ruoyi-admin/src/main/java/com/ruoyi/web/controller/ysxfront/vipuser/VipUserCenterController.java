@@ -1,8 +1,6 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileTypeUtil;
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -10,26 +8,18 @@ import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.file.FileUploadUtils;
-import com.ruoyi.framework.util.JwtUtils;
 import com.ruoyi.framework.util.RedisUtils;
-import com.ruoyi.framework.util.ShiroUtils;
-import com.ruoyi.system.domain.SysUser;
 import com.ruoyi.web.controller.system.SysProfileController;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
-import com.ruoyi.yishengxin.domain.VipAddress;
-import com.ruoyi.yishengxin.domain.VipProfitDetail;
-import com.ruoyi.yishengxin.domain.VipUser;
-import com.ruoyi.yishengxin.service.IVipAddressService;
-import com.ruoyi.yishengxin.service.IVipProfitDetailService;
-import com.ruoyi.yishengxin.service.IVipUserService;
+import com.ruoyi.yishengxin.domain.Trade;
+import com.ruoyi.yishengxin.domain.vipUser.*;
+import com.ruoyi.yishengxin.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,15 +37,24 @@ public class VipUserCenterController extends BaseFrontController {
 
     private static final Logger log = LoggerFactory.getLogger(SysProfileController.class);
 
-
     @Autowired
     private IVipUserService vipUserService;
-
     @Autowired
     private IVipProfitDetailService vipProfitDetailService;
-
     @Autowired
     private IVipAddressService vipAddressService;
+    @Autowired
+    private IVipAccountService vipAccountService;
+    @Autowired
+    private IVipFeedbackService feedbackService;
+    @Autowired
+    private IVipAboutusService aboutusService;
+    @Autowired
+    private IVipExchangeService vipExchangeService;
+    @Autowired
+    private IVipBuyService buyService;
+    @Autowired
+    private ITradeService tradeService;
 
     /**
      * 个人信息
@@ -63,7 +62,7 @@ public class VipUserCenterController extends BaseFrontController {
      * @return
      */
     @PostMapping("/base")
-    public ResponseResult userCenter(@RequestParam("token") String token){
+    public ResponseResult userCenter(String token){
 
         try {
             VipUser vipUser = userExist(token);
@@ -95,26 +94,20 @@ public class VipUserCenterController extends BaseFrontController {
      * @return
      */
     @PostMapping("/avaterUpload")
-    public ResponseResult avaterUpload(@RequestParam("token") String token,@RequestParam("avatarfile") MultipartFile file){
+    public ResponseResult avaterUpload(@RequestParam("token") String token,@RequestParam("file") MultipartFile file){
+
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
         try {
             if (!file.isEmpty()) {
-                String originalFilename = file.getOriginalFilename();
-                String filetype = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
-                if(!fileType(filetype,"pic")){
-                    //头像格式不支持
-                    return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER_TYPE);
-                }
-
-                String avatar = FileUploadUtils.upload(Global.getFrontPath(), file,filetype);
-                vipUser.setAvater(avatar);
+                //图片地址
+                String path = uploadFile(file);
+                vipUser.setAvater(path);
                 if(vipUserService.updateVipUser(vipUser) > 0){
                     RedisUtils.setJson(token,vipUser, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
-                    return ResponseResult.success();
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,CustomerConstants.SERVER_LINK+Global.getFrontPath()+path);
                 }
             }
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER);
@@ -308,10 +301,11 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipAddress.getIsDefault().equals(CustomerConstants.YES)){
+        if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
             vipAddressService.updateDefaultAddress(vipUser.getId());
         }
         vipAddress.setVipId(vipUser.getId());
+        vipAddress.setIsDefault(vipAddress.getIsDefault().toUpperCase());
         vipAddressService.insertVipAddress(vipAddress);
         return ResponseResult.success();
     }
@@ -360,9 +354,11 @@ public class VipUserCenterController extends BaseFrontController {
         }
 
         try{
-            if(vipAddress.getIsDefault().equals(CustomerConstants.YES)){
+            if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
                 vipAddressService.updateDefaultAddress(vipAddress.getVipId());
             }
+            vipAddress.setIsDefault(vipAddress.getIsDefault().toUpperCase());
+
             vipAddressService.updateVipAddress(vipAddress);
         }catch (Exception e){
             return ResponseResult.error();
@@ -387,5 +383,318 @@ public class VipUserCenterController extends BaseFrontController {
         return ResponseResult.success();
     }
 
+
+    /**
+     * 收款账户列表
+     * @param token
+     * @return
+     */
+    @PostMapping("/userAccountList")
+    public ResponseResult userAccountList(@RequestParam("token") String token) {
+
+        VipUser vipUser = userExist(token);
+
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        List<VipAccount> vipAccounts = vipAccountService.selectVipAccountList(new VipAccount());
+
+        List list = new ArrayList();
+        vipAccounts.stream().forEach(account -> {
+            Map map = new HashMap();
+            map.put("id",account.getId());
+            map.put("vipId",account.getVipId());
+            map.put("accountType",account.getAccountType());
+            map.put("account_name",account.getAccountName());
+            map.put("account_number",account.getAccountNumber());
+            map.put("account_img",account.getAccountImg());
+            map.put("is_Default",account.getIsDefault());
+            list.add(map);
+        });
+
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+    }
+
+    /**
+     * 收款账户添加
+     * @param token
+     * @return
+     */
+    @PostMapping("/userAccountAdd")
+    public ResponseResult userAccountAdd(@RequestParam("token") String token,VipAccount account) {
+
+        VipUser vipUser = userExist(token);
+
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        account.setVipId(vipUser.getId());
+        vipAccountService.insertVipAccount(account);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+    }
+
+    /**
+     *收款账户修改回显
+     * @param token
+     * @param id 收货地址id
+     * @return
+     */
+    @PostMapping("/userAccountToEdit")
+    public ResponseResult userAccountToEdit(@RequestParam("token") String token,@RequestParam("id") String id) {
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        VipAccount account = vipAccountService.selectVipAccountById(Integer.parseInt(id));
+
+        Map map = new HashMap();
+        map.put("id",account.getId());
+        map.put("vipId",account.getVipId());
+        map.put("accountType",account.getAccountType());
+        map.put("account_name",account.getAccountName());
+        map.put("account_number",account.getAccountNumber());
+        map.put("account_img",account.getAccountImg());
+        map.put("is_Default",account.getIsDefault());
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+    }
+
+
+    /**
+     * 收款账户执行修改
+     * @param token
+     * @param account
+     * @return
+     */
+    @PostMapping("/userAccountEdit")
+    public ResponseResult userAccountEdit(@RequestParam("token") String token,VipAccount account) {
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        try{
+            if(vipAccountService.updateVipAccount(account) > 0){
+                return ResponseResult.success();
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
+        return ResponseResult.success();
+    }
+
+    /**
+     * 收款账户删除
+     * @param token
+     * @param id  收货地址id
+     * @return
+     */
+    @PostMapping("/userAccountRemove")
+    public ResponseResult userAccountRemove(@RequestParam("token") String token,@RequestParam("id") String id) {
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        vipAccountService.deleteVipAccountByIds(id);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 收款账户上传
+     * @param token
+     * @param file
+     * @return
+     */
+    @PostMapping("/accountUpload")
+    public ResponseResult accountUpload(@RequestParam("token") String token,@RequestParam("file") MultipartFile file){
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        try {
+            if (!file.isEmpty()) {
+                //图片地址
+                String path = uploadFile(file);
+                if(path != null){
+                    Map map = new HashMap();
+                    map.put("picName",path);
+                    map.put("serverPath",CustomerConstants.SERVER_LINK+Global.getFrontPath()+path);
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+                }
+            }
+            return ResponseResult.error();
+        } catch(FileSizeLimitExceededException e){
+            log.error("文件过大");
+            return ResponseResult.responseResult(ResponseEnum.FILE_TOO_MAX);
+        }catch (FileNameLengthLimitExceededException e2){
+            log.error("文件名过长");
+            return ResponseResult.responseResult(ResponseEnum.FILE_NAME_LENGTH);
+        }catch (IOException e3){
+            return ResponseResult.error();
+        }
+    }
+
+    /**
+     * 设置默认收款账户
+     * @param token
+     * @param , id,isDefault两个参数
+     * @return
+     */
+    @PostMapping("/accountDefault")
+    public ResponseResult accountDefault(String token,VipAccount account){
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(account.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
+            vipAccountService.updateDefaultAccount(vipUser.getId());
+        }
+        account.setIsDefault(account.getIsDefault().toUpperCase());
+        if(vipAccountService.updateVipAccount(account) > 0){
+            return ResponseResult.success();
+        }
+        return ResponseResult.error();
+    }
+
+    /**
+     * 用户反馈
+     * @param token
+     * @param feedback
+     * @return
+     */
+    @PostMapping("/accountFeedBack")
+    public ResponseResult accountFeedBack(String token,VipFeedback feedback){
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        feedback.setVipId(vipUser.getId());
+        feedbackService.insertVipFeedback(feedback);
+        return ResponseResult.success();
+    }
+
+    /**
+     * 关于我们
+     * @return
+     */
+    @PostMapping("/aboutUs")
+    public ResponseResult aboutUs(){
+        List<VipAboutus> vipAboutuses = aboutusService.selectVipAboutusList(new VipAboutus());
+        if(vipAboutuses.size() > 0){
+            Map map = new HashMap();
+            map.put("title",vipAboutuses.get(0).getTitle());
+            map.put("content",vipAboutuses.get(0).getContent());
+            map.put("id",vipAboutuses.get(0).getId());
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,null);
+    }
+
+    /**
+     * 兑换查询
+     * @param token
+     * @return
+     */
+    @PostMapping("/userExchangeList")
+    public ResponseResult userExchangeList(String token){
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        VipExchange exchange = new VipExchange();
+        exchange.setVipId(vipUser.getId());
+        exchange.getParams().put("exchange"," order by create_time desc");
+        List<VipExchange> vipExchanges = vipExchangeService.selectVipExchangeList(exchange);
+        List list = new ArrayList();
+
+        vipExchanges.stream().forEach(vipExchange -> {
+            Map map = new HashMap();
+            map.put("exchangeAmount",vipExchange.getExchangeAmount());
+            map.put("exchangeCharge",vipExchange.getExchangeCharge());
+            map.put("exchangeMoney",vipExchange.getExchangeMoney());
+            map.put("exchangeAccount",vipExchange.getExchangeAccount());
+            map.put("exchangeType",vipExchange.getExchangeTime());
+            map.put("exchangeStatus",vipExchange.getExchangeStatus());
+            map.put("exchangeTime",vipExchange.getCreateTime());
+            map.put("exchangeDetail",CustomerConstants.PRE_INVI_LINK+vipExchange.getExchangeDetail());
+            list.add(map);
+        });
+        Map map = new HashMap();
+        List<Trade> trades = tradeService.selectTradeList(new Trade());
+        if(trades.size() > 0){
+            map.put("charge",trades.get(0).getHkdCharge());
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
+    }
+
+    /**
+     * 兑换
+     * @param token
+     * @param exchange
+     * @return
+     */
+    @PostMapping("/userExchangeAdd")
+    public ResponseResult userExchangeAdd(String token,VipExchange exchange){
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        try{
+            VipUser nowUser = vipUserService.selectVipUserById(vipUser.getId());
+            double excount = Double.parseDouble(exchange.getExchangeAmount());
+            //当前用户的hkd
+            double hkd = Double.parseDouble(nowUser.getHkdMoney());
+            //手续费
+            double charge = 0.00;
+            if(NumberUtil.sub(hkd,excount) < 0){
+                return ResponseResult.responseResult(ResponseEnum.NUMBER_TOO_MAX);
+            }
+
+            if(excount < 0){
+                return ResponseResult.responseResult(ResponseEnum.NUMBER_TOO_LOSS);
+            }
+
+
+            List<Trade> trades = tradeService.selectTradeList(new Trade());
+            if(trades.size() > 0){
+                charge = Double.parseDouble(trades.get(0).getHkdCharge());
+            }
+
+            //实际兑换金额
+            double exchangeMoney = NumberUtil.mul(excount, NumberUtil.sub(1, charge));
+
+            VipExchange exchange1 = new VipExchange();
+            exchange1.setVipId(vipUser.getId());
+            exchange1.setExchangeAccount(exchange.getExchangeAccount());
+            exchange1.setExchangeAmount(String.valueOf(excount));
+            exchange1.setExchangeCharge(String.valueOf(charge));
+            exchange1.setExchangeStatus(CustomerConstants.EXCHANGE_BUY_STATUS_WAIT);
+            exchange1.setExchangeTime(DateUtils.dateTimeNow("yyyy-MM-dd"));
+            exchange1.setExchangeMoney(String.valueOf(exchangeMoney));
+            vipExchangeService.insertVipExchange(exchange1);
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+            return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
+
+        return ResponseResult.success();
+
+
+
+    }
 
 }

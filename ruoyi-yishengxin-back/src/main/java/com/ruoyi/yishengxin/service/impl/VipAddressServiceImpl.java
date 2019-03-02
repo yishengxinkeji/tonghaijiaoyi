@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.yishengxin.mapper.VipAddressMapper;
-import com.ruoyi.yishengxin.domain.VipAddress;
+import com.ruoyi.yishengxin.mapper.vipUser.VipAddressMapper;
+import com.ruoyi.yishengxin.domain.vipUser.VipAddress;
 import com.ruoyi.yishengxin.service.IVipAddressService;
 import com.ruoyi.common.support.Convert;
 
@@ -75,6 +75,10 @@ public class VipAddressServiceImpl implements IVipAddressService {
         return vipAddressMapper.deleteVipAddressByIds(Convert.toStrArray(ids));
     }
 
+    /**
+     * 将该用户的地址改为非默认
+     * @param vipId
+     */
     @Override
     public void updateDefaultAddress(Integer vipId) {
         vipAddressMapper.updateDefaultAddress(vipId);

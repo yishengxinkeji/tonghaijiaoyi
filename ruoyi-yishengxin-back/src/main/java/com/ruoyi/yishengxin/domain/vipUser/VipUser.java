@@ -1,4 +1,4 @@
-package com.ruoyi.yishengxin.domain;
+package com.ruoyi.yishengxin.domain.vipUser;
 
 import lombok.Data;
 import lombok.ToString;

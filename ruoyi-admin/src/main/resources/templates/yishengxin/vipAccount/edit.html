@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-vipAccount-edit" th:object="${vipAccount}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input id="vipId" name="vipId" th:field="*{vipId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户类型：</label>
+				<div class="col-sm-8">
+					<input id="accountType" name="accountType" th:field="*{accountType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户姓名：</label>
+				<div class="col-sm-8">
+					<input id="accountName" name="accountName" th:field="*{accountName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户号：</label>
+				<div class="col-sm-8">
+					<input id="accountNumber" name="accountNumber" th:field="*{accountNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">账户图片：</label>
+				<div class="col-sm-8">
+					<input id="accountImg" name="accountImg" th:field="*{accountImg}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">是否默认：</label>
+				<div class="col-sm-8">
+					<input id="isDefault" name="isDefault" th:field="*{isDefault}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/vipAccount";
+		$("#form-vipAccount-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-vipAccount-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

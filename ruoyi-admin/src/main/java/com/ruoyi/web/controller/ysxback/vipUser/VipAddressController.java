@@ -1,7 +1,8 @@
-package com.ruoyi.web.controller.ysxback;
+package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.util.List;
 
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.framework.util.ShiroUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.yishengxin.domain.VipAddress;
+import com.ruoyi.yishengxin.domain.vipUser.VipAddress;
 import com.ruoyi.yishengxin.service.IVipAddressService;
 import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.common.page.TableDataInfo;
@@ -83,7 +84,12 @@ public class VipAddressController extends BaseController {
     @PostMapping("/add")
     @ResponseBody
     public AjaxResult addSave(VipAddress vipAddress) {
+
+        if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
+            vipAddressService.updateDefaultAddress(vipAddress.getVipId());
+        }
         vipAddress.setCreateBy(ShiroUtils.getLoginName());
+        vipAddress.setIsDefault(vipAddress.getIsDefault().toUpperCase());
         return toAjax(vipAddressService.insertVipAddress(vipAddress));
     }
 
@@ -105,7 +111,11 @@ public class VipAddressController extends BaseController {
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(VipAddress vipAddress) {
+        if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
+            vipAddressService.updateDefaultAddress(vipAddress.getVipId());
+        }
         vipAddress.setUpdateBy(ShiroUtils.getLoginName());
+        vipAddress.setIsDefault(vipAddress.getIsDefault().toUpperCase());
         return toAjax(vipAddressService.updateVipAddress(vipAddress));
     }
 

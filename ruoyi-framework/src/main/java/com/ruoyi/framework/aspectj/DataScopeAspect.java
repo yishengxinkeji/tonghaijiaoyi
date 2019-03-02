@@ -59,12 +59,12 @@ public class DataScopeAspect {
         }
         // 获取当前的用户
         SysUser currentUser = ShiroUtils.getSysUser();
-        /*if (currentUser != null) {
+        if (currentUser != null) {
             // 如果是超级管理员，则不过滤数据
-            if (!currentUser.isAdmin()) {
+            /*if (!currentUser.isAdmin()) {
                 dataScopeFilter(joinPoint, currentUser, controllerDataScope.tableAlias());
-            }
-        }*/
+            }*/
+        }
 
     }
 

@@ -1,6 +1,6 @@
-package com.ruoyi.yishengxin.mapper;
+package com.ruoyi.yishengxin.mapper.vipUser;
 
-import com.ruoyi.yishengxin.domain.VipProfitDetail;
+import com.ruoyi.yishengxin.domain.vipUser.VipProfitDetail;
 import java.util.List;	
 
 /**

@@ -1,18 +1,15 @@
 package com.ruoyi.web.controller.ysxfront;
 
-import cn.hutool.core.io.FileTypeUtil;
-import com.ruoyi.common.base.ResponseResult;
-import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.config.Global;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.RedisUtils;
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -48,6 +45,27 @@ public class BaseFrontController {
         return userList.get(0);
     }
 
+
+    /**
+     * 上传文件
+     * @param file
+     * @return  图片路径
+     * @throws IOException
+     */
+    protected String uploadFile(MultipartFile file) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String filetype = originalFilename.substring(originalFilename.lastIndexOf("."), originalFilename.length());
+        if(!fileType(filetype,"pic")){
+            //头像格式不支持
+            return null;
+        }
+        String avatar = FileUploadUtils.upload(Global.getFrontPath(), file,filetype);
+        return avatar;
+    }
+
+
+
+
     //判断文件格式,可能后续会改,目前只支持这几种
 
     /**
@@ -57,9 +75,10 @@ public class BaseFrontController {
      * @return
      */
     protected boolean fileType(String filetype,String type){
+        //pic就代表是图片类型
         if(type.equals("pic")){
-            if(filetype.equalsIgnoreCase("jpg") || filetype.equalsIgnoreCase("png")
-                    || filetype.equalsIgnoreCase("jpeg")){
+            if(filetype.equalsIgnoreCase(".jpg") || filetype.equalsIgnoreCase(".png")
+                    || filetype.equalsIgnoreCase(".jpeg")){
                 return true;
             }
         }

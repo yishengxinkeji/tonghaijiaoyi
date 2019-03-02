@@ -16,6 +16,11 @@ public enum ResponseEnum {
 
     FILE_NAME_LENGTH("1011","上传文件名过长"),
     FILE_TOO_MAX("1012","文件过大"),
+    FILE_UPLOAD_TYPE("1013","缺失文件类型,无法处理"),
+
+    NUMBER_TRANCT_ERROR("1014","填写正确的数字"),
+    NUMBER_TOO_MAX("1015","数字太大"),
+    NUMBER_TOO_LOSS("1016","数字为负数"),
 
     VIP_TOKEN_FAIL("9999","需重新登陆"),
 
