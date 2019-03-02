@@ -1,4 +1,4 @@
-package com.ruoyi.yishengxin.domain;
+package com.ruoyi.yishengxin.domain.goods;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品表 ysx_goods
  * 
  * @author ruoyi
- * @date 2019-03-01
+ * @date 2019-03-02
  */
 public class Goods extends BaseEntity
 {
@@ -23,6 +23,8 @@ public class Goods extends BaseEntity
 	private String goodsDetails;
 	/** 商品价格 */
 	private Integer goodsPrice;
+	/** 商品库存 */
+	private Integer goodsInventory;
 	/** 商品售出量 */
 	private Integer goodsSoldNumber;
 	/** 商品上下架 */
@@ -75,6 +77,15 @@ public class Goods extends BaseEntity
 	public Integer getGoodsPrice() 
 	{
 		return goodsPrice;
+	}
+	public void setGoodsInventory(Integer goodsInventory) 
+	{
+		this.goodsInventory = goodsInventory;
+	}
+
+	public Integer getGoodsInventory() 
+	{
+		return goodsInventory;
 	}
 	public void setGoodsSoldNumber(Integer goodsSoldNumber) 
 	{
@@ -155,6 +166,7 @@ public class Goods extends BaseEntity
             .append("goodsName", getGoodsName())
             .append("goodsDetails", getGoodsDetails())
             .append("goodsPrice", getGoodsPrice())
+            .append("goodsInventory", getGoodsInventory())
             .append("goodsSoldNumber", getGoodsSoldNumber())
             .append("standUpAndDown", getStandUpAndDown())
             .append("goodsPicture", getGoodsPicture())
