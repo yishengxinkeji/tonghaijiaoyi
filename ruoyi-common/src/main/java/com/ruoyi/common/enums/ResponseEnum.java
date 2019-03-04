@@ -56,7 +56,7 @@ public enum ResponseEnum {
     GOODS_ORDER_EDITERROR("2006","商品修改失败"),
     GOODS_ORDER_REMOVEERROR("2007","商品删除失败"),
     GOODS_ORDER_UPLOADORDERSTATUSERROR("2008","修改订单状态失败"),
-
+    GOODS_EVALUATION_ADDERROR("2009","评价添加失败"),
 
 
     FAIL("500","失败");

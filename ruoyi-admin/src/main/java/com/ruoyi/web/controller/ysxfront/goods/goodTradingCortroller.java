@@ -3,8 +3,8 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
-import com.ruoyi.yishengxin.domain.VipUser;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -65,11 +65,11 @@ public class goodTradingCortroller extends BaseFrontController{
 
             if (i1 >  0) {
                 GoodsOrder goodsOrder = iGoodsOrderService.selectGoodsOrderById(orderId);
-                goodsOrder.setGoodsStatus("已付款");
+                goodsOrder.setGoodsStatus("待发货");
                 int i2 = iGoodsOrderService.updateGoodsOrder(goodsOrder);
                 if (i2 > 0){
 
-                    //交易记录没写
+                    //添加交易记录没写
                     //TODO
                     return ResponseResult.responseResult(ResponseEnum.SUCCESS);
                 }

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.GoodsEvaluationMapper">
+    
+    <resultMap type="GoodsEvaluation" id="GoodsEvaluationResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="gid"    column="gid"    />
+        <result property="oid"    column="oid"    />
+        <result property="evaluationContent"    column="evaluationContent"    />
+        <result property="evaluationImage"    column="evaluationImage"    />
+        <result property="describeEvaluation"    column="describeEvaluation"    />
+        <result property="logisticsEvaluation"    column="logisticsEvaluation"    />
+        <result property="serviceAttitude"    column="serviceAttitude"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectGoodsEvaluationVo">
+        select id, uid, gid, oid, evaluationContent, evaluationImage, describeEvaluation, logisticsEvaluation, serviceAttitude, create_by, create_time, update_by, update_time, remark from ysx_goods_evaluation
+    </sql>
+	
+    <select id="selectGoodsEvaluationList" parameterType="GoodsEvaluation" resultMap="GoodsEvaluationResult">
+        <include refid="selectGoodsEvaluationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="uid != null "> and uid = #{uid}</if>
+             <if test="gid != null "> and gid = #{gid}</if>
+             <if test="oid != null "> and oid = #{oid}</if>
+             <if test="evaluationContent != null  and evaluationContent != '' "> and evaluationContent = #{evaluationContent}</if>
+             <if test="evaluationImage != null  and evaluationImage != '' "> and evaluationImage = #{evaluationImage}</if>
+             <if test="describeEvaluation != null "> and describeEvaluation = #{describeEvaluation}</if>
+             <if test="logisticsEvaluation != null "> and logisticsEvaluation = #{logisticsEvaluation}</if>
+             <if test="serviceAttitude != null "> and serviceAttitude = #{serviceAttitude}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectGoodsEvaluationById" parameterType="Integer" resultMap="GoodsEvaluationResult">
+        <include refid="selectGoodsEvaluationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGoodsEvaluation" parameterType="GoodsEvaluation" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_goods_evaluation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">uid,</if>
+			<if test="gid != null  ">gid,</if>
+			<if test="oid != null  ">oid,</if>
+			<if test="evaluationContent != null  and evaluationContent != ''  ">evaluationContent,</if>
+			<if test="evaluationImage != null  and evaluationImage != ''  ">evaluationImage,</if>
+			<if test="describeEvaluation != null  ">describeEvaluation,</if>
+			<if test="logisticsEvaluation != null  ">logisticsEvaluation,</if>
+			<if test="serviceAttitude != null  ">serviceAttitude,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">#{uid},</if>
+			<if test="gid != null  ">#{gid},</if>
+			<if test="oid != null  ">#{oid},</if>
+			<if test="evaluationContent != null  and evaluationContent != ''  ">#{evaluationContent},</if>
+			<if test="evaluationImage != null  and evaluationImage != ''  ">#{evaluationImage},</if>
+			<if test="describeEvaluation != null  ">#{describeEvaluation},</if>
+			<if test="logisticsEvaluation != null  ">#{logisticsEvaluation},</if>
+			<if test="serviceAttitude != null  ">#{serviceAttitude},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsEvaluation" parameterType="GoodsEvaluation">
+        update ysx_goods_evaluation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null  ">uid = #{uid},</if>
+            <if test="gid != null  ">gid = #{gid},</if>
+            <if test="oid != null  ">oid = #{oid},</if>
+            <if test="evaluationContent != null  and evaluationContent != ''  ">evaluationContent = #{evaluationContent},</if>
+            <if test="evaluationImage != null  and evaluationImage != ''  ">evaluationImage = #{evaluationImage},</if>
+            <if test="describeEvaluation != null  ">describeEvaluation = #{describeEvaluation},</if>
+            <if test="logisticsEvaluation != null  ">logisticsEvaluation = #{logisticsEvaluation},</if>
+            <if test="serviceAttitude != null  ">serviceAttitude = #{serviceAttitude},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsEvaluationById" parameterType="Integer">
+        delete from ysx_goods_evaluation where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsEvaluationByIds" parameterType="String">
+        delete from ysx_goods_evaluation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

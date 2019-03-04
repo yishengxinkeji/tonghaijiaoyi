@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品订单表 ysx_goods_order
  * 
  * @author ruoyi
- * @date 2019-03-02
+ * @date 2019-03-04
  */
 public class GoodsOrder extends BaseEntity
 {
@@ -33,6 +33,12 @@ public class GoodsOrder extends BaseEntity
 	private String goodsPicture;
 	/** 商品状态 */
 	private String goodsStatus;
+	/** 收货地址id */
+	private Integer shippingAddress;
+	/** 快递单号 */
+	private String courierNumber;
+	/** 快递公司 */
+	private String courierCompany;
 	/** 订单号 */
 	private String orderNumber;
 	/** 创建者 */
@@ -127,6 +133,33 @@ public class GoodsOrder extends BaseEntity
 	{
 		return goodsStatus;
 	}
+	public void setShippingAddress(Integer shippingAddress) 
+	{
+		this.shippingAddress = shippingAddress;
+	}
+
+	public Integer getShippingAddress() 
+	{
+		return shippingAddress;
+	}
+	public void setCourierNumber(String courierNumber) 
+	{
+		this.courierNumber = courierNumber;
+	}
+
+	public String getCourierNumber() 
+	{
+		return courierNumber;
+	}
+	public void setCourierCompany(String courierCompany) 
+	{
+		this.courierCompany = courierCompany;
+	}
+
+	public String getCourierCompany() 
+	{
+		return courierCompany;
+	}
 	public void setOrderNumber(String orderNumber) 
 	{
 		this.orderNumber = orderNumber;
@@ -193,6 +226,9 @@ public class GoodsOrder extends BaseEntity
             .append("goodsOrderTotalAmount", getGoodsOrderTotalAmount())
             .append("goodsPicture", getGoodsPicture())
             .append("goodsStatus", getGoodsStatus())
+            .append("shippingAddress", getShippingAddress())
+            .append("courierNumber", getCourierNumber())
+            .append("courierCompany", getCourierCompany())
             .append("orderNumber", getOrderNumber())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
