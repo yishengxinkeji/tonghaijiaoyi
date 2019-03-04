@@ -50,7 +50,7 @@ public class GoodsCollectionController extends BaseFrontController {
         goodsCollection.setId(vipUser.getId());
         //查询列表
         List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
-        if (null == goodsCollections) {
+        if (goodsCollections.size() == 0) {
             return ResponseResult.responseResult(ResponseEnum.SUCCESS, "数据为空");
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsCollections);

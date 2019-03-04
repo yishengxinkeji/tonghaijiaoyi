@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsOrderMapper">
+<mapper namespace="com.ruoyi.yishengxin.mapper.GoodsOrderMapper">
     
     <resultMap type="GoodsOrder" id="GoodsOrderResult">
         <result property="id"    column="id"    />
@@ -14,6 +14,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="goodsOrderTotalAmount"    column="goodsOrderTotalAmount"    />
         <result property="goodsPicture"    column="goodsPicture"    />
         <result property="goodsStatus"    column="goodsStatus"    />
+        <result property="shippingAddress"    column="shippingAddress"    />
+        <result property="courierNumber"    column="courierNumber"    />
+        <result property="courierCompany"    column="courierCompany"    />
         <result property="orderNumber"    column="orderNumber"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -23,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGoodsOrderVo">
-        select id, uid, goodsName, goodsDetails, goodsPrice, goodsSoldNumber, goodsOrderTotalAmount, goodsPicture, goodsStatus, orderNumber, create_by, create_time, update_by, update_time, remark from ysx_goods_order
+        select id, uid, goodsName, goodsDetails, goodsPrice, goodsSoldNumber, goodsOrderTotalAmount, goodsPicture, goodsStatus, shippingAddress, courierNumber, courierCompany, orderNumber, create_by, create_time, update_by, update_time, remark from ysx_goods_order
     </sql>
 	
     <select id="selectGoodsOrderList" parameterType="GoodsOrder" resultMap="GoodsOrderResult">
@@ -38,6 +41,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="goodsOrderTotalAmount != null "> and goodsOrderTotalAmount = #{goodsOrderTotalAmount}</if>
              <if test="goodsPicture != null  and goodsPicture != '' "> and goodsPicture = #{goodsPicture}</if>
              <if test="goodsStatus != null  and goodsStatus != '' "> and goodsStatus = #{goodsStatus}</if>
+             <if test="shippingAddress != null "> and shippingAddress = #{shippingAddress}</if>
+             <if test="courierNumber != null  and courierNumber != '' "> and courierNumber = #{courierNumber}</if>
+             <if test="courierCompany != null  and courierCompany != '' "> and courierCompany = #{courierCompany}</if>
              <if test="orderNumber != null  and orderNumber != '' "> and orderNumber = #{orderNumber}</if>
              <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
              <if test="createTime != null "> and create_time = #{createTime}</if>
@@ -63,6 +69,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount,</if>
 			<if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture,</if>
 			<if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus,</if>
+			<if test="shippingAddress != null  ">shippingAddress,</if>
+			<if test="courierNumber != null  and courierNumber != ''  ">courierNumber,</if>
+			<if test="courierCompany != null  and courierCompany != ''  ">courierCompany,</if>
 			<if test="orderNumber != null  and orderNumber != ''  ">orderNumber,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
 			<if test="createTime != null  ">create_time,</if>
@@ -79,6 +88,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="goodsOrderTotalAmount != null  ">#{goodsOrderTotalAmount},</if>
 			<if test="goodsPicture != null  and goodsPicture != ''  ">#{goodsPicture},</if>
 			<if test="goodsStatus != null  and goodsStatus != ''  ">#{goodsStatus},</if>
+			<if test="shippingAddress != null  ">#{shippingAddress},</if>
+			<if test="courierNumber != null  and courierNumber != ''  ">#{courierNumber},</if>
+			<if test="courierCompany != null  and courierCompany != ''  ">#{courierCompany},</if>
 			<if test="orderNumber != null  and orderNumber != ''  ">#{orderNumber},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
 			<if test="createTime != null  ">#{createTime},</if>
@@ -99,6 +111,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount = #{goodsOrderTotalAmount},</if>
             <if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture = #{goodsPicture},</if>
             <if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus = #{goodsStatus},</if>
+            <if test="shippingAddress != null  ">shippingAddress = #{shippingAddress},</if>
+            <if test="courierNumber != null  and courierNumber != ''  ">courierNumber = #{courierNumber},</if>
+            <if test="courierCompany != null  and courierCompany != ''  ">courierCompany = #{courierCompany},</if>
             <if test="orderNumber != null  and orderNumber != ''  ">orderNumber = #{orderNumber},</if>
             <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
             <if test="createTime != null  ">create_time = #{createTime},</if>
