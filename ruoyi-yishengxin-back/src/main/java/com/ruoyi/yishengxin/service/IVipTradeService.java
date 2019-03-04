@@ -1,0 +1,54 @@
+package com.ruoyi.yishengxin.service;
+
+import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
+import java.util.List;
+
+/**
+ * 交易记录 服务层
+ * 
+ * @author ruoyi
+ * @date 2019-03-04
+ */
+public interface IVipTradeService 
+{
+	/**
+     * 查询交易记录信息
+     * 
+     * @param id 交易记录ID
+     * @return 交易记录信息
+     */
+	public VipTrade selectVipTradeById(Integer id);
+	
+	/**
+     * 查询交易记录列表
+     * 
+     * @param vipTrade 交易记录信息
+     * @return 交易记录集合
+     */
+	public List<VipTrade> selectVipTradeList(VipTrade vipTrade);
+	
+	/**
+     * 新增交易记录
+     * 
+     * @param vipTrade 交易记录信息
+     * @return 结果
+     */
+	public int insertVipTrade(VipTrade vipTrade);
+	
+	/**
+     * 修改交易记录
+     * 
+     * @param vipTrade 交易记录信息
+     * @return 结果
+     */
+	public int updateVipTrade(VipTrade vipTrade);
+		
+	/**
+     * 删除交易记录信息
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+	public int deleteVipTradeByIds(String ids);
+	
+}

@@ -28,7 +28,7 @@ public class VipBuy extends BaseEntity
 	/** 打款凭证 */
 	private String buyDetail;
 	/** 购买状态 */
-	private String buyType;
+	private String buyStatus;
 	/** 创建者 */
 	private String createBy;
 	/** 创建时间 */
@@ -94,14 +94,14 @@ public class VipBuy extends BaseEntity
 	{
 		return buyDetail;
 	}
-	public void setBuyType(String buyType) 
+	public void setBuyStatus(String buyType)
 	{
-		this.buyType = buyType;
+		this.buyStatus = buyType;
 	}
 
-	public String getBuyType() 
+	public String getBuyStatus()
 	{
-		return buyType;
+		return buyStatus;
 	}
 	public void setCreateBy(String createBy) 
 	{
@@ -157,7 +157,7 @@ public class VipBuy extends BaseEntity
             .append("buyMoney", getBuyMoney())
             .append("buyAccount", getBuyAccount())
             .append("buyDetail", getBuyDetail())
-            .append("buyType", getBuyType())
+            .append("buyType", getBuyStatus())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

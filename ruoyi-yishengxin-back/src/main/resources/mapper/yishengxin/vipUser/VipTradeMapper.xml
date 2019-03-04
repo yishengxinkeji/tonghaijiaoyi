@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipTradeMapper">
+    
+    <resultMap type="VipTrade" id="VipTradeResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="vipTrade"    column="vip_trade"    />
+        <result property="tradeTime"    column="trade_time"    />
+        <result property="tradeNumber"    column="trade_number"    />
+        <result property="toVipId"    column="to_vip_id"    />
+        <result property="toVipNickname"    column="to_vip_nickname"    />
+        <result property="toVipAvater"    column="to_vip_avater"    />
+    </resultMap>
+	
+	<sql id="selectVipTradeVo">
+        select id, vip_id, vip_trade, trade_time, trade_number, to_vip_id, to_vip_nickname, to_vip_avater from ysx_vip_trade
+    </sql>
+	
+    <select id="selectVipTradeList" parameterType="VipTrade" resultMap="VipTradeResult">
+        <include refid="selectVipTradeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="vipTrade != null  and vipTrade != '' "> and vip_trade = #{vipTrade}</if>
+             <if test="tradeTime != null  and tradeTime != '' "> and trade_time = #{tradeTime}</if>
+             <if test="tradeNumber != null  and tradeNumber != '' "> and trade_number = #{tradeNumber}</if>
+             <if test="toVipId != null  and toVipId != '' "> and to_vip_id = #{toVipId}</if>
+             <if test="toVipNickname != null  and toVipNickname != '' "> and to_vip_nickname = #{toVipNickname}</if>
+             <if test="toVipAvater != null  and toVipAvater != '' "> and to_vip_avater = #{toVipAvater}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipTradeById" parameterType="Integer" resultMap="VipTradeResult">
+        <include refid="selectVipTradeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipTrade" parameterType="VipTrade" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_trade
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="vipTrade != null  and vipTrade != ''  ">vip_trade,</if>
+			<if test="tradeTime != null  and tradeTime != ''  ">trade_time,</if>
+			<if test="tradeNumber != null  and tradeNumber != ''  ">trade_number,</if>
+			<if test="toVipId != null  and toVipId != ''  ">to_vip_id,</if>
+			<if test="toVipNickname != null  and toVipNickname != ''  ">to_vip_nickname,</if>
+			<if test="toVipAvater != null  and toVipAvater != ''  ">to_vip_avater,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="vipTrade != null  and vipTrade != ''  ">#{vipTrade},</if>
+			<if test="tradeTime != null  and tradeTime != ''  ">#{tradeTime},</if>
+			<if test="tradeNumber != null  and tradeNumber != ''  ">#{tradeNumber},</if>
+			<if test="toVipId != null  and toVipId != ''  ">#{toVipId},</if>
+			<if test="toVipNickname != null  and toVipNickname != ''  ">#{toVipNickname},</if>
+			<if test="toVipAvater != null  and toVipAvater != ''  ">#{toVipAvater},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipTrade" parameterType="VipTrade">
+        update ysx_vip_trade
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="vipTrade != null  and vipTrade != ''  ">vip_trade = #{vipTrade},</if>
+            <if test="tradeTime != null  and tradeTime != ''  ">trade_time = #{tradeTime},</if>
+            <if test="tradeNumber != null  and tradeNumber != ''  ">trade_number = #{tradeNumber},</if>
+            <if test="toVipId != null  and toVipId != ''  ">to_vip_id = #{toVipId},</if>
+            <if test="toVipNickname != null  and toVipNickname != ''  ">to_vip_nickname = #{toVipNickname},</if>
+            <if test="toVipAvater != null  and toVipAvater != ''  ">to_vip_avater = #{toVipAvater},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipTradeById" parameterType="Integer">
+        delete from ysx_vip_trade where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipTradeByIds" parameterType="String">
+        delete from ysx_vip_trade where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

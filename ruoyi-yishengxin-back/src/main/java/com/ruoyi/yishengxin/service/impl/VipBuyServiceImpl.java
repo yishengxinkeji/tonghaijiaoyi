@@ -1,6 +1,15 @@
 package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
+
+import cn.hutool.core.util.NumberUtil;
+import com.ruoyi.common.enums.TradeType;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
+import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.mapper.vipUser.VipTradeMapper;
+import com.ruoyi.yishengxin.mapper.vipUser.VipUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.yishengxin.mapper.vipUser.VipBuyMapper;
@@ -19,6 +28,12 @@ public class VipBuyServiceImpl implements IVipBuyService
 {
 	@Autowired
 	private VipBuyMapper vipBuyMapper;
+
+	@Autowired
+	private VipUserMapper vipUserMapper;
+
+	@Autowired
+	private VipTradeMapper vipTradeMapper;
 
 	/**
      * 查询个人购买信息
@@ -79,5 +94,36 @@ public class VipBuyServiceImpl implements IVipBuyService
 	{
 		return vipBuyMapper.deleteVipBuyByIds(Convert.toStrArray(ids));
 	}
-	
+
+	/**
+	 * 客服处理用户购买
+	 * 更新购买信息
+	 * 更新用户余额
+	 * 查询到交易表中
+	 * @param vipBuy
+	 * @return
+	 */
+	@Override
+	public int exchange(VipBuy vipBuy) throws Exception{
+
+		String buyAmount = vipBuy.getBuyAmount();
+		VipUser vipUser = vipUserMapper.selectVipUserById(vipBuy.getVipId());
+
+		double sub = NumberUtil.add(Double.parseDouble(vipUser.getHkdMoney()), Double.parseDouble(buyAmount));
+		vipUser.setHkdMoney(String.valueOf(sub));
+
+		VipTrade trade = new VipTrade();
+		trade.setVipId(vipUser.getId());
+		trade.setVipTrade(TradeType.BACK_BUY.getCode());
+		trade.setTradeTime(DateUtils.dateTimeNow("yyyy-MM-dd HH:mm"));
+		trade.setTradeNumber(buyAmount);
+
+		//更新购买信息
+		updateVipBuy(vipBuy);
+		//更新用户余额
+		vipUserMapper.updateVipUser(vipUser);
+		//插入到交易信息表中
+		return vipTradeMapper.insertVipTrade(trade);
+	}
+
 }

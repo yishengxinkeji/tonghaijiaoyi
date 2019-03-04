@@ -57,7 +57,7 @@ public class VipUserLoginController extends BaseFrontController {
     public ResponseResult register(@RequestParam("phone") String phone,
                                    @RequestParam("verification") String verification,
                                    @RequestParam("password") String password,
-                                   @RequestParam("inviCode") String inviCode){
+                                   @RequestParam(value = "inviCode",required = false) String inviCode){
 
         //跳过验证码环节
         //TODO
@@ -91,13 +91,13 @@ public class VipUserLoginController extends BaseFrontController {
         }
         //使用hutool生成一个默认的二维码,文件名默认为推广码.jpg
         File file = QrCodeUtil.generate(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
-        new_User.setExtensionCode(file.getName());
+        new_User.setExtensionCode(Global.getFrontPath()+file.getName());
 
         //钱包地址
         new_User.setMoneyCode(IdUtil.simpleUUID());
         //邀请链接
        // new_User.setInviteLink(Base64Encoder.encode(CustomerConstants.PRE_INVI_LINK+exten));
-        new_User.setInviteLink(Global.getConfig(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten));
+        new_User.setInviteLink(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten);
 
 
         new_User.setHkdMoney("0");
@@ -105,7 +105,7 @@ public class VipUserLoginController extends BaseFrontController {
         //未领取新人礼包
         new_User.setNewReceive(CustomerConstants.NO);
 
-        if(!inviCode.equals("") && inviCode != null) {
+        if(inviCode != null) {
             vipUser.setPhone("");
             vipUser.setRecommendCode(inviCode);
             List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
@@ -213,6 +213,28 @@ public class VipUserLoginController extends BaseFrontController {
 
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,token);
     }
+
+
+    /**
+     * 用户退出
+     * @param token
+     * @return
+     */
+    @PostMapping("/logout")
+    public ResponseResult logout(@RequestHeader("token") String token){
+        try{
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+            RedisUtils.del(token);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseResult.responseResult(ResponseEnum.FAIL);
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+    }
+
 
     /**
      * 注册用户领好礼 弹窗接口

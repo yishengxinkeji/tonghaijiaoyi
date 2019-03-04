@@ -1,0 +1,88 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m" id="form-vipExchange-edit" th:object="${vipBuy}">
+		<input id="id" name="id" th:field="*{id}"  type="hidden">
+		<div class="form-group">
+			<label class="col-sm-3 control-label">用户id：</label>
+			<div class="col-sm-8">
+				<input id="vipId" name="vipId" th:field="*{vipId}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">购买数量：</label>
+			<div class="col-sm-8">
+				<input id="buyAmount" name="buyAmount" th:field="*{buyAmount}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">购买金额：</label>
+			<div class="col-sm-8">
+				<input id="buyMoney" name="buyMoney" th:field="*{buyMoney}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">平台账号：</label>
+			<div class="col-sm-8">
+				<input id="buyAccount" name="buyAccount" th:field="*{buyAccount}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">打款凭证：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test1">
+					上传图片
+				</button>
+				<input id="buyDetail" name="buyDetail" th:field="*{buyDetail}" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic">
+			</div>
+		</div>
+	</form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+	var prefix = ctx + "yishengxin/vipBuy";
+	layui.use('upload', function(){
+		var upload = layui.upload;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test1' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic").attr("src",res.msg);
+					$("#buyDetail").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+	});
+	$("#form-vipExchange-edit").validate({
+		rules:{
+			xxxx:{
+				required:true,
+			},
+		}
+	});
+
+	function submitHandler() {
+		if ($.validate.form()) {
+			$.operate.save(prefix + "/buySave", $('#form-vipExchange-edit').serialize());
+		}
+	}
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
-import com.ruoyi.yishengxin.domain.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
 import com.ruoyi.yishengxin.service.IVipUserService;

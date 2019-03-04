@@ -50,5 +50,11 @@ public interface IVipExchangeService
      * @return 结果
      */
 	public int deleteVipExchangeByIds(String ids);
-	
+
+	/**
+	 * 客服处理用户兑换
+	 * @param vipExchange
+	 * @return
+	 */
+    int exchange(VipExchange vipExchange) throws Exception;
 }

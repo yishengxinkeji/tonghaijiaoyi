@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.mapper.vipUser;
 
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2019-03-02
  */
+@Repository
 public interface VipExchangeMapper 
 {
 	/**

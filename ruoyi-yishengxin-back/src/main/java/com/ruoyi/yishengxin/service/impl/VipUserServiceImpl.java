@@ -88,7 +88,7 @@ public class VipUserServiceImpl implements IVipUserService {
 
 
     /**
-     * 新人领取礼包
+     * 新人领取礼包,还要给上级和上上级奖励
      * @param vipUser
      */
     @Override
@@ -122,4 +122,5 @@ public class VipUserServiceImpl implements IVipUserService {
     public List<VipUser> selectUserByGrandParentCode(VipUser oneUser) {
         return vipUserMapper.selectUserByGrandParentCode(oneUser);
     }
+
 }

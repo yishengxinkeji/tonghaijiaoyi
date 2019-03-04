@@ -50,5 +50,11 @@ public interface IVipBuyService
      * @return 结果
      */
 	public int deleteVipBuyByIds(String ids);
-	
+
+	/**
+	 * 个人平台购买,客服打款
+	 * @param vipBuy
+	 * @return
+	 */
+    int exchange(VipBuy vipBuy) throws Exception;
 }
