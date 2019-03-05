@@ -36,18 +36,6 @@ public enum ResponseEnum {
     VIP_TOKEN_FAIL("9999","需重新登陆"),
 
 
-
-
-
-
-
-
-
-
-
-
-
-
     GOODS_NULL("2001","数据为空"),
     COODS_COLLECTION_PARAMETER("2002","传参有误"),
     COODS_COLLECTION_ADD("2003","收藏添加失败"),
@@ -57,7 +45,15 @@ public enum ResponseEnum {
     GOODS_ORDER_REMOVEERROR("2007","商品删除失败"),
     GOODS_ORDER_UPLOADORDERSTATUSERROR("2008","修改订单状态失败"),
     GOODS_EVALUATION_ADDERROR("2009","评价添加失败"),
-
+    GOODS_SALESRETURN_ADDERROR("2010","添加退货失败"),
+    GOODS_SALESRETURN_SELECTBYORADERNUMBERERROR("2011","通过订单号查询退货详情失败"),
+    GOODS_PICTURE_ADDERROR("2012","商品添加图片失败"),
+    GOODS_ADDERROR("2013","商品添加失败"),
+    GOODS_PICTURE_UPLOADERROR("2014","商品修改图片失败"),
+    GOODS_UPLOADERROR("2015","商品修改失败"),
+    GOODS_SHARE_ADDERROR("2016","商品新增分享失败"),
+    GOODS_SHARE_UPLODEERROR("2016","商品新增分享失败"),
+    GOODS_SHARE_SSLEERROR("2017","商品分享SSL获取失败"),
 
     FAIL("500","失败");
 

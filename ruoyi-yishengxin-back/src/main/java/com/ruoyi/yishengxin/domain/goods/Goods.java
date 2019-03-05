@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品表 ysx_goods
  * 
  * @author ruoyi
- * @date 2019-03-02
+ * @date 2019-03-05
  */
 public class Goods extends BaseEntity
 {
@@ -22,13 +22,17 @@ public class Goods extends BaseEntity
 	/** 商品详情 */
 	private String goodsDetails;
 	/** 商品价格 */
-	private Integer goodsPrice;
+	private String goodsPrice;
+	/** 商品详情图 */
+	private String goodsDetailsPicture;
 	/** 商品库存 */
 	private Integer goodsInventory;
 	/** 商品售出量 */
 	private Integer goodsSoldNumber;
 	/** 商品上下架 */
-	private Integer standUpAndDown;
+	private String standUpAndDown;
+	/** 客服电话 */
+	private String serviceTel;
 	/** 商品图片 */
 	private String goodsPicture;
 	/** 创建者 */
@@ -69,14 +73,23 @@ public class Goods extends BaseEntity
 	{
 		return goodsDetails;
 	}
-	public void setGoodsPrice(Integer goodsPrice) 
+	public void setGoodsPrice(String goodsPrice) 
 	{
 		this.goodsPrice = goodsPrice;
 	}
 
-	public Integer getGoodsPrice() 
+	public String getGoodsPrice() 
 	{
 		return goodsPrice;
+	}
+	public void setGoodsDetailsPicture(String goodsDetailsPicture) 
+	{
+		this.goodsDetailsPicture = goodsDetailsPicture;
+	}
+
+	public String getGoodsDetailsPicture() 
+	{
+		return goodsDetailsPicture;
 	}
 	public void setGoodsInventory(Integer goodsInventory) 
 	{
@@ -96,14 +109,23 @@ public class Goods extends BaseEntity
 	{
 		return goodsSoldNumber;
 	}
-	public void setStandUpAndDown(Integer standUpAndDown) 
+	public void setStandUpAndDown(String standUpAndDown) 
 	{
 		this.standUpAndDown = standUpAndDown;
 	}
 
-	public Integer getStandUpAndDown() 
+	public String getStandUpAndDown() 
 	{
 		return standUpAndDown;
+	}
+	public void setServiceTel(String serviceTel) 
+	{
+		this.serviceTel = serviceTel;
+	}
+
+	public String getServiceTel() 
+	{
+		return serviceTel;
 	}
 	public void setGoodsPicture(String goodsPicture) 
 	{
@@ -166,9 +188,11 @@ public class Goods extends BaseEntity
             .append("goodsName", getGoodsName())
             .append("goodsDetails", getGoodsDetails())
             .append("goodsPrice", getGoodsPrice())
+            .append("goodsDetailsPicture", getGoodsDetailsPicture())
             .append("goodsInventory", getGoodsInventory())
             .append("goodsSoldNumber", getGoodsSoldNumber())
             .append("standUpAndDown", getStandUpAndDown())
+            .append("serviceTel", getServiceTel())
             .append("goodsPicture", getGoodsPicture())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())

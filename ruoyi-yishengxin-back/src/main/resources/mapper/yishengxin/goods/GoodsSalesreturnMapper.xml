@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsSalesreturnMapper">
+    
+    <resultMap type="GoodsSalesreturn" id="GoodsSalesreturnResult">
+        <result property="id"    column="id"    />
+        <result property="uid"    column="uid"    />
+        <result property="orderNumber"    column="orderNumber"    />
+        <result property="orderTime"    column="orderTime"    />
+        <result property="goodsName"    column="goodsName"    />
+        <result property="goodsImages"    column="goodsImages"    />
+        <result property="goodsIntroduce"    column="goodsIntroduce"    />
+        <result property="goodsUnitPrice"    column="goodsUnitPrice"    />
+        <result property="buyNumber"    column="buyNumber"    />
+        <result property="refundWay"    column="refundWay"    />
+        <result property="refundReason"    column="refundReason"    />
+        <result property="reasonFailure"    column="reasonFailure"    />
+        <result property="efundInstructions"    column="efundInstructions"    />
+        <result property="ploadDocuments"    column="ploadDocuments"    />
+        <result property="refundAmount"    column="refundAmount"    />
+        <result property="refundNumber"    column="refundNumber"    />
+        <result property="refundTime"    column="refundTime"    />
+        <result property="refundSerialNumber"    column="refundSerialNumber"    />
+        <result property="refundCompany"    column="refundCompany"    />
+        <result property="refundLogistics"    column="refundLogistics"    />
+        <result property="refundStatus"    column="refundStatus"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectGoodsSalesreturnVo">
+        select id, uid, orderNumber, orderTime, goodsName, goodsImages, goodsIntroduce, goodsUnitPrice, buyNumber, refundWay, refundReason, reasonFailure, efundInstructions, ploadDocuments, refundAmount, refundNumber, refundTime, refundSerialNumber, refundCompany, refundLogistics, refundStatus, create_by, create_time, update_by, update_time, remark from ysx_goods_salesReturn
+    </sql>
+	
+    <select id="selectGoodsSalesreturnList" parameterType="GoodsSalesreturn" resultMap="GoodsSalesreturnResult">
+        <include refid="selectGoodsSalesreturnVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="uid != null "> and uid = #{uid}</if>
+             <if test="orderNumber != null  and orderNumber != '' "> and orderNumber = #{orderNumber}</if>
+             <if test="orderTime != null "> and orderTime = #{orderTime}</if>
+             <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
+             <if test="goodsImages != null  and goodsImages != '' "> and goodsImages = #{goodsImages}</if>
+             <if test="goodsIntroduce != null  and goodsIntroduce != '' "> and goodsIntroduce = #{goodsIntroduce}</if>
+             <if test="goodsUnitPrice != null  and goodsUnitPrice != '' "> and goodsUnitPrice = #{goodsUnitPrice}</if>
+             <if test="buyNumber != null "> and buyNumber = #{buyNumber}</if>
+             <if test="refundWay != null  and refundWay != '' "> and refundWay = #{refundWay}</if>
+             <if test="refundReason != null  and refundReason != '' "> and refundReason = #{refundReason}</if>
+             <if test="reasonFailure != null  and reasonFailure != '' "> and reasonFailure = #{reasonFailure}</if>
+             <if test="efundInstructions != null  and efundInstructions != '' "> and efundInstructions = #{efundInstructions}</if>
+             <if test="ploadDocuments != null  and ploadDocuments != '' "> and ploadDocuments = #{ploadDocuments}</if>
+             <if test="refundAmount != null  and refundAmount != '' "> and refundAmount = #{refundAmount}</if>
+             <if test="refundNumber != null "> and refundNumber = #{refundNumber}</if>
+             <if test="refundTime != null "> and refundTime = #{refundTime}</if>
+             <if test="refundSerialNumber != null  and refundSerialNumber != '' "> and refundSerialNumber = #{refundSerialNumber}</if>
+             <if test="refundCompany != null  and refundCompany != '' "> and refundCompany = #{refundCompany}</if>
+             <if test="refundLogistics != null  and refundLogistics != '' "> and refundLogistics = #{refundLogistics}</if>
+             <if test="refundStatus != null  and refundStatus != '' "> and refundStatus = #{refundStatus}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectGoodsSalesreturnById" parameterType="Integer" resultMap="GoodsSalesreturnResult">
+        <include refid="selectGoodsSalesreturnVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGoodsSalesreturn" parameterType="GoodsSalesreturn" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_goods_salesReturn
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">uid,</if>
+			<if test="orderNumber != null  and orderNumber != ''  ">orderNumber,</if>
+			<if test="orderTime != null  ">orderTime,</if>
+			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
+			<if test="goodsImages != null  and goodsImages != ''  ">goodsImages,</if>
+			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce,</if>
+			<if test="goodsUnitPrice != null  and goodsUnitPrice != ''  ">goodsUnitPrice,</if>
+			<if test="buyNumber != null  ">buyNumber,</if>
+			<if test="refundWay != null  and refundWay != ''  ">refundWay,</if>
+			<if test="refundReason != null  and refundReason != ''  ">refundReason,</if>
+			<if test="reasonFailure != null  and reasonFailure != ''  ">reasonFailure,</if>
+			<if test="efundInstructions != null  and efundInstructions != ''  ">efundInstructions,</if>
+			<if test="ploadDocuments != null  and ploadDocuments != ''  ">ploadDocuments,</if>
+			<if test="refundAmount != null  and refundAmount != ''  ">refundAmount,</if>
+			<if test="refundNumber != null  ">refundNumber,</if>
+			<if test="refundTime != null  ">refundTime,</if>
+			<if test="refundSerialNumber != null  and refundSerialNumber != ''  ">refundSerialNumber,</if>
+			<if test="refundCompany != null  and refundCompany != ''  ">refundCompany,</if>
+			<if test="refundLogistics != null  and refundLogistics != ''  ">refundLogistics,</if>
+			<if test="refundStatus != null  and refundStatus != ''  ">refundStatus,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uid != null  ">#{uid},</if>
+			<if test="orderNumber != null  and orderNumber != ''  ">#{orderNumber},</if>
+			<if test="orderTime != null  ">#{orderTime},</if>
+			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
+			<if test="goodsImages != null  and goodsImages != ''  ">#{goodsImages},</if>
+			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">#{goodsIntroduce},</if>
+			<if test="goodsUnitPrice != null  and goodsUnitPrice != ''  ">#{goodsUnitPrice},</if>
+			<if test="buyNumber != null  ">#{buyNumber},</if>
+			<if test="refundWay != null  and refundWay != ''  ">#{refundWay},</if>
+			<if test="refundReason != null  and refundReason != ''  ">#{refundReason},</if>
+			<if test="reasonFailure != null  and reasonFailure != ''  ">#{reasonFailure},</if>
+			<if test="efundInstructions != null  and efundInstructions != ''  ">#{efundInstructions},</if>
+			<if test="ploadDocuments != null  and ploadDocuments != ''  ">#{ploadDocuments},</if>
+			<if test="refundAmount != null  and refundAmount != ''  ">#{refundAmount},</if>
+			<if test="refundNumber != null  ">#{refundNumber},</if>
+			<if test="refundTime != null  ">#{refundTime},</if>
+			<if test="refundSerialNumber != null  and refundSerialNumber != ''  ">#{refundSerialNumber},</if>
+			<if test="refundCompany != null  and refundCompany != ''  ">#{refundCompany},</if>
+			<if test="refundLogistics != null  and refundLogistics != ''  ">#{refundLogistics},</if>
+			<if test="refundStatus != null  and refundStatus != ''  ">#{refundStatus},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsSalesreturn" parameterType="GoodsSalesreturn">
+        update ysx_goods_salesReturn
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null  ">uid = #{uid},</if>
+            <if test="orderNumber != null  and orderNumber != ''  ">orderNumber = #{orderNumber},</if>
+            <if test="orderTime != null  ">orderTime = #{orderTime},</if>
+            <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
+            <if test="goodsImages != null  and goodsImages != ''  ">goodsImages = #{goodsImages},</if>
+            <if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce = #{goodsIntroduce},</if>
+            <if test="goodsUnitPrice != null  and goodsUnitPrice != ''  ">goodsUnitPrice = #{goodsUnitPrice},</if>
+            <if test="buyNumber != null  ">buyNumber = #{buyNumber},</if>
+            <if test="refundWay != null  and refundWay != ''  ">refundWay = #{refundWay},</if>
+            <if test="refundReason != null  and refundReason != ''  ">refundReason = #{refundReason},</if>
+            <if test="reasonFailure != null  and reasonFailure != ''  ">reasonFailure = #{reasonFailure},</if>
+            <if test="efundInstructions != null  and efundInstructions != ''  ">efundInstructions = #{efundInstructions},</if>
+            <if test="ploadDocuments != null  and ploadDocuments != ''  ">ploadDocuments = #{ploadDocuments},</if>
+            <if test="refundAmount != null  and refundAmount != ''  ">refundAmount = #{refundAmount},</if>
+            <if test="refundNumber != null  ">refundNumber = #{refundNumber},</if>
+            <if test="refundTime != null  ">refundTime = #{refundTime},</if>
+            <if test="refundSerialNumber != null  and refundSerialNumber != ''  ">refundSerialNumber = #{refundSerialNumber},</if>
+            <if test="refundCompany != null  and refundCompany != ''  ">refundCompany = #{refundCompany},</if>
+            <if test="refundLogistics != null  and refundLogistics != ''  ">refundLogistics = #{refundLogistics},</if>
+            <if test="refundStatus != null  and refundStatus != ''  ">refundStatus = #{refundStatus},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsSalesreturnById" parameterType="Integer">
+        delete from ysx_goods_salesReturn where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsSalesreturnByIds" parameterType="String">
+        delete from ysx_goods_salesReturn where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>
