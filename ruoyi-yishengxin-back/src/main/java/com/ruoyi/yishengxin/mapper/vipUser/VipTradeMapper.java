@@ -1,6 +1,8 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,5 +63,11 @@ public interface VipTradeMapper
      * @return 结果
      */
 	public int deleteVipTradeByIds(String[] ids);
-	
+
+	/**
+	 * 今日总共转了多少
+	 * @param vipUser
+	 * @return
+	 */
+	String selectTranByDay(VipTrade vipUser);
 }

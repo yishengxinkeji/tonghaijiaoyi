@@ -3,8 +3,8 @@ package ${package}.service.impl;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ${package}.mapper.${className}Mapper;
-import ${package}.domain.${className};
+import ${package}.mapper.vipUser.${className}Mapper;
+import ${package}.domain.vipUser.${className};
 import ${package}.service.I${className}Service;
 import com.ruoyi.common.support.Convert;
 

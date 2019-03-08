@@ -1,0 +1,59 @@
+package com.ruoyi.yishengxin.service;
+
+import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+
+import java.util.List;
+
+/**
+ * 挂卖SSL 服务层
+ * 
+ * @author ruoyi
+ * @date 2019-03-06
+ */
+public interface IVipTradeSslSaleService
+{
+	/**
+     * 查询挂卖SSL信息
+     * 
+     * @param id 挂卖SSLID
+     * @return 挂卖SSL信息
+     */
+	public VipTradeSslSale selectVipTradeSaleById(Integer id);
+	
+	/**
+     * 查询挂卖SSL列表
+     * 
+     * @param vipTradeSslSale 挂卖SSL信息
+     * @return 挂卖SSL集合
+     */
+	public List<VipTradeSslSale> selectVipTradeSaleList(VipTradeSslSale vipTradeSslSale);
+	
+	/**
+     * 新增挂卖SSL
+     * 
+     * @param vipTradeSslSale 挂卖SSL信息
+     * @return 结果
+     */
+	public int insertVipTradeSale(VipTradeSslSale vipTradeSslSale);
+	
+	/**
+     * 修改挂卖SSL
+     * 
+     * @param vipTradeSslSale 挂卖SSL信息
+     * @return 结果
+     */
+	public int updateVipTradeSale(VipTradeSslSale vipTradeSslSale);
+		
+	/**
+     * 删除挂卖SSL信息
+     * 
+     * @param ids 需要删除的数据ID
+     * @return 结果
+     */
+	public int deleteVipTradeSaleByIds(String ids);
+
+	//处理挂卖ssl
+    int saleSsl(VipUser vipUser,String number, String price) throws Exception;
+
+}

@@ -1,7 +1,8 @@
 package ${package}.mapper;
 
-import ${package}.domain.${className};
-import java.util.List;	
+import ${package}.domain.vipUser.${className};
+import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  * ${tableComment} 数据层
@@ -9,8 +10,8 @@ import java.util.List;
  * @author ${author}
  * @date ${datetime}
  */
-public interface ${className}Mapper 
-{
+@Repository
+public interface ${className}Mapper {
 	/**
      * 查询${tableComment}信息
      * 

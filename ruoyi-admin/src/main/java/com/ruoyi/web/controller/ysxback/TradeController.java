@@ -23,104 +23,106 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
  * 交易设置 信息操作处理
- *
+ * 
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-06
  */
 @Controller
 @RequestMapping("/yishengxin/trade")
-public class TradeController extends BaseController {
+public class TradeController extends BaseController
+{
     private String prefix = "yishengxin/trade";
-
-    @Autowired
-    private ITradeService tradeService;
-
-    @RequiresPermissions("yishengxin:trade:view")
-    @GetMapping()
-    public String trade() {
-        return prefix + "/trade";
-    }
-
-    /**
-     * 查询交易设置列表
-     */
-    @RequiresPermissions("yishengxin:trade:list")
-    @PostMapping("/list")
-    @ResponseBody
-    public TableDataInfo list(Trade trade) {
-        startPage();
+	
+	@Autowired
+	private ITradeService tradeService;
+	
+	@RequiresPermissions("yishengxin:trade:view")
+	@GetMapping()
+	public String trade(){
+	    return prefix + "/trade";
+	}
+	
+	/**
+	 * 查询交易设置列表
+	 */
+	@RequiresPermissions("yishengxin:trade:list")
+	@PostMapping("/list")
+	@ResponseBody
+	public TableDataInfo list(Trade trade){
+		startPage();
         List<Trade> list = tradeService.selectTradeList(trade);
-        return getDataTable(list);
-    }
-
-
-    /**
-     * 导出交易设置列表
-     */
-    @RequiresPermissions("yishengxin:trade:export")
+		return getDataTable(list);
+	}
+	
+	
+	/**
+	 * 导出交易设置列表
+	 */
+	@RequiresPermissions("yishengxin:trade:export")
     @PostMapping("/export")
     @ResponseBody
-    public AjaxResult export(Trade trade) {
-        List<Trade> list = tradeService.selectTradeList(trade);
+    public AjaxResult export(Trade trade){
+    	List<Trade> list = tradeService.selectTradeList(trade);
         ExcelUtil<Trade> util = new ExcelUtil<Trade>(Trade.class);
         return util.exportExcel(list, "trade");
     }
+	
+	/**
+	 * 新增交易设置
+	 */
+	@GetMapping("/add")
+	public String add(){
+		List<Trade> trades = tradeService.selectTradeList(new Trade());
+		if(trades.size() > 0){
+			return prefix + "/message";
+		}
 
-    /**
-     * 新增交易设置
-     */
-    @GetMapping("/add")
-    public String add() {
-        List<Trade> trades = tradeService.selectTradeList(new Trade());
-        if(trades.size() > 0) {
-            return  prefix + "/message";
-        }
-        return prefix + "/add";
-    }
+		return prefix + "/add";
+	}
+	
+	/**
+	 * 新增保存交易设置
+	 */
+	@RequiresPermissions("yishengxin:trade:add")
+	@Log(title = "交易设置", businessType = BusinessType.INSERT)
+	@PostMapping("/add")
+	@ResponseBody
+	public AjaxResult addSave(Trade trade){
+	    trade.setCreateBy(ShiroUtils.getLoginName());
+		return toAjax(tradeService.insertTrade(trade));
+	}
 
-    /**
-     * 新增保存交易设置
-     */
-    @RequiresPermissions("yishengxin:trade:add")
-    @Log(title = "交易设置", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    @ResponseBody
-    public AjaxResult addSave(Trade trade) {
-        trade.setCreateBy(ShiroUtils.getLoginName());
-        return toAjax(tradeService.insertTrade(trade));
-    }
-
-    /**
-     * 修改交易设置
-     */
-    @GetMapping("/edit/{id}")
-    public String edit(@PathVariable("id") Integer id, ModelMap mmap) {
-        Trade trade = tradeService.selectTradeById(id);
-        mmap.put("trade", trade);
-        return prefix + "/edit";
-    }
-
-    /**
-     * 修改保存交易设置
-     */
-    @RequiresPermissions("yishengxin:trade:edit")
-    @Log(title = "交易设置", businessType = BusinessType.UPDATE)
-    @PostMapping("/edit")
-    @ResponseBody
-    public AjaxResult editSave(Trade trade) {
-        trade.setUpdateBy(ShiroUtils.getLoginName());
-        return toAjax(tradeService.updateTrade(trade));
-    }
-
-    /**
-     * 删除交易设置
-     */
-    @RequiresPermissions("yishengxin:trade:remove")
-    @Log(title = "交易设置", businessType = BusinessType.DELETE)
-    @PostMapping("/remove")
-    @ResponseBody
-    public AjaxResult remove(String ids) {
-        return toAjax(tradeService.deleteTradeByIds(ids));
-    }
-
+	/**
+	 * 修改交易设置
+	 */
+	@GetMapping("/edit/{id}")
+	public String edit(@PathVariable("id") Integer id, ModelMap mmap){
+		Trade trade = tradeService.selectTradeById(id);
+		mmap.put("trade", trade);
+	    return prefix + "/edit";
+	}
+	
+	/**
+	 * 修改保存交易设置
+	 */
+	@RequiresPermissions("yishengxin:trade:edit")
+	@Log(title = "交易设置", businessType = BusinessType.UPDATE)
+	@PostMapping("/edit")
+	@ResponseBody
+	public AjaxResult editSave(Trade trade){
+	    trade.setUpdateBy(ShiroUtils.getLoginName());
+		return toAjax(tradeService.updateTrade(trade));
+	}
+	
+	/**
+	 * 删除交易设置
+	 */
+	@RequiresPermissions("yishengxin:trade:remove")
+	@Log(title = "交易设置", businessType = BusinessType.DELETE)
+	@PostMapping( "/remove")
+	@ResponseBody
+	public AjaxResult remove(String ids){
+		return toAjax(tradeService.deleteTradeByIds(ids));
+	}
+	
 }

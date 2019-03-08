@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.yishengxin.mapper.vipUser.VipTradeMapper;
@@ -75,4 +76,8 @@ public class VipTradeServiceImpl implements IVipTradeService {
         return vipTradeMapper.deleteVipTradeByIds(Convert.toStrArray(ids));
     }
 
+    @Override
+    public String selectTranByDay(VipTrade vipTrade) {
+        return vipTradeMapper.selectTranByDay(vipTrade);
+    }
 }

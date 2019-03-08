@@ -16,6 +16,7 @@ import com.ruoyi.yishengxin.mapper.vipUser.VipBuyMapper;
 import com.ruoyi.yishengxin.domain.vipUser.VipBuy;
 import com.ruoyi.yishengxin.service.IVipBuyService;
 import com.ruoyi.common.support.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 个人购买 服务层实现
@@ -24,6 +25,7 @@ import com.ruoyi.common.support.Convert;
  * @date 2019-03-02
  */
 @Service
+@Transactional
 public class VipBuyServiceImpl implements IVipBuyService 
 {
 	@Autowired

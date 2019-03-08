@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipLockMapper">
+    
+    <resultMap type="VipLock" id="VipLockResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="lockTime"    column="lock_time"    />
+        <result property="lockType"    column="lock_type"    />
+        <result property="lockNumber"    column="lock_number"    />
+        <result property="lockProfit"    column="lock_profit"    />
+        <result property="lockStatus"    column="lock_status"    />
+        <result property="lockExpire"    column="lock_expire"    />
+    </resultMap>
+	
+	<sql id="selectVipLockVo">
+        select id, vip_id, lock_time,lock_expire, lock_type, lock_number, lock_profit, lock_status from ysx_vip_lock
+    </sql>
+	
+    <select id="selectVipLockList" parameterType="VipLock" resultMap="VipLockResult">
+        <include refid="selectVipLockVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="lockTime != null  and lockTime != '' "> and lock_time = #{lockTime}</if>
+             <if test="lockType != null  and lockType != '' "> and lock_type = #{lockType}</if>
+             <if test="lockNumber != null  and lockNumber != '' "> and lock_number = #{lockNumber}</if>
+             <if test="lockProfit != null  and lockProfit != '' "> and lock_profit = #{lockProfit}</if>
+             <if test="lockStatus != null  and lockStatus != '' "> and lock_status = #{lockStatus}</if>
+             <if test="lockExpire != null  and lockExpire != '' "> and lock_expire = #{lockExpire}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipLockById" parameterType="Integer" resultMap="VipLockResult">
+        <include refid="selectVipLockVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipLock" parameterType="VipLock" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_lock
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="lockTime != null  and lockTime != ''  ">lock_time,</if>
+			<if test="lockType != null  and lockType != ''  ">lock_type,</if>
+			<if test="lockNumber != null  and lockNumber != ''  ">lock_number,</if>
+			<if test="lockProfit != null  and lockProfit != ''  ">lock_profit,</if>
+			<if test="lockStatus != null  and lockStatus != ''  ">lock_status,</if>
+            <if test="lockExpire != null  and lockExpire != ''  ">lock_expire,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="lockTime != null  and lockTime != ''  ">#{lockTime},</if>
+			<if test="lockType != null  and lockType != ''  ">#{lockType},</if>
+			<if test="lockNumber != null  and lockNumber != ''  ">#{lockNumber},</if>
+			<if test="lockProfit != null  and lockProfit != ''  ">#{lockProfit},</if>
+			<if test="lockStatus != null  and lockStatus != ''  ">#{lockStatus},</if>
+            <if test="lockExpire != null  and lockExpire != ''  ">#{lockExpire},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipLock" parameterType="VipLock">
+        update ysx_vip_lock
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="lockTime != null  and lockTime != ''  ">lock_time = #{lockTime},</if>
+            <if test="lockType != null  and lockType != ''  ">lock_type = #{lockType},</if>
+            <if test="lockNumber != null  and lockNumber != ''  ">lock_number = #{lockNumber},</if>
+            <if test="lockProfit != null  and lockProfit != ''  ">lock_profit = #{lockProfit},</if>
+            <if test="lockStatus != null  and lockStatus != ''  ">lock_status = #{lockStatus},</if>
+            <if test="lockExpire != null  and lockExpire != ''  ">lock_expire = #{lockExpire},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipLockById" parameterType="Integer">
+        delete from ysx_vip_lock where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipLockByIds" parameterType="String">
+        delete from ysx_vip_lock where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

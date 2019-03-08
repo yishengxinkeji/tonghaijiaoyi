@@ -1,15 +1,20 @@
 package com.ruoyi.yishengxin.domain;
 
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.base.BaseEntity;
+import java.util.Date;
 
 /**
  * 交易设置表 ysx_trade
  * 
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-06
  */
+@Data
+@ToString
 public class Trade extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
@@ -20,14 +25,14 @@ public class Trade extends BaseEntity
 	private String low;
 	/** 涨幅峰值 */
 	private String high;
-	/** 每天最大互转量 */
-	private String maxDeliverDay;
-	/** 每笔最低互转量 */
-	private String minDeliverTime;
+	/** 每天ssl最大互转量 */
+	private String maxSslDeliverDay;
+	/** 每笔ssl最低互转量 */
+	private String minSslDeliverTime;
 	/** 每天最大交易量 */
-	private String maxTradeDay;
-	/** 每笔最大额 */
-	private String maxTradeTime;
+	private String maxSslTradeDay;
+	/** 每笔ssl最大交易额 */
+	private String maxSslTradeTime;
 	/** 卖HKD手续费 */
 	private String hkdCharge;
 	/** 卖SSL手续费 */
@@ -46,170 +51,24 @@ public class Trade extends BaseEntity
 	private String sixRate;
 	/** 12个月利率 */
 	private String twelveRate;
+	/** 创建者 */
+	private String createBy;
+	/** 创建时间 */
+	private Date createTime;
+	/** 更新者 */
+	private String updateBy;
+	/** 更新时间 */
+	private Date updateTime;
+	/** 备注 */
+	private String remark;
+	/** 每天hdk最大互转量 */
+	private String maxHdkDeliverDay;
+	/** 每次hdk最低互转量 */
+	private String minHdkDeliverTime;
+	/** 每次HDK最大交易量 */
+	private String maxHdkTradeTime;
+	/** 每天hdk最大交易量 */
+	private String maxHdkTradeDay;
 
-	public void setId(Integer id) 
-	{
-		this.id = id;
-	}
 
-	public Integer getId() 
-	{
-		return id;
-	}
-	public void setLow(String low) 
-	{
-		this.low = low;
-	}
-
-	public String getLow() 
-	{
-		return low;
-	}
-	public void setHigh(String high) 
-	{
-		this.high = high;
-	}
-
-	public String getHigh() 
-	{
-		return high;
-	}
-	public void setMaxDeliverDay(String maxDeliverDay) 
-	{
-		this.maxDeliverDay = maxDeliverDay;
-	}
-
-	public String getMaxDeliverDay() 
-	{
-		return maxDeliverDay;
-	}
-	public void setMinDeliverTime(String minDeliverTime) 
-	{
-		this.minDeliverTime = minDeliverTime;
-	}
-
-	public String getMinDeliverTime() 
-	{
-		return minDeliverTime;
-	}
-	public void setMaxTradeDay(String maxTradeDay) 
-	{
-		this.maxTradeDay = maxTradeDay;
-	}
-
-	public String getMaxTradeDay() 
-	{
-		return maxTradeDay;
-	}
-	public void setMaxTradeTime(String maxTradeTime) 
-	{
-		this.maxTradeTime = maxTradeTime;
-	}
-
-	public String getMaxTradeTime() 
-	{
-		return maxTradeTime;
-	}
-	public void setHkdCharge(String hkdCharge) 
-	{
-		this.hkdCharge = hkdCharge;
-	}
-
-	public String getHkdCharge() 
-	{
-		return hkdCharge;
-	}
-	public void setSslCharge(String sslCharge) 
-	{
-		this.sslCharge = sslCharge;
-	}
-
-	public String getSslCharge() 
-	{
-		return sslCharge;
-	}
-	public void setMinLockPosition(String minLockPosition) 
-	{
-		this.minLockPosition = minLockPosition;
-	}
-
-	public String getMinLockPosition() 
-	{
-		return minLockPosition;
-	}
-	public void setLockMultipleNumber(String lockMultipleNumber) 
-	{
-		this.lockMultipleNumber = lockMultipleNumber;
-	}
-
-	public String getLockMultipleNumber() 
-	{
-		return lockMultipleNumber;
-	}
-	public void setLockBreakCharge(String lockBreakCharge) 
-	{
-		this.lockBreakCharge = lockBreakCharge;
-	}
-
-	public String getLockBreakCharge() 
-	{
-		return lockBreakCharge;
-	}
-	public void setOneRate(String oneRate) 
-	{
-		this.oneRate = oneRate;
-	}
-
-	public String getOneRate() 
-	{
-		return oneRate;
-	}
-	public void setThreeRate(String threeRate) 
-	{
-		this.threeRate = threeRate;
-	}
-
-	public String getThreeRate() 
-	{
-		return threeRate;
-	}
-	public void setSixRate(String sixRate) 
-	{
-		this.sixRate = sixRate;
-	}
-
-	public String getSixRate() 
-	{
-		return sixRate;
-	}
-	public void setTwelveRate(String twelveRate) 
-	{
-		this.twelveRate = twelveRate;
-	}
-
-	public String getTwelveRate() 
-	{
-		return twelveRate;
-	}
-
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("low", getLow())
-            .append("high", getHigh())
-            .append("maxDeliverDay", getMaxDeliverDay())
-            .append("minDeliverTime", getMinDeliverTime())
-            .append("maxTradeDay", getMaxTradeDay())
-            .append("maxTradeTime", getMaxTradeTime())
-            .append("hkdCharge", getHkdCharge())
-            .append("sslCharge", getSslCharge())
-            .append("minLockPosition", getMinLockPosition())
-            .append("lockMultipleNumber", getLockMultipleNumber())
-            .append("lockBreakCharge", getLockBreakCharge())
-            .append("oneRate", getOneRate())
-            .append("threeRate", getThreeRate())
-            .append("sixRate", getSixRate())
-            .append("twelveRate", getTwelveRate())
-            .toString();
-    }
 }

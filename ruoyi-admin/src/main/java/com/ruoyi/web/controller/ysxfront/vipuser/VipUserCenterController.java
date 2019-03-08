@@ -6,6 +6,8 @@ import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ProfitType;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.enums.TradeStatus;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.DateUtils;
@@ -23,10 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -62,6 +61,16 @@ public class VipUserCenterController extends BaseFrontController {
     private IPlatDataService platDataService;
     @Autowired
     private IVipTradeService vipTradeService;
+    @Autowired
+    private IVipTradeHkdBuyService vipTradeHkdBuyService;
+    @Autowired
+    private IVipTradeHkdSaleService vipTradeHkdSaleService;
+    @Autowired
+    private IVipTradeSslBuyService vipTradeSslBuyService;
+    @Autowired
+    private IVipTradeSslSaleService vipTradeSslSaleService;
+    @Autowired
+    private IVipAccountService accountService;
 
 
     /**
@@ -150,7 +159,6 @@ public class VipUserCenterController extends BaseFrontController {
 
             List list = new ArrayList();
             //交易明细
-            //TODO
             VipTrade vipTrade = new VipTrade();
             vipTrade.setVipId(vipUser.getId());
             vipTrade.getParams().put("tradeTime","order by trade_time desc");
@@ -167,6 +175,84 @@ public class VipUserCenterController extends BaseFrontController {
                 list.add(map1);
             });
 
+            VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
+            vipTradeSslBuy.setVipId(vipUser.getId());
+            vipTradeSslBuy.setBuyStatus(TradeStatus.FAIL.getCode());
+            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc");
+
+            List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+
+            VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
+            vipTradeSslSale.setVipId(vipUser.getId());
+            vipTradeSslSale.setSaleStatus(TradeStatus.FAIL.getCode());
+            vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc");
+
+            List<VipTradeSslSale> vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
+
+            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
+            vipTradeHkdSale.setVipId(vipUser.getId());
+            vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+
+            List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
+
+            VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
+            vipTradeHkdBuy.setVipId(vipUser.getId());
+            vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+
+            List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
+
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map2 = new HashMap();
+                map2.put("vipTrade",TradeType.SALE_SSL);    //挂卖ssl
+                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
+                map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
+                map2.put("toVipId",vipTradeSslSale1.getBuyId());
+                map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
+                map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
+                list.add(map2);
+            });
+            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
+                Map map2 = new HashMap();
+                map2.put("vipTrade",TradeType.BUY_SSL);    //挂买SSL
+                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
+                map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
+                map2.put("toVipId",vipTradeSslBuy1.getSaleId());
+                map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
+                map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
+                list.add(map2);
+            });
+
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map2 = new HashMap();
+                map2.put("vipTrade",TradeType.SALE_HKD);    //挂卖hkd
+                map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
+                map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
+                map2.put("toVipId",vipTradeHkdSale1.getBuyId());
+                map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
+                map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
+                list.add(map2);
+            });
+
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map2 = new HashMap();
+                map2.put("vipTrade",TradeType.BUY_HKD);    //挂买ssl
+                map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
+                map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
+                map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
+                map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
+                map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
+                list.add(map2);
+            });
+
+            Collections.sort(list, new Comparator<Map<String, Object>>() {
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    Integer name1 = Integer.valueOf(o1.get("tradeTime").toString()) ;//name1是从你list里面拿出来的一个
+                    Integer name2 = Integer.valueOf(o2.get("tradeTime").toString()) ; //name1是从你list里面拿出来的第二个name
+                    return name2.compareTo(name1);
+                }
+            });
 
             //将用户最新的信息保存到Redis中
             RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
@@ -176,6 +262,122 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.error();
         }
     }
+
+    /**
+     * 转出
+     * @param token
+     * @param type  类型:SSL,HKD
+     * @param number 数量
+     * @param toMoneyCode 目标钱包地址
+     * @param toId  目标ID
+     * @return
+     */
+    @PostMapping("/tranSport")
+    public ResponseResult tranSport(@RequestHeader("token") String token,
+                                    @RequestParam("type") String type,
+                                    @RequestParam("number") String number,
+                                    @RequestParam("toMoneyCode") String toMoneyCode,
+                                    @RequestParam("toId") String toId){
+
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        VipUser myVip = vipUserService.selectVipUserById(vipUser.getId());
+
+        String sslMoney = myVip.getSslMoney();
+        String hkdMoney = myVip.getHkdMoney();
+        double tranMoney = 0.00;
+        //目标会员
+        VipUser vipUser1 = new VipUser();
+        vipUser1.setId(Integer.parseInt(toId));
+        vipUser1.setMoneyCode(toMoneyCode);
+        List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser1);
+        //不存在该用户
+        if(vipUsers.size() == 0){
+            return ResponseResult.responseResult(ResponseEnum.PHONE_NOTEXIST_ERROR);
+        }
+
+        //ssl每天最大互转量
+        double maxSslDeliverDay = 0.00;
+        //ssl每笔最低互转量
+        double minSslDeliverTime = 0.00;
+        //hkd每天最大互转量
+        double maxHdkDeliverDay = 0.00;
+        //hkd每笔最大互转量
+        double maxHdkTradeTime = 0.00;
+
+        List<Trade> trades = tradeService.selectTradeList(new Trade());
+        if(trades.size() > 0){
+
+            maxSslDeliverDay  =Double.parseDouble(trades.get(0).getMaxSslDeliverDay());
+            minSslDeliverTime =Double.parseDouble(trades.get(0).getMinSslDeliverTime());
+            maxHdkDeliverDay =Double.parseDouble(trades.get(0).getMaxHdkDeliverDay());
+            maxHdkTradeTime =Double.parseDouble(trades.get(0).getMaxHdkTradeTime());
+
+        }
+
+
+        VipTrade vipTrade = new VipTrade();
+        vipTrade.setVipId(vipUser.getId());
+
+        try{
+            if(type.equalsIgnoreCase("ssl")){
+                tranMoney = NumberUtil.sub(Double.parseDouble(sslMoney),Double.parseDouble(number));
+                if(tranMoney < 0){
+                    //SSL币不足
+                    return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
+                }
+                if(Double.parseDouble(number) < minSslDeliverTime){
+                    //单次转出少于最小转出
+                    return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
+                }
+
+                vipTrade.setVipTrade(TradeType.OUT_SSL.getCode());
+                String tranDay = vipTradeService.selectTranByDay(vipTrade);
+                if(Double.parseDouble(tranDay) > maxSslDeliverDay){
+                    //今日交易已达上限
+                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                }
+
+                int i = vipUserService.tranSport(myVip,vipUsers.get(0),type,number,tranMoney);
+                if(i > 0){
+                    return ResponseResult.success();
+                }
+            }else if(type.equalsIgnoreCase("hkd")){
+                tranMoney = NumberUtil.sub(Double.parseDouble(hkdMoney),Double.parseDouble(number));
+                if(tranMoney < 0){
+                    //HKD币不足
+                    return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
+                }
+
+                if(Double.parseDouble(number) > maxHdkTradeTime){
+                    //单次交易已达上限
+                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_TIME);
+                }
+
+                vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
+                String tranDay = vipTradeService.selectTranByDay(vipTrade);
+                if(Double.parseDouble(tranDay) > maxSslDeliverDay){
+                    //今日交易已达上限
+                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                }
+
+                int i = vipUserService.tranSport(myVip,vipUsers.get(0),type,number,tranMoney);
+                if(i > 0){
+                    return ResponseResult.success();
+                }
+            }
+            return ResponseResult.error();
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
+
+    }
+
 
     /**
      * 邀请链接
@@ -296,12 +498,26 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
         try{
             VipAddress address = new VipAddress();
             address.setVipId(vipUser.getId());
             List<VipAddress> vipAddresses = vipAddressService.selectVipAddressList(address);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,vipAddresses);
+            List list = new ArrayList();
+            vipAddresses.stream().forEach(vipAddress->{
+                Map map = new HashMap();
+                map.put("id",vipAddress.getId());
+                map.put("vipId",vipAddress.getVipId());
+                map.put("phone",vipAddress.getPhone());
+                map.put("receivUser",vipAddress.getReceivUser());
+                map.put("addressDetail",vipAddress.getAddressDetail());
+                map.put("isDefault",vipAddress.getIsDefault());
+                map.put("province",vipAddress.getProvince());
+                map.put("city",vipAddress.getCity());
+                map.put("district",vipAddress.getDistrict());
+                list.add(map);
+            });
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
         }catch (Exception e){
             return ResponseResult.error();
         }
@@ -392,6 +608,34 @@ public class VipUserCenterController extends BaseFrontController {
         return ResponseResult.success();
     }
 
+
+    /**
+     * 设置默认地址
+     * @param token
+     * @param id
+     * @return
+     */
+    @PostMapping("/userAddressDefault")
+    public ResponseResult userAddressDefault(@RequestHeader("token") String token,@RequestParam("id") String id) {
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        try{
+            VipAddress vipAddress = new VipAddress();
+            vipAddress.setId(Integer.parseInt(id));
+            vipAddress.setIsDefault(CustomerConstants.YES);
+            if(vipAddressService.updateDefaultAddress(vipUser.getId()) > 0){
+                vipAddressService.updateVipAddress(vipAddress);
+            }
+            return ResponseResult.success();
+        }catch (Exception e){
+            return ResponseResult.error();
+        }
+    }
+
     /**
      * 收货地址删除
      * @param token
@@ -428,7 +672,10 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        List<VipAccount> vipAccounts = vipAccountService.selectVipAccountList(new VipAccount());
+
+        VipAccount vipAccount = new VipAccount();
+        vipAccount.setVipId(vipUser.getId());
+        List<VipAccount> vipAccounts = vipAccountService.selectVipAccountList(vipAccount);
 
         List list = new ArrayList();
         vipAccounts.stream().forEach(account -> {
@@ -579,21 +826,17 @@ public class VipUserCenterController extends BaseFrontController {
     /**
      * 设置默认收款账户
      * @param token
-     * @param , id,isDefault两个参数
+     * @param , id
      * @return
      */
     @PostMapping("/accountDefault")
-    public ResponseResult accountDefault(@RequestHeader("token")String token,VipAccount account){
+    public ResponseResult accountDefault(@RequestHeader("token")String token,@RequestParam("id") String id){
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(account.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
-            vipAccountService.updateDefaultAccount(vipUser.getId());
-        }
-        account.setIsDefault(account.getIsDefault().toUpperCase());
-        if(vipAccountService.updateVipAccount(account) > 0){
+        if(vipAccountService.updateDefaultAccount(vipUser.getId(),Integer.parseInt(id)) > 0){
             return ResponseResult.success();
         }
         return ResponseResult.error();
@@ -695,7 +938,8 @@ public class VipUserCenterController extends BaseFrontController {
             //手续费
             double charge = 0.00;
             if(NumberUtil.sub(hkd,excount) < 0){
-                return ResponseResult.responseResult(ResponseEnum.NUMBER_TOO_MAX);
+                //hkd币不足
+                return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
             }
 
             if(excount < 0){
@@ -734,7 +978,7 @@ public class VipUserCenterController extends BaseFrontController {
      * @param token
      * @return
      */
-    @PostMapping("/userBuyList")
+        @PostMapping("/userBuyList")
     public ResponseResult userBuyList(@RequestHeader("token") String token){
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -763,7 +1007,7 @@ public class VipUserCenterController extends BaseFrontController {
         if(platData.size() > 0){
             map.put("account",platData.get(0).getPlatAccount());
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
     /**

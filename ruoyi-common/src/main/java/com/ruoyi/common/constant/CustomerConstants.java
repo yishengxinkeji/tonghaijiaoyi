@@ -46,6 +46,13 @@ public class CustomerConstants {
     public static final String EXCHANGE_BUY_STATUS_WAIT = "1";
     public static final String EXCHANGE_BUY_STATUS_DEAL = "2";
 
+    //交易的两种币
+    public static final String TRADE_TYPE_SSL = "SSL";
+    public static final String TRADE_TYPE_HKD = "HKD";
+
+    //redis的任务状态 Y:任务执行中
+    public static final String TASK_STATUS_KEY = "ISCANCEL";
+
 
 
 

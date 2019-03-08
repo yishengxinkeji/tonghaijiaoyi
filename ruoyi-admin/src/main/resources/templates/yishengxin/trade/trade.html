@@ -6,10 +6,10 @@
     
      <div class="container-div">
 		<div class="row">
-			<!--<div class="col-sm-12 search-collapse">
+			<div class="col-sm-12 search-collapse">
 				<form id="formId">
 					<div class="select-list">
-						<ul>
+						<!--<ul>
 							<li>
 								跌幅谷值：<input type="text" name="low"/>
 							</li>
@@ -19,19 +19,19 @@
 							</li>
 
 							<li>
-								每天最大互转量：<input type="text" name="maxDeliverDay"/>
+								每天ssl最大互转量：<input type="text" name="maxSslDeliverDay"/>
 							</li>
 
 							<li>
-								每笔最低互转量：<input type="text" name="minDeliverTime"/>
+								每笔ssl最低互转量：<input type="text" name="minSslDeliverTime"/>
 							</li>
 
 							<li>
-								每天最大交易量：<input type="text" name="maxTradeDay"/>
+								每天最大交易量：<input type="text" name="maxSslTradeDay"/>
 							</li>
 
 							<li>
-								每笔最大额：<input type="text" name="maxTradeTime"/>
+								每笔ssl最大交易额：<input type="text" name="maxSslTradeTime"/>
 							</li>
 
 							<li>
@@ -71,13 +71,49 @@
 							</li>
 
 							<li>
+								创建者：<input type="text" name="createBy"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createTime"/>
+							</li>
+
+							<li>
+								更新者：<input type="text" name="updateBy"/>
+							</li>
+
+							<li>
+								更新时间：<input type="text" name="updateTime"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="remark"/>
+							</li>
+
+							<li>
+								每天hdk最大互转量：<input type="text" name="maxHdkDeliverDay"/>
+							</li>
+
+							<li>
+								每次hdk最低互转量：<input type="text" name="minHdkDeliverTime"/>
+							</li>
+
+							<li>
+								每次HDK最大交易量：<input type="text" name="maxHdkTradeTime"/>
+							</li>
+
+							<li>
+								每天hdk最大交易量：<input type="text" name="maxHdkTradeDay"/>
+							</li>
+
+							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
 							</li>
-						</ul>
+						</ul>-->
 					</div>
 				</form>
-			</div>-->
+			</div>
 			
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
 				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:trade:add">
@@ -89,9 +125,9 @@
 				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:trade:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<!--<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:trade:export">
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:trade:export">
 						<i class="fa fa-download"></i> 导出
-				 </a>-->
+				 </a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -133,23 +169,43 @@
 					sortable: true
 				},
 				{
-					field : 'maxDeliverDay', 
-					title : '每天最大互转量',
+					field : 'maxSslDeliverDay', 
+					title : '每天ssl最大互转量',
 					sortable: true
 				},
 				{
-					field : 'minDeliverTime', 
-					title : '每笔最低互转量',
+					field : 'minSslDeliverTime', 
+					title : '每笔ssl最低互转量',
 					sortable: true
 				},
 				{
-					field : 'maxTradeDay', 
+					field : 'maxHdkDeliverDay',
+					title : '每天hdk最大互转量',
+					sortable: true
+				},
+				{
+					field : 'minHdkDeliverTime',
+					title : '每次hdk最低互转量',
+					sortable: true
+				},
+				{
+					field : 'maxHdkTradeTime',
+					title : '每次HDK最大交易量',
+					sortable: true
+				},
+				{
+					field : 'maxHdkTradeDay',
+					title : '每天hdk最大交易量',
+					sortable: true
+				},
+				{
+					field : 'maxSslTradeDay', 
 					title : '每天最大交易量',
 					sortable: true
 				},
 				{
-					field : 'maxTradeTime', 
-					title : '每笔最大额',
+					field : 'maxSslTradeTime', 
+					title : '每笔ssl最大交易额',
 					sortable: true
 				},
 				{
@@ -197,6 +253,7 @@
 					title : '12个月利率',
 					sortable: true
 				},
+
 		        {
 		            title: '操作',
 		            align: 'center',

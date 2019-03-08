@@ -8,10 +8,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="low"    column="low"    />
         <result property="high"    column="high"    />
-        <result property="maxDeliverDay"    column="max_deliver_day"    />
-        <result property="minDeliverTime"    column="min_deliver_time"    />
-        <result property="maxTradeDay"    column="max_trade_day"    />
-        <result property="maxTradeTime"    column="max_trade_time"    />
+        <result property="maxSslDeliverDay"    column="max_ssl_deliver_day"    />
+        <result property="minSslDeliverTime"    column="min_ssl_deliver_time"    />
+        <result property="maxSslTradeDay"    column="max_ssl_trade_day"    />
+        <result property="maxSslTradeTime"    column="max_ssl_trade_time"    />
         <result property="hkdCharge"    column="hkd_charge"    />
         <result property="sslCharge"    column="ssl_charge"    />
         <result property="minLockPosition"    column="min_lock_position"    />
@@ -26,10 +26,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="maxHdkDeliverDay"    column="max_hdk_deliver_day"    />
+        <result property="minHdkDeliverTime"    column="min_hdk_deliver_time"    />
+        <result property="maxHdkTradeTime"    column="max_hdk_trade_time"    />
+        <result property="maxHdkTradeDay"    column="max_hdk_trade_day"    />
     </resultMap>
 	
 	<sql id="selectTradeVo">
-        select id, low, high, max_deliver_day, min_deliver_time, max_trade_day, max_trade_time, hkd_charge, ssl_charge, min_lock_position, lock_multiple_number, lock_break_charge, one_rate, three_rate, six_rate, twelve_rate, create_by, create_time, update_by, update_time, remark from ysx_trade
+        select id, low, high, max_ssl_deliver_day, min_ssl_deliver_time, max_ssl_trade_day, max_ssl_trade_time, hkd_charge, ssl_charge, min_lock_position, lock_multiple_number, lock_break_charge, one_rate, three_rate, six_rate, twelve_rate, create_by, create_time, update_by, update_time, remark, max_hdk_deliver_day, min_hdk_deliver_time, max_hdk_trade_time, max_hdk_trade_day from ysx_trade
     </sql>
 	
     <select id="selectTradeList" parameterType="Trade" resultMap="TradeResult">
@@ -38,10 +42,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="low != null  and low != '' "> and low = #{low}</if>
              <if test="high != null  and high != '' "> and high = #{high}</if>
-             <if test="maxDeliverDay != null  and maxDeliverDay != '' "> and max_deliver_day = #{maxDeliverDay}</if>
-             <if test="minDeliverTime != null  and minDeliverTime != '' "> and min_deliver_time = #{minDeliverTime}</if>
-             <if test="maxTradeDay != null  and maxTradeDay != '' "> and max_trade_day = #{maxTradeDay}</if>
-             <if test="maxTradeTime != null  and maxTradeTime != '' "> and max_trade_time = #{maxTradeTime}</if>
+             <if test="maxSslDeliverDay != null  and maxSslDeliverDay != '' "> and max_ssl_deliver_day = #{maxSslDeliverDay}</if>
+             <if test="minSslDeliverTime != null  and minSslDeliverTime != '' "> and min_ssl_deliver_time = #{minSslDeliverTime}</if>
+             <if test="maxSslTradeDay != null  and maxSslTradeDay != '' "> and max_ssl_trade_day = #{maxSslTradeDay}</if>
+             <if test="maxSslTradeTime != null  and maxSslTradeTime != '' "> and max_ssl_trade_time = #{maxSslTradeTime}</if>
              <if test="hkdCharge != null  and hkdCharge != '' "> and hkd_charge = #{hkdCharge}</if>
              <if test="sslCharge != null  and sslCharge != '' "> and ssl_charge = #{sslCharge}</if>
              <if test="minLockPosition != null  and minLockPosition != '' "> and min_lock_position = #{minLockPosition}</if>
@@ -56,6 +60,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
              <if test="updateTime != null "> and update_time = #{updateTime}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="maxHdkDeliverDay != null  and maxHdkDeliverDay != '' "> and max_hdk_deliver_day = #{maxHdkDeliverDay}</if>
+             <if test="minHdkDeliverTime != null  and minHdkDeliverTime != '' "> and min_hdk_deliver_time = #{minHdkDeliverTime}</if>
+             <if test="maxHdkTradeTime != null  and maxHdkTradeTime != '' "> and max_hdk_trade_time = #{maxHdkTradeTime}</if>
+             <if test="maxHdkTradeDay != null  and maxHdkTradeDay != '' "> and max_hdk_trade_day = #{maxHdkTradeDay}</if>
          </where>
     </select>
     
@@ -69,10 +77,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="low != null  and low != ''  ">low,</if>
 			<if test="high != null  and high != ''  ">high,</if>
-			<if test="maxDeliverDay != null  and maxDeliverDay != ''  ">max_deliver_day,</if>
-			<if test="minDeliverTime != null  and minDeliverTime != ''  ">min_deliver_time,</if>
-			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
-			<if test="maxTradeTime != null  and maxTradeTime != ''  ">max_trade_time,</if>
+			<if test="maxSslDeliverDay != null  and maxSslDeliverDay != ''  ">max_ssl_deliver_day,</if>
+			<if test="minSslDeliverTime != null  and minSslDeliverTime != ''  ">min_ssl_deliver_time,</if>
+			<if test="maxSslTradeDay != null  and maxSslTradeDay != ''  ">max_ssl_trade_day,</if>
+			<if test="maxSslTradeTime != null  and maxSslTradeTime != ''  ">max_ssl_trade_time,</if>
 			<if test="hkdCharge != null  and hkdCharge != ''  ">hkd_charge,</if>
 			<if test="sslCharge != null  and sslCharge != ''  ">ssl_charge,</if>
 			<if test="minLockPosition != null  and minLockPosition != ''  ">min_lock_position,</if>
@@ -83,16 +91,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sixRate != null  and sixRate != ''  ">six_rate,</if>
 			<if test="twelveRate != null  and twelveRate != ''  ">twelve_rate,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-			create_time,
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="maxHdkDeliverDay != null  and maxHdkDeliverDay != ''  ">max_hdk_deliver_day,</if>
+			<if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">min_hdk_deliver_time,</if>
+			<if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">max_hdk_trade_time,</if>
+			<if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">max_hdk_trade_day,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="low != null  and low != ''  ">#{low},</if>
 			<if test="high != null  and high != ''  ">#{high},</if>
-			<if test="maxDeliverDay != null  and maxDeliverDay != ''  ">#{maxDeliverDay},</if>
-			<if test="minDeliverTime != null  and minDeliverTime != ''  ">#{minDeliverTime},</if>
-			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
-			<if test="maxTradeTime != null  and maxTradeTime != ''  ">#{maxTradeTime},</if>
+			<if test="maxSslDeliverDay != null  and maxSslDeliverDay != ''  ">#{maxSslDeliverDay},</if>
+			<if test="minSslDeliverTime != null  and minSslDeliverTime != ''  ">#{minSslDeliverTime},</if>
+			<if test="maxSslTradeDay != null  and maxSslTradeDay != ''  ">#{maxSslTradeDay},</if>
+			<if test="maxSslTradeTime != null  and maxSslTradeTime != ''  ">#{maxSslTradeTime},</if>
 			<if test="hkdCharge != null  and hkdCharge != ''  ">#{hkdCharge},</if>
 			<if test="sslCharge != null  and sslCharge != ''  ">#{sslCharge},</if>
 			<if test="minLockPosition != null  and minLockPosition != ''  ">#{minLockPosition},</if>
@@ -103,8 +117,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="sixRate != null  and sixRate != ''  ">#{sixRate},</if>
 			<if test="twelveRate != null  and twelveRate != ''  ">#{twelveRate},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-			sysdate(),
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
 			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="maxHdkDeliverDay != null  and maxHdkDeliverDay != ''  ">#{maxHdkDeliverDay},</if>
+			<if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">#{minHdkDeliverTime},</if>
+			<if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">#{maxHdkTradeTime},</if>
+			<if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">#{maxHdkTradeDay},</if>
          </trim>
     </insert>
 	 
@@ -113,10 +133,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="low != null  and low != ''  ">low = #{low},</if>
             <if test="high != null  and high != ''  ">high = #{high},</if>
-            <if test="maxDeliverDay != null  and maxDeliverDay != ''  ">max_deliver_day = #{maxDeliverDay},</if>
-            <if test="minDeliverTime != null  and minDeliverTime != ''  ">min_deliver_time = #{minDeliverTime},</if>
-            <if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day = #{maxTradeDay},</if>
-            <if test="maxTradeTime != null  and maxTradeTime != ''  ">max_trade_time = #{maxTradeTime},</if>
+            <if test="maxSslDeliverDay != null  and maxSslDeliverDay != ''  ">max_ssl_deliver_day = #{maxSslDeliverDay},</if>
+            <if test="minSslDeliverTime != null  and minSslDeliverTime != ''  ">min_ssl_deliver_time = #{minSslDeliverTime},</if>
+            <if test="maxSslTradeDay != null  and maxSslTradeDay != ''  ">max_ssl_trade_day = #{maxSslTradeDay},</if>
+            <if test="maxSslTradeTime != null  and maxSslTradeTime != ''  ">max_ssl_trade_time = #{maxSslTradeTime},</if>
             <if test="hkdCharge != null  and hkdCharge != ''  ">hkd_charge = #{hkdCharge},</if>
             <if test="sslCharge != null  and sslCharge != ''  ">ssl_charge = #{sslCharge},</if>
             <if test="minLockPosition != null  and minLockPosition != ''  ">min_lock_position = #{minLockPosition},</if>
@@ -126,9 +146,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="threeRate != null  and threeRate != ''  ">three_rate = #{threeRate},</if>
             <if test="sixRate != null  and sixRate != ''  ">six_rate = #{sixRate},</if>
             <if test="twelveRate != null  and twelveRate != ''  ">twelve_rate = #{twelveRate},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate(),
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="maxHdkDeliverDay != null  and maxHdkDeliverDay != ''  ">max_hdk_deliver_day = #{maxHdkDeliverDay},</if>
+            <if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">min_hdk_deliver_time = #{minHdkDeliverTime},</if>
+            <if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">max_hdk_trade_time = #{maxHdkTradeTime},</if>
+            <if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">max_hdk_trade_day = #{maxHdkTradeDay},</if>
         </trim>
         where id = #{id}
     </update>

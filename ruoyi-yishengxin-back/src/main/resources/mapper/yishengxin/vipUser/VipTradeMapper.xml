@@ -37,6 +37,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVipTradeVo"/>
         where id = #{id}
     </select>
+
+    <select id="selectTranByDay" parameterType="VipTrade">
+        select sum(trade_number) from ysx_vip_trade where vip_trade = #{vipTrade} and to_days(trade_time) <![CDATA[ <= ]]> to_days(now())
+    </select>
         
     <insert id="insertVipTrade" parameterType="VipTrade" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_vip_trade

@@ -1,14 +1,17 @@
 package com.ruoyi.yishengxin.mapper;
 
 import com.ruoyi.yishengxin.domain.Trade;
-import java.util.List;	
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 交易设置 数据层
  * 
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-06
  */
+@Repository
 public interface TradeMapper 
 {
 	/**

@@ -12,7 +12,7 @@ import com.ruoyi.common.support.Convert;
  * 交易设置 服务层实现
  * 
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-06
  */
 @Service
 public class TradeServiceImpl implements ITradeService 

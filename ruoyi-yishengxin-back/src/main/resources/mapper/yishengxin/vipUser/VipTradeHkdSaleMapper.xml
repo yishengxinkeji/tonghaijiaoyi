@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipTradeHkdSaleMapper">
+    
+    <resultMap type="VipTradeHkdSale" id="VipTradeHkdSaleResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="saleType"    column="sale_type"    />
+        <result property="saleStatus"    column="sale_status"    />
+        <result property="saleNo"    column="sale_no"    />
+        <result property="saleNumber"    column="sale_number"    />
+        <result property="saleTotal"    column="sale_total"    />
+        <result property="saleTime"    column="sale_time"    />
+        <result property="buyId"    column="buy_id"    />
+        <result property="buyPhone"    column="buy_phone"    />
+        <result property="buyNickname"    column="buy_nickname"    />
+        <result property="buyAvater"    column="buy_avater"    />
+        <result property="failReason"    column="fail_reason"    />
+        <result property="isAppeal"    column="is_appeal"    />
+        <result property="appealStatus"    column="appeal_status"    />
+        <result property="proof"    column="proof"    />
+    </resultMap>
+	
+	<sql id="selectVipTradeHkdSaleVo">
+        select id, vip_id, sale_type, proof,sale_status, sale_no, sale_number, sale_total, sale_time, buy_id, buy_phone, buy_nickname, buy_avater, fail_reason,is_appeal,appeal_status from ysx_vip_trade_hkd_sale
+    </sql>
+	
+    <select id="selectVipTradeHkdSaleList" parameterType="VipTradeHkdSale" resultMap="VipTradeHkdSaleResult">
+        <include refid="selectVipTradeHkdSaleVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="saleType != null  and saleType != '' "> and sale_type = #{saleType}</if>
+             <if test="saleStatus != null  and saleStatus != '' "> and sale_status = #{saleStatus}</if>
+             <if test="saleNo != null  and saleNo != '' "> and sale_no = #{saleNo}</if>
+             <if test="saleNumber != null  and saleNumber != '' "> and sale_number = #{saleNumber}</if>
+             <if test="saleTotal != null  and saleTotal != '' "> and sale_total = #{saleTotal}</if>
+             <if test="saleTime != null  and saleTime != '' "> and sale_time = #{saleTime}</if>
+             <if test="buyId != null  and buyId != '' "> and buy_id = #{buyId}</if>
+             <if test="buyPhone != null  and buyPhone != '' "> and buy_phone = #{buyPhone}</if>
+             <if test="buyNickname != null  and buyNickname != '' "> and buy_nickname = #{buyNickname}</if>
+             <if test="buyAvater != null  and buyAvater != '' "> and buy_avater = #{buyAvater}</if>
+             <if test="failReason != null  and failReason != '' "> and fail_reason = #{failReason}</if>
+             <if test="isAppeal != null  and isAppeal != '' "> and is_appeal = #{isAppeal}</if>
+             <if test="appealStatus != null  and appealStatus != '' "> and appeal_status = #{appealStatus}</if>
+         </where>
+        ${params.VipTradeHkdBuy}
+    </select>
+    
+    <select id="selectVipTradeHkdSaleById" parameterType="Integer" resultMap="VipTradeHkdSaleResult">
+        <include refid="selectVipTradeHkdSaleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipTradeHkdSale" parameterType="VipTradeHkdSale" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_trade_hkd_sale
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="saleType != null  and saleType != ''  ">sale_type,</if>
+			<if test="saleStatus != null  and saleStatus != ''  ">sale_status,</if>
+			<if test="saleNo != null  and saleNo != ''  ">sale_no,</if>
+			<if test="saleNumber != null  and saleNumber != ''  ">sale_number,</if>
+			<if test="saleTotal != null  and saleTotal != ''  ">sale_total,</if>
+			<if test="saleTime != null  and saleTime != ''  ">sale_time,</if>
+			<if test="buyId != null  and buyId != ''  ">buy_id,</if>
+			<if test="buyPhone != null  and buyPhone != ''  ">buy_phone,</if>
+			<if test="buyNickname != null  and buyNickname != ''  ">buy_nickname,</if>
+			<if test="buyAvater != null  and buyAvater != ''  ">buy_avater,</if>
+			<if test="failReason != null  and failReason != ''  ">fail_reason,</if>
+            <if test="isAppeal != null  and isAppeal != ''  ">is_appeal,</if>
+            <if test="appealStatus != null  and appealStatus != ''  ">appeal_status,</if>
+            <if test="proof != null  and proof != ''  ">proof,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="saleType != null  and saleType != ''  ">#{saleType},</if>
+			<if test="saleStatus != null  and saleStatus != ''  ">#{saleStatus},</if>
+			<if test="saleNo != null  and saleNo != ''  ">#{saleNo},</if>
+			<if test="saleNumber != null  and saleNumber != ''  ">#{saleNumber},</if>
+			<if test="saleTotal != null  and saleTotal != ''  ">#{saleTotal},</if>
+			<if test="saleTime != null  and saleTime != ''  ">#{saleTime},</if>
+			<if test="buyId != null  and buyId != ''  ">#{buyId},</if>
+			<if test="buyPhone != null  and buyPhone != ''  ">#{buyPhone},</if>
+			<if test="buyNickname != null  and buyNickname != ''  ">#{buyNickname},</if>
+			<if test="buyAvater != null  and buyAvater != ''  ">#{buyAvater},</if>
+			<if test="failReason != null  and failReason != ''  ">#{failReason},</if>
+            <if test="isAppeal != null  and isAppeal != ''  ">#{isAppeal},</if>
+            <if test="appealStatus != null  and appealStatus != ''  ">#{appealStatus},</if>
+            <if test="proof != null  and proof != ''  ">#{proof},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipTradeHkdSale" parameterType="VipTradeHkdSale">
+        update ysx_vip_trade_hkd_sale
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="saleType != null  and saleType != ''  ">sale_type = #{saleType},</if>
+            <if test="saleStatus != null  and saleStatus != ''  ">sale_status = #{saleStatus},</if>
+            <if test="saleNo != null  and saleNo != ''  ">sale_no = #{saleNo},</if>
+            <if test="saleNumber != null  and saleNumber != ''  ">sale_number = #{saleNumber},</if>
+            <if test="saleTotal != null  and saleTotal != ''  ">sale_total = #{saleTotal},</if>
+            <if test="saleTime != null  and saleTime != ''  ">sale_time = #{saleTime},</if>
+            <if test="buyId != null  and buyId != ''  ">buy_id = #{buyId},</if>
+            <if test="buyPhone != null  and buyPhone != ''  ">buy_phone = #{buyPhone},</if>
+            <if test="buyNickname != null  and buyNickname != ''  ">buy_nickname = #{buyNickname},</if>
+            <if test="buyAvater != null  and buyAvater != ''  ">buy_avater = #{buyAvater},</if>
+            <if test="failReason != null  and failReason != ''  ">fail_reason = #{failReason},</if>
+            <if test="isAppeal != null  and isAppeal != ''  ">is_appeal = #{isAppeal},</if>
+            <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus},</if>
+            <if test="proof != null  and proof != ''  ">proof = #{proof},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipTradeHkdSaleById" parameterType="Integer">
+        delete from ysx_vip_trade_hkd_sale where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipTradeHkdSaleByIds" parameterType="String">
+        delete from ysx_vip_trade_hkd_sale where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

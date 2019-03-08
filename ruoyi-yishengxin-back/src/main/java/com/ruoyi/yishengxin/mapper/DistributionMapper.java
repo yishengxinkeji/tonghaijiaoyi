@@ -1,7 +1,9 @@
 package com.ruoyi.yishengxin.mapper;
 
 import com.ruoyi.yishengxin.domain.Distribution;
-import java.util.List;	
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 分销设置 数据层
@@ -9,6 +11,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2019-02-26
  */
+@Repository
 public interface DistributionMapper 
 {
 	/**

@@ -63,5 +63,5 @@ public interface VipAddressMapper {
      * 将该用户所有的地址改为非默认
      * @param vipId
      */
-    void updateDefaultAddress(Integer vipId);
+    int updateDefaultAddress(Integer vipId);
 }

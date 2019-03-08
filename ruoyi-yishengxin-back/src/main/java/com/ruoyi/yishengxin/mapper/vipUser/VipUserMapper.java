@@ -75,4 +75,6 @@ public interface VipUserMapper
 	 * @return
 	 */
 	List<VipUser> selectUserByGrandParentCode(VipUser oneUser);
+
+
 }
