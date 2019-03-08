@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.vipUser.VipAppealMapper">
+    
+    <resultMap type="VipAppeal" id="VipAppealResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="content"    column="content"    />
+        <result property="appealTime"    column="appeal_time"    />
+        <result property="appealStatus"    column="appeal_status"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderId"    column="order_id"    />
+    </resultMap>
+	
+	<sql id="selectVipAppealVo">
+        select id, vip_id, content, appeal_time, appeal_status, order_type, order_id from ysx_vip_appeal
+    </sql>
+	
+    <select id="selectVipAppealList" parameterType="VipAppeal" resultMap="VipAppealResult">
+        <include refid="selectVipAppealVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+             <if test="appealTime != null  and appealTime != '' "> and appeal_time = #{appealTime}</if>
+             <if test="appealStatus != null  and appealStatus != '' "> and appeal_status = #{appealStatus}</if>
+             <if test="orderType != null  and orderType != '' "> and order_type = #{orderType}</if>
+             <if test="orderId != null  and orderId != '' "> and order_id = #{orderId}</if>
+         </where>
+    </select>
+    
+    <select id="selectVipAppealById" parameterType="Integer" resultMap="VipAppealResult">
+        <include refid="selectVipAppealVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVipAppeal" parameterType="VipAppeal" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_vip_appeal
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">vip_id,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+			<if test="appealTime != null  and appealTime != ''  ">appeal_time,</if>
+			<if test="appealStatus != null  and appealStatus != ''  ">appeal_status,</if>
+			<if test="orderType != null  and orderType != ''  ">order_type,</if>
+			<if test="orderId != null  and orderId != ''  ">order_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  ">#{vipId},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+			<if test="appealTime != null  and appealTime != ''  ">#{appealTime},</if>
+			<if test="appealStatus != null  and appealStatus != ''  ">#{appealStatus},</if>
+			<if test="orderType != null  and orderType != ''  ">#{orderType},</if>
+			<if test="orderId != null  and orderId != ''  ">#{orderId},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateVipAppeal" parameterType="VipAppeal">
+        update ysx_vip_appeal
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="appealTime != null  and appealTime != ''  ">appeal_time = #{appealTime},</if>
+            <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus},</if>
+            <if test="orderType != null  and orderType != ''  ">order_type = #{orderType},</if>
+            <if test="orderId != null  and orderId != ''  ">order_id = #{orderId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteVipAppealById" parameterType="Integer">
+        delete from ysx_vip_appeal where id = #{id}
+    </delete>
+	
+    <delete id="deleteVipAppealByIds" parameterType="String">
+        delete from ysx_vip_appeal where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

@@ -1,6 +1,5 @@
 package com.ruoyi.yishengxin.service;
 
-import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import java.util.List;
 
@@ -70,5 +69,17 @@ public interface IVipUserService
 	 * @return
 	 */
 	List<VipUser> selectUserByGrandParentCode(VipUser oneUser);
+
+	/**
+	 * 转出
+	 *
+	 * @param vip
+	 * @param myVip
+	 * @param type
+	 * @param number
+	 * @param tranMoney
+	 * @return
+	 */
+    int tranSport(VipUser vip, VipUser myVip, String type, String number, double tranMoney) throws Exception;
 
 }

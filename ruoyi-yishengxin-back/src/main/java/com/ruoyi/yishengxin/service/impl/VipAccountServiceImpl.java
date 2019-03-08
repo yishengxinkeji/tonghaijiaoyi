@@ -1,12 +1,15 @@
 package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.constant.CustomerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.yishengxin.mapper.vipUser.VipAccountMapper;
 import com.ruoyi.yishengxin.domain.vipUser.VipAccount;
 import com.ruoyi.yishengxin.service.IVipAccountService;
 import com.ruoyi.common.support.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 收款账户 服务层实现
@@ -15,6 +18,7 @@ import com.ruoyi.common.support.Convert;
  * @date 2019-03-02
  */
 @Service
+@Transactional
 public class VipAccountServiceImpl implements IVipAccountService 
 {
 	@Autowired
@@ -85,7 +89,11 @@ public class VipAccountServiceImpl implements IVipAccountService
 	 * @param vipId
 	 */
 	@Override
-	public void updateDefaultAccount(Integer vipId) {
+	public int updateDefaultAccount(Integer vipId,Integer id) {
 		vipAccountMapper.updateDefaultAccount(vipId);
+		VipAccount vipAccount = new VipAccount();
+		vipAccount.setId(id);
+		vipAccount.setIsDefault(CustomerConstants.YES);
+		return vipAccountMapper.updateVipAccount(vipAccount);
 	}
 }

@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVipUserVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertVipUser" parameterType="VipUser" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_vip_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">

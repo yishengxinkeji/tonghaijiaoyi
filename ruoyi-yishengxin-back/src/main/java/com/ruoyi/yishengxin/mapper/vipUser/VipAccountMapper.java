@@ -1,7 +1,9 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
 import com.ruoyi.yishengxin.domain.vipUser.VipAccount;
-import java.util.List;	
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 收款账户 数据层
@@ -9,6 +11,7 @@ import java.util.List;
  * @author ruoyi
  * @date 2019-03-02
  */
+@Repository
 public interface VipAccountMapper 
 {
 	/**
@@ -63,5 +66,5 @@ public interface VipAccountMapper
 	 * 将该用户账户改为非默认
 	 * @param vipId
 	 */
-	void updateDefaultAccount(Integer vipId);
+	int updateDefaultAccount(Integer vipId);
 }

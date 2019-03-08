@@ -70,7 +70,7 @@ public class VipUser extends BaseEntity {
      */
     private String hkdMoney;
     /**
-     * 上级推广码
+     * 上级推荐码
      */
     private String parentCode;
     /**

@@ -8,6 +8,7 @@ import com.ruoyi.yishengxin.mapper.vipUser.VipAddressMapper;
 import com.ruoyi.yishengxin.domain.vipUser.VipAddress;
 import com.ruoyi.yishengxin.service.IVipAddressService;
 import com.ruoyi.common.support.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 会员地址 服务层实现
@@ -16,6 +17,7 @@ import com.ruoyi.common.support.Convert;
  * @date 2019-02-27
  */
 @Service
+@Transactional
 public class VipAddressServiceImpl implements IVipAddressService {
     @Autowired
     private VipAddressMapper vipAddressMapper;
@@ -80,8 +82,8 @@ public class VipAddressServiceImpl implements IVipAddressService {
      * @param vipId
      */
     @Override
-    public void updateDefaultAddress(Integer vipId) {
-        vipAddressMapper.updateDefaultAddress(vipId);
+    public int updateDefaultAddress(Integer vipId) {
+        return vipAddressMapper.updateDefaultAddress(vipId);
     }
 
 }

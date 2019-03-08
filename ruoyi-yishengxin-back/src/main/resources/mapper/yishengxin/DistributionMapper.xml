@@ -6,7 +6,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Distribution" id="DistributionResult">
         <result property="id"    column="id"    />
-        <result property="charge"    column="charge"    />
         <result property="parentCharge"    column="parent_charge"    />
         <result property="grandparentCharge"    column="grandparent_charge"    />
         <result property="createBy"    column="create_by"    />
@@ -17,14 +16,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectDistributionVo">
-        select id, charge, parent_charge, grandparent_charge, create_by, create_time, update_by, update_time, remark from ysx_distribution
+        select id, parent_charge, grandparent_charge, create_by, create_time, update_by, update_time, remark from ysx_distribution
     </sql>
 	
     <select id="selectDistributionList" parameterType="Distribution" resultMap="DistributionResult">
         <include refid="selectDistributionVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="charge != null  and charge != '' "> and charge = #{charge}</if>
              <if test="parentCharge != null  and parentCharge != '' "> and parent_charge = #{parentCharge}</if>
              <if test="grandparentCharge != null  and grandparentCharge != '' "> and grandparent_charge = #{grandparentCharge}</if>
              <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
@@ -43,7 +41,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertDistribution" parameterType="Distribution" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_distribution
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="charge != null  and charge != ''  ">charge,</if>
 			<if test="parentCharge != null  and parentCharge != ''  ">parent_charge,</if>
 			<if test="grandparentCharge != null  and grandparentCharge != ''  ">grandparent_charge,</if>
 			<if test="createBy != null  and createBy != ''  ">create_by,</if>
@@ -52,7 +49,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="charge != null  and charge != ''  ">#{charge},</if>
 			<if test="parentCharge != null  and parentCharge != ''  ">#{parentCharge},</if>
 			<if test="grandparentCharge != null  and grandparentCharge != ''  ">#{grandparentCharge},</if>
 			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
@@ -64,7 +60,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateDistribution" parameterType="Distribution">
         update ysx_distribution
         <trim prefix="SET" suffixOverrides=",">
-            <if test="charge != null  and charge != ''  ">charge = #{charge},</if>
             <if test="parentCharge != null  and parentCharge != ''  ">parent_charge = #{parentCharge},</if>
             <if test="grandparentCharge != null  and grandparentCharge != ''  ">grandparent_charge = #{grandparentCharge},</if>
 

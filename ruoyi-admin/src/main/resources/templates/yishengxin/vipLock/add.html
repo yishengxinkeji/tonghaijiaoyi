@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-vipLock-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">用户id：</label>
+				<div class="col-sm-8">
+					<input id="vipId" name="vipId" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓时间：</label>
+				<div class="col-sm-8">
+					<input id="lockTime" name="lockTime" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓类型(1,3,6,12)：</label>
+				<div class="col-sm-8">
+					<input id="lockType" name="lockType" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓数量：</label>
+				<div class="col-sm-8">
+					<input id="lockNumber" name="lockNumber" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">本息获利：</label>
+				<div class="col-sm-8">
+					<input id="lockProfit" name="lockProfit" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">锁仓状态(锁仓中,已收货,中断锁仓)：</label>
+				<div class="col-sm-8">
+					<input id="lockStatus" name="lockStatus" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/vipLock"
+		$("#form-vipLock-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-vipLock-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

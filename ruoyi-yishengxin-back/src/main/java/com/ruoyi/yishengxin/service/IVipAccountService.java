@@ -55,6 +55,6 @@ public interface IVipAccountService
 	 * 将该用户的所有地址改为非默认
 	 * @param vipId
 	 */
-	void updateDefaultAccount(Integer vipId);
+	int updateDefaultAccount(Integer vipId,Integer id);
 	
 }

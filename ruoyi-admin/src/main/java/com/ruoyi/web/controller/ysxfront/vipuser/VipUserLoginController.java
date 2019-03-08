@@ -120,6 +120,8 @@ public class VipUserLoginController extends BaseFrontController {
             }else {
                 new_User.setParentCode("-1");
             }
+        }else {
+            new_User.setParentCode("-1");
         }
         new_User.setIsFrozen(CustomerConstants.NO);
         new_User.setMaxTradeDay("-1");
@@ -242,7 +244,7 @@ public class VipUserLoginController extends BaseFrontController {
      * @return
      */
     @PostMapping("/registerGift")
-    public ResponseResult registerGift(@RequestParam("token") String token){
+    public ResponseResult registerGift(@RequestHeader("token") String token){
         try{
             VipUser vipUser = userExist(token);
             if(vipUser == null){
@@ -281,7 +283,7 @@ public class VipUserLoginController extends BaseFrontController {
      * @return
      */
     @PostMapping("/receiveGift")
-    public ResponseResult receiveGift(@RequestParam("token") String token){
+    public ResponseResult receiveGift(@RequestHeader("token") String token){
 
         String giftType = "";
         String giftNumber = "";

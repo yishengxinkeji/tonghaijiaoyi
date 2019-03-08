@@ -1,6 +1,8 @@
 package com.ruoyi.yishengxin.service;
 
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+
 import java.util.List;
 
 /**
@@ -50,5 +52,11 @@ public interface IVipTradeService
      * @return 结果
      */
 	public int deleteVipTradeByIds(String ids);
-	
+
+	/**
+	 * 今日总共转了多少
+	 * @param vipTrade
+	 * @return
+	 */
+	String selectTranByDay(VipTrade vipTrade);
 }
