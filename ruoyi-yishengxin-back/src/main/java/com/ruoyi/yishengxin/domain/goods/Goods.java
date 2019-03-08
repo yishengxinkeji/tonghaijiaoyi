@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品表 ysx_goods
  * 
  * @author ruoyi
- * @date 2019-03-05
+ * @date 2019-03-07
  */
 public class Goods extends BaseEntity
 {
@@ -19,6 +19,8 @@ public class Goods extends BaseEntity
 	private Integer id;
 	/** 商品名称 */
 	private String goodsName;
+	/** 商品介绍 */
+	private String goodsIntroduce;
 	/** 商品详情 */
 	private String goodsDetails;
 	/** 商品价格 */
@@ -33,8 +35,10 @@ public class Goods extends BaseEntity
 	private String standUpAndDown;
 	/** 客服电话 */
 	private String serviceTel;
-	/** 商品图片 */
-	private String goodsPicture;
+	/** 商品轮播图 */
+	private String goodsSlideShow;
+	/** 商品主图 */
+	private String goodsMainFigure;
 	/** 创建者 */
 	private String createBy;
 	/** 创建时间 */
@@ -63,6 +67,15 @@ public class Goods extends BaseEntity
 	public String getGoodsName() 
 	{
 		return goodsName;
+	}
+	public void setGoodsIntroduce(String goodsIntroduce) 
+	{
+		this.goodsIntroduce = goodsIntroduce;
+	}
+
+	public String getGoodsIntroduce() 
+	{
+		return goodsIntroduce;
 	}
 	public void setGoodsDetails(String goodsDetails) 
 	{
@@ -127,14 +140,23 @@ public class Goods extends BaseEntity
 	{
 		return serviceTel;
 	}
-	public void setGoodsPicture(String goodsPicture) 
+	public void setGoodsSlideShow(String goodsSlideShow) 
 	{
-		this.goodsPicture = goodsPicture;
+		this.goodsSlideShow = goodsSlideShow;
 	}
 
-	public String getGoodsPicture() 
+	public String getGoodsSlideShow() 
 	{
-		return goodsPicture;
+		return goodsSlideShow;
+	}
+	public void setGoodsMainFigure(String goodsMainFigure) 
+	{
+		this.goodsMainFigure = goodsMainFigure;
+	}
+
+	public String getGoodsMainFigure() 
+	{
+		return goodsMainFigure;
 	}
 	public void setCreateBy(String createBy) 
 	{
@@ -186,6 +208,7 @@ public class Goods extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("goodsName", getGoodsName())
+            .append("goodsIntroduce", getGoodsIntroduce())
             .append("goodsDetails", getGoodsDetails())
             .append("goodsPrice", getGoodsPrice())
             .append("goodsDetailsPicture", getGoodsDetailsPicture())
@@ -193,7 +216,8 @@ public class Goods extends BaseEntity
             .append("goodsSoldNumber", getGoodsSoldNumber())
             .append("standUpAndDown", getStandUpAndDown())
             .append("serviceTel", getServiceTel())
-            .append("goodsPicture", getGoodsPicture())
+            .append("goodsSlideShow", getGoodsSlideShow())
+            .append("goodsMainFigure", getGoodsMainFigure())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

@@ -81,5 +81,7 @@ public class GoodsServiceImpl implements IGoodsService
 	{
 		return goodsMapper.deleteGoodsByIds(Convert.toStrArray(ids));
 	}
-	
+
+
+
 }

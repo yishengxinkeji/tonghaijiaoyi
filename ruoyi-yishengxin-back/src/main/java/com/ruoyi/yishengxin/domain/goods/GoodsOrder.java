@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品订单表 ysx_goods_order
  * 
  * @author ruoyi
- * @date 2019-03-04
+ * @date 2019-03-07
  */
 public class GoodsOrder extends BaseEntity
 {
@@ -24,11 +24,11 @@ public class GoodsOrder extends BaseEntity
 	/** 商品详情 */
 	private String goodsDetails;
 	/** 商品价格 */
-	private Integer goodsPrice;
+	private String goodsPrice;
 	/** 商品购买数量 */
 	private Integer goodsSoldNumber;
 	/** 商品订单总额 */
-	private Integer goodsOrderTotalAmount;
+	private String goodsOrderTotalAmount;
 	/** 商品图片 */
 	private String goodsPicture;
 	/** 商品状态 */
@@ -88,12 +88,12 @@ public class GoodsOrder extends BaseEntity
 	{
 		return goodsDetails;
 	}
-	public void setGoodsPrice(Integer goodsPrice) 
+	public void setGoodsPrice(String goodsPrice) 
 	{
 		this.goodsPrice = goodsPrice;
 	}
 
-	public Integer getGoodsPrice() 
+	public String getGoodsPrice() 
 	{
 		return goodsPrice;
 	}
@@ -106,12 +106,12 @@ public class GoodsOrder extends BaseEntity
 	{
 		return goodsSoldNumber;
 	}
-	public void setGoodsOrderTotalAmount(Integer goodsOrderTotalAmount) 
+	public void setGoodsOrderTotalAmount(String goodsOrderTotalAmount) 
 	{
 		this.goodsOrderTotalAmount = goodsOrderTotalAmount;
 	}
 
-	public Integer getGoodsOrderTotalAmount() 
+	public String getGoodsOrderTotalAmount() 
 	{
 		return goodsOrderTotalAmount;
 	}

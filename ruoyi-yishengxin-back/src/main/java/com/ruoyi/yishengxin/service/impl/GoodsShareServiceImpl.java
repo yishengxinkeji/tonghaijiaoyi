@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.ruoyi.yishengxin.domain.goods.GoodsShare;
 import com.ruoyi.yishengxin.mapper.goods.GoodsShareMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 import com.ruoyi.yishengxin.service.IGoodsShareService;
@@ -83,5 +83,10 @@ public class GoodsShareServiceImpl implements IGoodsShareService
 	{
 		return goodsShareMapper.deleteGoodsShareByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public GoodsShare selectGoodsShareByUid(int uid) {
+		return goodsShareMapper.selectGoodsShareByUid(uid);
+	}
+
 }
