@@ -15,7 +15,7 @@ public class GoodsCollection extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
 	
-	/** 商品详情表id */
+	/** 商品收藏表id */
 	private Integer id;
 	/** 用户id */
 	private Integer uid;

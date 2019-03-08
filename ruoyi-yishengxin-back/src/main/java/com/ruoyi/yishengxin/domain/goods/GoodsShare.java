@@ -9,7 +9,7 @@ import java.util.Date;
  * 商品分享表 ysx_goods_share
  * 
  * @author ruoyi
- * @date 2019-03-05
+ * @date 2019-03-06
  */
 public class GoodsShare extends BaseEntity
 {

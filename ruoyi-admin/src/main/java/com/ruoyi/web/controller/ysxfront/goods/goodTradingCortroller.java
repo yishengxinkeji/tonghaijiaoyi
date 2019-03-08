@@ -3,14 +3,15 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
-import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -26,10 +27,17 @@ public class goodTradingCortroller extends BaseFrontController{
     @Autowired
     IGoodsOrderService iGoodsOrderService;
 
-
+    /**
+     *
+     * @param token 令牌
+     * @param orderTotalAmount  商品订单总额
+     * @param tradePassword   支付密码
+     * @param orderId 订单ID
+     * @return
+     */
     @PostMapping("/payment")
     @ResponseBody
-    public ResponseResult payment(String token,String orderTotalAmount,String tradePassword,int orderId) {
+    public ResponseResult payment(@RequestHeader("token")String token, String orderTotalAmount, String tradePassword, int orderId) {
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
@@ -65,7 +73,7 @@ public class goodTradingCortroller extends BaseFrontController{
 
             if (i1 >  0) {
                 GoodsOrder goodsOrder = iGoodsOrderService.selectGoodsOrderById(orderId);
-                goodsOrder.setGoodsStatus("已付款");
+                goodsOrder.setGoodsStatus("待发货");
                 int i2 = iGoodsOrderService.updateGoodsOrder(goodsOrder);
                 if (i2 > 0){
 

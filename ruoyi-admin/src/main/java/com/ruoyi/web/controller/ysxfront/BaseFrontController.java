@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.ysxfront;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.RedisUtils;
+import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
  * 前端控制器公共类
  */
 @Component
-public class BaseFrontController {
+public class BaseFrontController  {
 
     @Autowired
     private IVipUserService vipUserService;

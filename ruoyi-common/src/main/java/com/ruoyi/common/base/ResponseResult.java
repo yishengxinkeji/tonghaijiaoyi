@@ -15,21 +15,21 @@ public class ResponseResult extends HashMap<String, Object> {
     public static ResponseResult success() {
         ResponseResult responseResult = new ResponseResult();
         responseResult.put("code", ResponseEnum.SUCCESS.getCode());
-        responseResult.put("info", ResponseEnum.SUCCESS.getInfo());
+        responseResult.put("msg", ResponseEnum.SUCCESS.getInfo());
         return responseResult;
     }
 
     public static ResponseResult error() {
         ResponseResult responseResult = new ResponseResult();
         responseResult.put("code", ResponseEnum.FAIL.getCode());
-        responseResult.put("info", ResponseEnum.FAIL.getInfo());
+        responseResult.put("msg", ResponseEnum.FAIL.getInfo());
         return responseResult;
     }
 
     public static ResponseResult error(String message) {
         ResponseResult responseResult = new ResponseResult();
         responseResult.put("code", ResponseEnum.FAIL.getCode());
-        responseResult.put("info", message);
+        responseResult.put("msg", message);
         return responseResult;
     }
 

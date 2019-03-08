@@ -51,5 +51,13 @@ public interface IGoodsShareService
      * @return 结果
      */
 	public int deleteGoodsShareByIds(String ids);
+
+	/**
+	 * 根据用户id查询用户的最后一次分享
+	 *
+	 * @param uid
+	 * @return
+	 */
+	public GoodsShare selectGoodsShareByUid(int uid);
 	
 }

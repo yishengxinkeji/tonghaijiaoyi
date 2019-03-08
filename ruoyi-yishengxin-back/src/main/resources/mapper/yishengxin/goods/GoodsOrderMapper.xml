@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.yishengxin.mapper.GoodsOrderMapper">
+<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsOrderMapper">
     
     <resultMap type="GoodsOrder" id="GoodsOrderResult">
         <result property="id"    column="id"    />
@@ -36,9 +36,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="uid != null "> and uid = #{uid}</if>
              <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
              <if test="goodsDetails != null  and goodsDetails != '' "> and goodsDetails = #{goodsDetails}</if>
-             <if test="goodsPrice != null "> and goodsPrice = #{goodsPrice}</if>
+             <if test="goodsPrice != null  and goodsPrice != '' "> and goodsPrice = #{goodsPrice}</if>
              <if test="goodsSoldNumber != null "> and goodsSoldNumber = #{goodsSoldNumber}</if>
-             <if test="goodsOrderTotalAmount != null "> and goodsOrderTotalAmount = #{goodsOrderTotalAmount}</if>
+             <if test="goodsOrderTotalAmount != null  and goodsOrderTotalAmount != '' "> and goodsOrderTotalAmount = #{goodsOrderTotalAmount}</if>
              <if test="goodsPicture != null  and goodsPicture != '' "> and goodsPicture = #{goodsPicture}</if>
              <if test="goodsStatus != null  and goodsStatus != '' "> and goodsStatus = #{goodsStatus}</if>
              <if test="shippingAddress != null "> and shippingAddress = #{shippingAddress}</if>
@@ -64,9 +64,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="uid != null  ">uid,</if>
 			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
 			<if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails,</if>
-			<if test="goodsPrice != null  ">goodsPrice,</if>
+			<if test="goodsPrice != null  and goodsPrice != ''  ">goodsPrice,</if>
 			<if test="goodsSoldNumber != null  ">goodsSoldNumber,</if>
-			<if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount,</if>
+			<if test="goodsOrderTotalAmount != null  and goodsOrderTotalAmount != ''  ">goodsOrderTotalAmount,</if>
 			<if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture,</if>
 			<if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus,</if>
 			<if test="shippingAddress != null  ">shippingAddress,</if>
@@ -83,9 +83,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="uid != null  ">#{uid},</if>
 			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
 			<if test="goodsDetails != null  and goodsDetails != ''  ">#{goodsDetails},</if>
-			<if test="goodsPrice != null  ">#{goodsPrice},</if>
+			<if test="goodsPrice != null  and goodsPrice != ''  ">#{goodsPrice},</if>
 			<if test="goodsSoldNumber != null  ">#{goodsSoldNumber},</if>
-			<if test="goodsOrderTotalAmount != null  ">#{goodsOrderTotalAmount},</if>
+			<if test="goodsOrderTotalAmount != null  and goodsOrderTotalAmount != ''  ">#{goodsOrderTotalAmount},</if>
 			<if test="goodsPicture != null  and goodsPicture != ''  ">#{goodsPicture},</if>
 			<if test="goodsStatus != null  and goodsStatus != ''  ">#{goodsStatus},</if>
 			<if test="shippingAddress != null  ">#{shippingAddress},</if>
@@ -106,9 +106,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="uid != null  ">uid = #{uid},</if>
             <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
             <if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails = #{goodsDetails},</if>
-            <if test="goodsPrice != null  ">goodsPrice = #{goodsPrice},</if>
+            <if test="goodsPrice != null  and goodsPrice != ''  ">goodsPrice = #{goodsPrice},</if>
             <if test="goodsSoldNumber != null  ">goodsSoldNumber = #{goodsSoldNumber},</if>
-            <if test="goodsOrderTotalAmount != null  ">goodsOrderTotalAmount = #{goodsOrderTotalAmount},</if>
+            <if test="goodsOrderTotalAmount != null  and goodsOrderTotalAmount != ''  ">goodsOrderTotalAmount = #{goodsOrderTotalAmount},</if>
             <if test="goodsPicture != null  and goodsPicture != ''  ">goodsPicture = #{goodsPicture},</if>
             <if test="goodsStatus != null  and goodsStatus != ''  ">goodsStatus = #{goodsStatus},</if>
             <if test="shippingAddress != null  ">shippingAddress = #{shippingAddress},</if>

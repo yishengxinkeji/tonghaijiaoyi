@@ -51,5 +51,7 @@ public interface IGoodsService
      * @return 结果
      */
 	public int deleteGoodsByIds(String ids);
+
+
 	
 }

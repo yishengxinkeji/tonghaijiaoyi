@@ -26,6 +26,7 @@ public interface GoodsMapper
      * @param goods 商品信息
      * @return 商品集合
      */
+
 	public List<Goods> selectGoodsList(Goods goods);
 	
 	/**

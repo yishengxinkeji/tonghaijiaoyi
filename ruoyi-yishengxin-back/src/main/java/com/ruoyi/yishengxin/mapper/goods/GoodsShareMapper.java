@@ -1,6 +1,7 @@
 package com.ruoyi.yishengxin.mapper.goods;
 
 import com.ruoyi.yishengxin.domain.goods.GoodsShare;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -59,5 +60,14 @@ public interface GoodsShareMapper
      * @return 结果
      */
 	public int deleteGoodsShareByIds(String[] ids);
+
+	/**
+	 * 通过用户id查询用户的最后一次分享
+	 *
+	 * @param uid 用户 ID
+	 * @return
+	 */
+	@Select("select * from  ysx_goods_share where uid = #{uid} ORDER BY createTime DESC LIMIT 1")
+	public GoodsShare selectGoodsShareByUid(int uid);
 	
 }

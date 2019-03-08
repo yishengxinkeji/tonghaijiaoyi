@@ -54,7 +54,13 @@ public enum ResponseEnum {
     GOODS_SHARE_ADDERROR("2016","商品新增分享失败"),
     GOODS_SHARE_UPLODEERROR("2016","商品新增分享失败"),
     GOODS_SHARE_SSLEERROR("2017","商品分享SSL获取失败"),
-
+    GOODS_SHARE_SHARE("2018","今天已经已经分享过商品"),
+    GOODS_SELECTERROR("2019","商品查询失败"),
+    GOODS_DELECTERROR("2020","商品删除失败"),
+    GOODS_DELIVERYERROR("2021","商品确定收货失败"),
+    GOODS__SALES_AUDITERROR("2022","商品退货失败"),
+    GOODS__RETURNMANY_ERROR("2023","商品退货失败"),
+    GOODS__OPERARETURNMANY_ERROR("2024","商品退货已完成，请不要重复操作"),
     FAIL("500","失败");
 
 

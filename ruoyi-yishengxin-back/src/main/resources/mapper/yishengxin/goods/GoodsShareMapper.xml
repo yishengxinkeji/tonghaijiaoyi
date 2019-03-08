@@ -2,21 +2,21 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.yishengxin.mapper.GoodsShareMapper">
+<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsShareMapper">
     
     <resultMap type="GoodsShare" id="GoodsShareResult">
         <result property="id"    column="id"    />
         <result property="uid"    column="uid"    />
         <result property="bounty"    column="bounty"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="createTime"    column="createTime"    />
+        <result property="updateBy"    column="updateBy"    />
+        <result property="updateTime"    column="updateTime"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 	
 	<sql id="selectGoodsShareVo">
-        select id, uid, bounty, create_by, create_time, update_by, update_time, remark from ysx_goods_share
+        select id, uid, bounty, createBy, createTime, updateBy, updateTime, remark from ysx_goods_share
     </sql>
 	
     <select id="selectGoodsShareList" parameterType="GoodsShare" resultMap="GoodsShareResult">
@@ -25,10 +25,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="uid != null "> and uid = #{uid}</if>
              <if test="bounty != null  and bounty != '' "> and bounty = #{bounty}</if>
-             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
-             <if test="createTime != null "> and create_time = #{createTime}</if>
-             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
-             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="createBy != null  and createBy != '' "> and createBy = #{createBy}</if>
+             <if test="createTime != null "> and createTime = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and updateBy = #{updateBy}</if>
+             <if test="updateTime != null "> and updateTime = #{updateTime}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
          </where>
     </select>
@@ -43,10 +43,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="uid != null  ">uid,</if>
 			<if test="bounty != null  and bounty != ''  ">bounty,</if>
-			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-			<if test="createTime != null  ">create_time,</if>
-			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
-			<if test="updateTime != null  ">update_time,</if>
+			<if test="createBy != null  and createBy != ''  ">createBy,</if>
+			<if test="createTime != null  ">createTime,</if>
+			<if test="updateBy != null  and updateBy != ''  ">updateBy,</if>
+			<if test="updateTime != null  ">updateTime,</if>
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -65,10 +65,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="uid != null  ">uid = #{uid},</if>
             <if test="bounty != null  and bounty != ''  ">bounty = #{bounty},</if>
-            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
-            <if test="createTime != null  ">create_time = #{createTime},</if>
-            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="createBy != null  and createBy != ''  ">createBy = #{createBy},</if>
+            <if test="createTime != null  ">createTime = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">updateBy = #{updateBy},</if>
+            <if test="updateTime != null  ">updateTime = #{updateTime},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
         </trim>
         where id = #{id}

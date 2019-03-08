@@ -1,5 +1,4 @@
 package com.ruoyi.web.controller.ysxfront.goods;
-
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.order.Order;
@@ -8,9 +7,11 @@ import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.domain.goods.GoodsSalesreturn;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
+import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.yishengxin.service.IGoodsSalesreturnService;
@@ -18,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 商品退货 信息操作处理
@@ -37,96 +40,40 @@ public class GoodsSalesreturnController extends BaseFrontController
 	@Autowired
 	private IGoodsOrderService goodsOrderService;
 
+	@Autowired
+	private IVipUserService vipUserService;
+
 	/**
 	 * 查询商品退货列表
 	 */
 
 	@PostMapping("/list")
 	@ResponseBody
-	public ResponseResult list(String token , GoodsSalesreturn goodsSalesreturn){
+	public ResponseResult list(GoodsSalesreturn goodsSalesreturn){
 
-		return null;
+
+		List<GoodsSalesreturn> goodsSalesreturns = goodsSalesreturnService.selectGoodsSalesreturnList(goodsSalesreturn);
+
+		return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsSalesreturns);
 	}
+
+
 
 
 	/**
-	 * 新增保存商品仅退款退货
+	 *  订单退款
+	 * @param token
+	 * @param orderId
+	 * @param goodsSalesreturn
+	 * @param filename
+	 * @return
+	 * @throws IOException
 	 */
-	@PostMapping("/onlySalesreturnAdd")
-	@ResponseBody
-	public ResponseResult onlySalesreturnAdd(String token , int orderId, GoodsSalesreturn goodsSalesreturn, MultipartFile[] filename) throws IOException {
-		// 校验登录状态
-		goodsSalesreturn.setRefundStatus("仅退款");
-		VipUser vipUser = userExist(token);
-
-		if (vipUser == null) {
-			return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-		}
-		//校验传参
-		if (null == token || "".equals(token)) {
-			return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-		}
-		Integer uid = vipUser.getId();
-		goodsSalesreturn.setUid(uid);
-
-		GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderId);
-		String orderNumber = goodsOrder.getOrderNumber();
-		goodsSalesreturn.setOrderNumber(orderNumber);
-
-		String goodsName = goodsOrder.getGoodsName();
-		goodsSalesreturn.setGoodsName(goodsName);
-
-		String goodsDetails = goodsOrder.getGoodsDetails();
-		goodsSalesreturn.setGoodsIntroduce(goodsDetails);
-
-		Integer goodsPrice = goodsOrder.getGoodsPrice();
-		goodsSalesreturn.setGoodsUnitPrice(goodsPrice+"");
-
-		String goodsPicture = goodsOrder.getGoodsPicture();
-		goodsSalesreturn.setGoodsImages(goodsPicture);
-
-		Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
-		goodsSalesreturn.setBuyNumber(goodsSoldNumber);
-
-		Integer goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
-		goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount+"");
-
-		Date createTime = goodsOrder.getCreateTime();
-		goodsSalesreturn.setOrderTime(createTime);
-		//生成退单号
-		String orderIdByTime = Order.getOrderIdByTime();
-		goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
-
-		String imagesPath = "";
-		for (int i = 0; i < filename.length; i++) {
-
-			if (filename.length == 0) {
-				int i1 = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
-
-				if (i1 > 0) {
-					return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-				}
-				return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
-			}
-			String images = "e:/" + filename[i].getOriginalFilename() + ",";
-
-			filename[i].transferTo(new File(images));
-			imagesPath = imagesPath + images;
-		}
-		goodsSalesreturn.setPloadDocuments(imagesPath);
-		int i = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
-
-		if (i > 0 ){
-			return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-		}
-
-		return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
-	}
 	@PostMapping("/add")
 	@ResponseBody
-	public ResponseResult addSave(String token , int orderId, GoodsSalesreturn goodsSalesreturn, MultipartFile[] filename) throws IOException {
+	public ResponseResult addSave(@RequestHeader("token")String token , int orderId, GoodsSalesreturn goodsSalesreturn, MultipartFile[] filename) throws IOException {
 		// 校验登录状态
-		goodsSalesreturn.setRefundStatus("退货退款");
+
 		VipUser vipUser = userExist(token);
 
 		if (vipUser == null) {
@@ -149,7 +96,7 @@ public class GoodsSalesreturnController extends BaseFrontController
 		String goodsDetails = goodsOrder.getGoodsDetails();
 		goodsSalesreturn.setGoodsIntroduce(goodsDetails);
 
-		Integer goodsPrice = goodsOrder.getGoodsPrice();
+		String goodsPrice = goodsOrder.getGoodsPrice();
 		goodsSalesreturn.setGoodsUnitPrice(goodsPrice+"");
 
 		String goodsPicture = goodsOrder.getGoodsPicture();
@@ -158,8 +105,9 @@ public class GoodsSalesreturnController extends BaseFrontController
 		Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
 		goodsSalesreturn.setBuyNumber(goodsSoldNumber);
 
-		Integer goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
-		goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount+"");
+		goodsSalesreturn.setRefundTime(new Date());
+
+
 
 		Date createTime = goodsOrder.getCreateTime();
 		goodsSalesreturn.setOrderTime(createTime);
@@ -168,25 +116,33 @@ public class GoodsSalesreturnController extends BaseFrontController
 		goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
 
 		String imagesPath = "";
-		for (int i = 0; i < filename.length; i++) {
 
-			if (filename.length == 0) {
-				int i1 = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
+		if (null == filename) {
+			goodsSalesreturn.setRefundStatus("待审批");
+			int i1 = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
 
-				if (i1 > 0) {
-					return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-				}
-				return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
+			if (i1 > 0) {
+				goodsOrder.setGoodsStatus("退款/售后");
+				goodsOrderService.updateGoodsOrder(goodsOrder);
+
+
+				return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 			}
-			String images = "e:/" + filename[i].getOriginalFilename() + ",";
+			return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
+		}
 
+		for (int i = 0; i < filename.length; i++) {
+			String images = "e:/" + filename[i].getOriginalFilename() + ",";
 			filename[i].transferTo(new File(images));
 			imagesPath = imagesPath + images;
 		}
 		goodsSalesreturn.setPloadDocuments(imagesPath);
+		goodsSalesreturn.setRefundStatus("待审批");
 		int i = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
 
 		if (i > 0 ){
+			goodsOrder.setGoodsStatus("退款/售后");
+			goodsOrderService.updateGoodsOrder(goodsOrder);
 			return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 		}
 
@@ -203,7 +159,7 @@ public class GoodsSalesreturnController extends BaseFrontController
 	 */
 	@PostMapping("/selectByOrderNumber")
 	@ResponseBody
-	public ResponseResult selectGoodsSalesreturnByOrderNumber(String token,String oraderNumber) {
+	public ResponseResult selectGoodsSalesreturnByOrderNumber(@RequestHeader("token")String token,String oraderNumber) {
 		//校验传参
 		if (null == token || "".equals(token)) {
 			return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
@@ -226,13 +182,56 @@ public class GoodsSalesreturnController extends BaseFrontController
 
 
 	/**
-	 * 修改保存商品退货
+	 * 审批保存商品退货
 	 */
 	@PostMapping("/edit")
 	@ResponseBody
-	public ResponseResult editSave(GoodsSalesreturn goodsSalesreturn){
+	public ResponseResult editSave(int orderID,GoodsSalesreturn goodsSalesreturn){
+		//检查是否已经退货
 
-		return null;
+		GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
+
+
+		if (goodsSalesreturn1.getRefundStatus().equals("同意") || goodsSalesreturn1.getRefundStatus().equals("不同意")){
+				ResponseResult.responseResult(ResponseEnum.GOODS__OPERARETURNMANY_ERROR);
+
+			}
+
+
+		int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn);
+
+		if ( i > 0 ){
+				if(goodsSalesreturn.getRefundStatus().equals("同意")){
+
+					GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderID);
+
+					String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
+					//todo
+
+					VipUser vipUser1 = vipUserService.selectVipUserById(goodsOrder.getUid());
+					String sslMoney = vipUser1.getSslMoney();
+
+
+
+					BigDecimal bigDecimal = new BigDecimal(sslMoney);
+					BigDecimal bigDecimal1 = new BigDecimal(goodsOrderTotalAmount);
+					BigDecimal addSsl = bigDecimal.add(bigDecimal1);
+
+					String sslMony = addSsl.toString();
+					vipUser1.setSslMoney(sslMony);
+					int i1 = vipUserService.updateVipUser(vipUser1);
+					if (i1 > 0){
+
+						return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+					}
+					return ResponseResult.responseResult(ResponseEnum.GOODS__RETURNMANY_ERROR);
+
+				}
+
+			return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+		}
+
+		return ResponseResult.responseResult(ResponseEnum.GOODS__SALES_AUDITERROR);
 	}
 	
 	/**
