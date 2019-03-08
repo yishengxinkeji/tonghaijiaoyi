@@ -108,7 +108,7 @@ public class GoodsEvaluationController extends BaseFrontController {
             }
             String images = "e:/" + filename[i].getOriginalFilename() + ",";
 
-            filename[i].transferTo(new File("e:/" + filename[i].getOriginalFilename()));
+            filename[i].transferTo(new File(images));
             imagesPath = imagesPath + images;
         }
         goodsEvaluation.setEvaluationImage(imagesPath);
