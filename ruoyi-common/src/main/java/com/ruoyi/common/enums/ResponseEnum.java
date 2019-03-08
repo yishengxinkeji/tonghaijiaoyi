@@ -13,27 +13,50 @@ public enum ResponseEnum {
     VIP_USER_INVITE("1008","邀请码不存在"),
     VIP_USER_AVATER("1009","头像修改失败"),
     VIP_USER_AVATER_TYPE("1010","头像格式不正确"),
-    VIP_USER_ADDADDRESS("1099","添加收货地址错误"),
-    VIP_USER_EDITADDRESS("1098","修改收货地址错误"),
-    VIP_USER_REMOVEADDRESS("1097","删除收货地址错误"),
-    VIP_USER_NULLDEFAULTADDRESS("1096","没有默认收货地址错误"),
-    VIP_USER_NULL("1095","用户不存在"),
-    VIP_USER_TRADPASSWORDERROR("1094","支付密码错误"),
-    VIP_USER_SSLINSUFFICIENT("1093","SSL币不足"),
-    VIP_USER_TRADPUPLOADSSLERROR("1092","支付修改ssl错误"),
-
-
-
-
     FILE_NAME_LENGTH("1011","上传文件名过长"),
     FILE_TOO_MAX("1012","文件过大"),
     FILE_UPLOAD_TYPE("1013","缺失文件类型,无法处理"),
-
     NUMBER_TRANCT_ERROR("1014","填写正确的数字"),
     NUMBER_TOO_MAX("1015","数字太大"),
-    NUMBER_TOO_LOSS("1016","数字为负数"),
+    NUMBER_TOO_LOSS("1016","不能为负数"),
+    VIP_USER_TRADPUPLOADSSLERROR("1092","支付修改ssl错误"),
+    VIP_USER_SSLINSUFFICIENT("1093","SSL币不足"),
+    VIP_USER_TRADPASSWORDERROR("1094","支付密码错误"),
+    VIP_USER_NULL("1095","用户不存在"),
+    VIP_USER_NULLDEFAULTADDRESS("1096","没有默认收货地址错误"),
+    VIP_USER_REMOVEADDRESS("1097","删除收货地址错误"),
+    VIP_USER_EDITADDRESS("1098","修改收货地址错误"),
+    VIP_USER_ADDADDRESS("1099","添加收货地址错误"),
+    VIP_USER_HKDINSUFFICIENT("1100","HKD币不足"),
+    VIP_ACCOUNT_NO_DEFAULT("1101","缺少默认收款账户"),
+    VIP_USER_SSL_NOT_ENOUGH("1102","挂售SSL最低100"),
+    SYS_DEAL_TRADE("1103","系统正在操作交易列表,暂无法操作"),
+    MAX_TRADE_BY_DAY("1104","今日交易已达上限"),
+    MAX_TRADE_BY_TIME("1105","单次交易已超上限"),
+    OVER_ORDER_TOP("1106","购买数量超出订单数量"),
+    MIN_TRADE_BY_TIME("1107","一次转出太少"),
+    HKD_MULTIPLE_100("1108","单次交易只能是100的整数倍"),
+    NUMBER_INTEGRAL("1109","只能输入整数"),
+    NUMBER_LOW_LOCK("1110","低于锁仓最小值"),
+    NUMBER_MULTIPLE_LOCK("1111","有锁仓整数倍限制"),
+    ALREADY_FINISH_LOCK("1112","该订单已经锁仓结束"),
+    CAN_NOT_BUY_YOURSELF("1113","不能购买自己的订单"),
 
-    VIP_TOKEN_FAIL("9999","需重新登陆"),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     GOODS_NULL("2001","数据为空"),
@@ -61,8 +84,10 @@ public enum ResponseEnum {
     GOODS__SALES_AUDITERROR("2022","商品退货失败"),
     GOODS__RETURNMANY_ERROR("2023","商品退货失败"),
     GOODS__OPERARETURNMANY_ERROR("2024","商品退货已完成，请不要重复操作"),
-    FAIL("500","失败");
 
+
+    FAIL("500","失败"),
+    VIP_TOKEN_FAIL("9999","需重新登陆");
 
     private final String code;
     private final String info;
