@@ -42,7 +42,7 @@ public class GoodsCollectionController extends BaseFrontController {
 
     @PostMapping("/list")
     @ResponseBody
-    public ResponseResult list(@RequestHeader("token")String token) {
+    public ResponseResult list(@RequestHeader(value = "token")String token) {
         //校验传参
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
@@ -71,6 +71,7 @@ public class GoodsCollectionController extends BaseFrontController {
             goodsCollectionVo.setGoodsCollectionId(id);
             goodsCollectionVo.setGoods(goods);
             goodsCollectionVos.add(goodsCollectionVo);
+
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsCollectionVos);
     }
@@ -113,8 +114,9 @@ public class GoodsCollectionController extends BaseFrontController {
      */
     @PostMapping("/remove")
     @ResponseBody
-    public ResponseResult remove(@RequestHeader("token")String token, String[] ids) {
+    public ResponseResult remove(@RequestHeader("token")String token, String ids) {
 
+        String[] ids1 =ids.split("\\.");
         //校验传参
         if (null == ids || "".equals(token) || null == token) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
@@ -126,8 +128,8 @@ public class GoodsCollectionController extends BaseFrontController {
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        for (int i = 0; i < ids.length; i++) {
-            String id = ids[i];
+        for (int i = 0; i < ids1.length; i++) {
+            String id = ids1[i];
             int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
             if (i1 == 0) {
                 return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);

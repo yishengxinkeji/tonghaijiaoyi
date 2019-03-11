@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="goodsName"    column="goodsName"    />
         <result property="goodsIntroduce"    column="goodsIntroduce"    />
+        <result property="collectionStatus"    column="collectionStatus"    />
         <result property="goodsDetails"    column="goodsDetails"    />
         <result property="goodsPrice"    column="goodsPrice"    />
         <result property="goodsDetailsPicture"    column="goodsDetailsPicture"    />
@@ -25,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGoodsVo">
-        select id, goodsName, goodsIntroduce, goodsDetails, goodsPrice, goodsDetailsPicture, goodsInventory, goodsSoldNumber, standUpAndDown, serviceTel, goodsSlideShow, goodsMainFigure, create_by, create_time, update_by, update_time, remark from ysx_goods
+        select id, goodsName, goodsIntroduce, collectionStatus, goodsDetails, goodsPrice, goodsDetailsPicture, goodsInventory, goodsSoldNumber, standUpAndDown, serviceTel, goodsSlideShow, goodsMainFigure, create_by, create_time, update_by, update_time, remark from ysx_goods
     </sql>
 	
     <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="id != null "> and id = #{id}</if>
              <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
              <if test="goodsIntroduce != null  and goodsIntroduce != '' "> and goodsIntroduce = #{goodsIntroduce}</if>
+             <if test="collectionStatus != null "> and collectionStatus = #{collectionStatus}</if>
              <if test="goodsDetails != null  and goodsDetails != '' "> and goodsDetails = #{goodsDetails}</if>
              <if test="goodsPrice != null  and goodsPrice != '' "> and goodsPrice = #{goodsPrice}</if>
              <if test="goodsDetailsPicture != null  and goodsDetailsPicture != '' "> and goodsDetailsPicture = #{goodsDetailsPicture}</if>
@@ -61,6 +63,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
 			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce,</if>
+			<if test="collectionStatus != null  ">collectionStatus,</if>
 			<if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails,</if>
 			<if test="goodsPrice != null  and goodsPrice != ''  ">goodsPrice,</if>
 			<if test="goodsDetailsPicture != null  and goodsDetailsPicture != ''  ">goodsDetailsPicture,</if>
@@ -79,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
 			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">#{goodsIntroduce},</if>
+			<if test="collectionStatus != null  ">#{collectionStatus},</if>
 			<if test="goodsDetails != null  and goodsDetails != ''  ">#{goodsDetails},</if>
 			<if test="goodsPrice != null  and goodsPrice != ''  ">#{goodsPrice},</if>
 			<if test="goodsDetailsPicture != null  and goodsDetailsPicture != ''  ">#{goodsDetailsPicture},</if>
@@ -101,6 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
             <if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce = #{goodsIntroduce},</if>
+            <if test="collectionStatus != null  ">collectionStatus = #{collectionStatus},</if>
             <if test="goodsDetails != null  and goodsDetails != ''  ">goodsDetails = #{goodsDetails},</if>
             <if test="goodsPrice != null  and goodsPrice != ''  ">goodsPrice = #{goodsPrice},</if>
             <if test="goodsDetailsPicture != null  and goodsDetailsPicture != ''  ">goodsDetailsPicture = #{goodsDetailsPicture},</if>

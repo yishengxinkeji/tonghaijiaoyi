@@ -17,7 +17,7 @@ import java.util.List;
  * 前端控制器公共类
  */
 @Component
-public class BaseFrontController  {
+public class BaseFrontController extends BaseController {
 
     @Autowired
     private IVipUserService vipUserService;

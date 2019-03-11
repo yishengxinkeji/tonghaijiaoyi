@@ -60,7 +60,7 @@ public class GoodsOrderController extends BaseFrontController {
         int i = goodsOrderService.insertGoodsOrder(goodsOrder);
 
         if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,i);
         }
 
         return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_ADDERROR);
