@@ -29,7 +29,9 @@ public interface GoodsSalesreturnMapper
      * @return 商品退货集合
      */
 	public List<GoodsSalesreturn> selectGoodsSalesreturnList(GoodsSalesreturn goodsSalesreturn);
-	
+
+
+
 	/**
      * 新增商品退货
      * 

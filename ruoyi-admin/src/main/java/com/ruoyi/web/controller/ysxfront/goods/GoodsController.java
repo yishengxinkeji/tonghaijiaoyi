@@ -16,7 +16,6 @@ import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsCollection;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsCollectionService;
-import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -100,12 +99,6 @@ public class GoodsController extends BaseFrontController {
                 }
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
             }
-
-
-
-
-
-
         }
       
        return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);

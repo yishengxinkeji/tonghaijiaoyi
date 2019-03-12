@@ -16,7 +16,7 @@ public class GoodsEvalutionVo {
     /** 评价内容 */
     private String evaluationContent;
     /** 评价图片 */
-    private List<String> evaluationImage;
+    private String[] evaluationImage;
     /** 描述评价 */
     private Integer describeEvaluation;
     /** 物流评价 */
@@ -74,11 +74,11 @@ public class GoodsEvalutionVo {
         this.evaluationContent = evaluationContent;
     }
 
-    public List<String> getEvaluationImage() {
+    public String[] getEvaluationImage() {
         return evaluationImage;
     }
 
-    public void setEvaluationImage(List<String> evaluationImage) {
+    public void setEvaluationImage(String[] evaluationImage) {
         this.evaluationImage = evaluationImage;
     }
 

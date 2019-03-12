@@ -85,7 +85,7 @@ public class GoodsCollectionController extends BaseFrontController {
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
-        if (vipUser == null) {
+        if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
         }
@@ -96,9 +96,14 @@ public class GoodsCollectionController extends BaseFrontController {
         }
 
         GoodsCollection goodsCollection = new GoodsCollection();
-        goodsCollection.setId(vipUser.getId());
+
         goodsCollection.setGid(gid);
         goodsCollection.setUid(vipUser.getId());
+        List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
+        if(goodsCollections.size() > 0){
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }
+
         goodsCollection.setCreateTime(new Date());
         //添加收藏
         int i = goodsCollectionService.insertGoodsCollection(goodsCollection);

@@ -45,8 +45,19 @@ public class GoodsServiceImpl implements IGoodsService
 	{
 	    return goodsMapper.selectGoodsList(goods);
 	}
-	
-    /**
+
+	/**
+	 * 查询商品信息
+	 *
+	 * @param goodsName 商品名称
+	 * @return 商品信息
+	 */
+	@Override
+	public Goods selectGoodsByGoodsName(String goodsName) {
+		return goodsMapper.selectGoodsByGoodsName(goodsName);
+	}
+
+	/**
      * 新增商品
      * 
      * @param goods 商品信息
