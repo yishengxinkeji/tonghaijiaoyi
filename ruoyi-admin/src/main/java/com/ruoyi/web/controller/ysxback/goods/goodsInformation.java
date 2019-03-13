@@ -1,7 +1,11 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.utils.Uuid;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.goods.Goods;
@@ -16,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.enums.BusinessType;
-
 import com.ruoyi.yishengxin.service.IGoodsService;
 import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.common.page.TableDataInfo;
 import com.ruoyi.common.base.AjaxResult;
+import org.springframework.web.multipart.MultipartFile;
 
 
 /**
@@ -79,12 +83,122 @@ public class goodsInformation extends BaseController {
     /**
      * 新增保存商品
      */
+
+    /*
+    @PostMapping("/add")
+    @ResponseBody
+    public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1,MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
+
+        String id1 = Uuid.getId();
+        //主图片存放路径，
+        String images1 = "e:/" + id1 ;
+
+        try {
+            goodsMainFigure1.transferTo(new File(images1));
+        } catch (IOException e) {
+            return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+        }
+            goods.setGoodsMainFigure(images1);
+       //轮播图路径
+        String goodsSlideShowPath = "";
+
+        if (goodsSlideShow1.length == 0) {
+            goods.setGoodsSlideShow("");
+        } else {
+            for (int i = 0; i < goodsSlideShow1.length; i++) {
+                //生成唯一标识
+                String id = Uuid.getId();
+                //图片存放路径，
+                String images = "e:/" + id + ",";
+
+                try {
+                    goodsSlideShow1[i].transferTo(new File(images));
+                } catch (IOException e) {
+                   return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                }
+                goodsSlideShowPath = goodsSlideShowPath + images;
+            }
+        }
+
+        goods.setGoodsSlideShow(goodsSlideShowPath);
+
+        //详情图路径
+        String goodsOfDetailsPicturePath = "";
+        if (goodsOfDetailsPicture.length == 0) {
+            goods.setGoodsDetailsPicture("");
+        } else {
+            for (int i = 0; i < goodsOfDetailsPicture.length; i++) {
+                //生成唯一标识
+                String id = Uuid.getId();
+                //图片存放路径，第一个是主图，其余的是轮播图
+                String images = "e:/" + id + ",";
+
+                try {
+                    goodsOfDetailsPicture[i].transferTo(new File(images));
+                } catch (IOException e) {
+                    return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                }
+                goodsOfDetailsPicturePath = goodsOfDetailsPicturePath + images;
+            }
+        }
+        goods.setGoodsDetailsPicture(goodsOfDetailsPicturePath);
+        goods.setCreateTime(new Date());
+        goods.setUpdateTime(new Date());
+        int i = goodsService.insertGoods(goods);
+
+        if (i > 0) {
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }
+
+        return ResponseResult.responseResult(ResponseEnum.GOODS_ADDERROR);
+    }
+     */
+
     @RequiresPermissions("yishengxin:goods:add")
     @Log(title = "商品", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     @ResponseBody
-    public AjaxResult addSave(Goods goods) {
-        goods.setCreateBy(ShiroUtils.getLoginName());
+    public AjaxResult addSave(Goods goods, MultipartFile goodsMainFigure1, MultipartFile[] goodsSlideShow1) {
+
+        String id1 = Uuid.getId();
+        //主图片存放路径，
+        String images1 = "e:/" + id1 ;
+
+        try {
+            goodsMainFigure1.transferTo(new File(images1));
+        } catch (IOException e) {
+           // return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+        }
+        goods.setGoodsMainFigure(images1);
+        //轮播图路径
+        String goodsSlideShowPath = "";
+
+        if (goodsSlideShow1.length == 0) {
+            goods.setGoodsSlideShow("");
+        } else {
+            for (int i = 0; i < goodsSlideShow1.length; i++) {
+                //生成唯一标识
+                String id = Uuid.getId();
+                //图片存放路径，
+                String images = "e:/" + id + ",";
+
+                try {
+                    goodsSlideShow1[i].transferTo(new File(images));
+                } catch (IOException e) {
+                 //   return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                }
+                goodsSlideShowPath = goodsSlideShowPath + images;
+            }
+        }
+
+        goods.setGoodsSlideShow(goodsSlideShowPath);
+
+
+        goods.setCreateTime(new Date());
+        goods.setUpdateTime(new Date());
+
+
+
         return toAjax(goodsService.insertGoods(goods));
     }
 
