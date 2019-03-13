@@ -1,10 +1,13 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 挂卖SSL 数据层
@@ -71,4 +74,6 @@ public interface VipTradeSslSaleMapper {
     @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where to_days(sale_time) <= to_days(now())")
     public double selectSslMaxNumberByDay(Integer id);
 
+    @Select("select ifnull(avg(unit_price),0) from ysx_vip_trade_ssl_sale where sale_time between #{beginOfDay} and #{endOfDay}")
+    public double selectAvg(@Param("beginOfDay") DateTime beginOfDay, @Param("endOfDay") DateTime endOfDay);
 }

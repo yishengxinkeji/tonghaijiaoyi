@@ -125,9 +125,6 @@
 				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:trade:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:trade:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -216,6 +213,11 @@
 				{
 					field : 'sslCharge', 
 					title : '卖SSL手续费',
+					sortable: true
+				},
+				{
+					field : 'saleDutyCharge',
+					title : '交易失败卖家责任手续费',
 					sortable: true
 				},
 				{

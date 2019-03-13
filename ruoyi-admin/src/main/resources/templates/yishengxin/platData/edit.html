@@ -2,6 +2,7 @@
 <html  lang="zh" xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-platData-edit" th:object="${platData}">
@@ -12,6 +13,39 @@
 					<input id="platAccount" name="platAccount" th:field="*{platAccount}" class="form-control" type="text">
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">新闻资讯大图片：</label>
+				<div class="col-sm-8">
+					<button type="button" class="layui-btn" id="test1">
+						上传图片
+					</button>
+					<input id="newsBigPic" name="newsBigPic" th:field="*{newsBigPic}" class="form-control" type="hidden">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-8">
+					<img style="width: 200px;height: 200px;" id="pic1" th:src="*{newsBigPic}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">公告大图片：</label>
+				<div class="col-sm-8">
+					<button type="button" class="layui-btn" id="test2">
+						上传图片
+					</button>
+					<input id="noticeBigPic" name="noticeBigPic" th:field="*{noticeBigPic}" class="form-control" type="hidden">
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
+				<div class="col-sm-8">
+					<img style="width: 200px;height: 200px;" id="pic2" th:src="*{noticeBigPic}">
+				</div>
+			</div>
+
 		</form>
     </div>
     <div th:include="include::footer"></div>
@@ -24,7 +58,41 @@
 				},
 			}
 		});
-		
+
+		layui.use('upload', function(){
+			var upload = layui.upload;
+
+			//执行实例
+			var news = upload.render({
+				elem: '#test1' //绑定元素
+				,url: prefix+'/upload/' //上传接口
+				,done: function(res){
+					//上传完毕回调
+					if(res.code == "0"){
+						$("#pic1").attr("src",res.msg);
+						$("#newsBigPic").val(res.msg);
+					}
+				}
+				,error: function(){
+					//请求异常回调
+				}
+			});
+			var news = upload.render({
+				elem: '#test2' //绑定元素
+				,url: prefix+'/upload/' //上传接口
+				,done: function(res){
+					//上传完毕回调
+					if(res.code == "0"){
+						$("#pic2").attr("src",res.msg);
+						$("#noticeBigPic").val(res.msg);
+					}
+				}
+				,error: function(){
+					//请求异常回调
+				}
+			});
+		});
+
 		function submitHandler() {
 	        if ($.validate.form()) {
 	            $.operate.save(prefix + "/edit", $('#form-platData-edit').serialize());

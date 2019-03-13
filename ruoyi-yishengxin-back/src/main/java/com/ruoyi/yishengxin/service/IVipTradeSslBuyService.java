@@ -68,4 +68,7 @@ public interface IVipTradeSslBuyService
 	void dealEqOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
 	//卖小于买
 	void dealltOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
+
+	//取消挂买
+    int cancelBuy(VipUser vipUser, String id);
 }

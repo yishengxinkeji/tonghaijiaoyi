@@ -1,5 +1,7 @@
 package com.ruoyi.yishengxin.domain.vipUser;
 
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.base.BaseEntity;
@@ -10,6 +12,9 @@ import com.ruoyi.common.base.BaseEntity;
  * @author ruoyi
  * @date 2019-02-28
  */
+
+@Data
+@ToString
 public class VipProfitDetail extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -43,70 +48,8 @@ public class VipProfitDetail extends BaseEntity {
      */
     private String profitType;
 
-    public String getProfitType() {
-        return profitType;
-    }
-
-    public void setProfitType(String profitType) {
-        this.profitType = profitType;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setVipId(Integer vipId) {
-        this.vipId = vipId;
-    }
-
-    public Integer getVipId() {
-        return vipId;
-    }
-
-    public void setVipAvater(String vipAvater) {
-        this.vipAvater = vipAvater;
-    }
-
-    public String getVipAvater() {
-        return vipAvater;
-    }
-
-    public void setVipName(String vipName) {
-        this.vipName = vipName;
-    }
-
-    public String getVipName() {
-        return vipName;
-    }
-
-    public void setProfitDescription(String profitDescription) {
-        this.profitDescription = profitDescription;
-    }
-
-    public String getProfitDescription() {
-        return profitDescription;
-    }
-
-    public void setProfitDate(String profitDate) {
-        this.profitDate = profitDate;
-    }
-
-    public String getProfitDate() {
-        return profitDate;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("vipId", getVipId())
-                .append("vipAvater", getVipAvater())
-                .append("vipName", getVipName())
-                .append("profitDescription", getProfitDescription())
-                .append("profitDate", getProfitDate())
-                .toString();
-    }
+    /**
+     * 下级用户id
+     */
+    private Integer childrenVipId;
 }

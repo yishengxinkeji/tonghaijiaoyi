@@ -30,10 +30,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="minHdkDeliverTime"    column="min_hdk_deliver_time"    />
         <result property="maxHdkTradeTime"    column="max_hdk_trade_time"    />
         <result property="maxHdkTradeDay"    column="max_hdk_trade_day"    />
+        <result property="saleDutyCharge"    column="sale_duty_charge"    />
     </resultMap>
 	
 	<sql id="selectTradeVo">
-        select id, low, high, max_ssl_deliver_day, min_ssl_deliver_time, max_ssl_trade_day, max_ssl_trade_time, hkd_charge, ssl_charge, min_lock_position, lock_multiple_number, lock_break_charge, one_rate, three_rate, six_rate, twelve_rate, create_by, create_time, update_by, update_time, remark, max_hdk_deliver_day, min_hdk_deliver_time, max_hdk_trade_time, max_hdk_trade_day from ysx_trade
+        select id, low, high, max_ssl_deliver_day, min_ssl_deliver_time, max_ssl_trade_day, max_ssl_trade_time, hkd_charge, ssl_charge, min_lock_position, lock_multiple_number, lock_break_charge, one_rate, three_rate, six_rate, twelve_rate, create_by, create_time, update_by, update_time, remark, max_hdk_deliver_day, min_hdk_deliver_time, max_hdk_trade_time, max_hdk_trade_day, sale_duty_charge from ysx_trade
     </sql>
 	
     <select id="selectTradeList" parameterType="Trade" resultMap="TradeResult">
@@ -64,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="minHdkDeliverTime != null  and minHdkDeliverTime != '' "> and min_hdk_deliver_time = #{minHdkDeliverTime}</if>
              <if test="maxHdkTradeTime != null  and maxHdkTradeTime != '' "> and max_hdk_trade_time = #{maxHdkTradeTime}</if>
              <if test="maxHdkTradeDay != null  and maxHdkTradeDay != '' "> and max_hdk_trade_day = #{maxHdkTradeDay}</if>
+             <if test="saleDutyCharge != null  and saleDutyCharge != '' "> and sale_duty_charge = #{saleDutyCharge}</if>
          </where>
     </select>
     
@@ -99,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">min_hdk_deliver_time,</if>
 			<if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">max_hdk_trade_time,</if>
 			<if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">max_hdk_trade_day,</if>
+			<if test="saleDutyCharge != null  and saleDutyCharge != ''  ">sale_duty_charge,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="low != null  and low != ''  ">#{low},</if>
@@ -125,6 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">#{minHdkDeliverTime},</if>
 			<if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">#{maxHdkTradeTime},</if>
 			<if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">#{maxHdkTradeDay},</if>
+			<if test="saleDutyCharge != null  and saleDutyCharge != ''  ">#{saleDutyCharge},</if>
          </trim>
     </insert>
 	 
@@ -155,6 +159,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="minHdkDeliverTime != null  and minHdkDeliverTime != ''  ">min_hdk_deliver_time = #{minHdkDeliverTime},</if>
             <if test="maxHdkTradeTime != null  and maxHdkTradeTime != ''  ">max_hdk_trade_time = #{maxHdkTradeTime},</if>
             <if test="maxHdkTradeDay != null  and maxHdkTradeDay != ''  ">max_hdk_trade_day = #{maxHdkTradeDay},</if>
+            <if test="saleDutyCharge != null  and saleDutyCharge != ''  ">sale_duty_charge = #{saleDutyCharge},</if>
         </trim>
         where id = #{id}
     </update>

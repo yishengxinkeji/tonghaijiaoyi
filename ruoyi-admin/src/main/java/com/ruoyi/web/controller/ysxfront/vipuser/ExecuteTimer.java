@@ -37,7 +37,7 @@ public class ExecuteTimer {
      */
     //应该每小时执行一次
     //查询所有的
-    //@Scheduled(cron = "0 0/1 * * * ?")
+    //@Scheduled(cron = "0 0 * * * ? ")
     public void timerCron() {
         //每次任务启动后,需要有个标志,用户暂时不能操作 取消按钮,Y代表任务正在执行中
         RedisUtils.set(CustomerConstants.TASK_STATUS_KEY,"Y");
@@ -87,6 +87,8 @@ public class ExecuteTimer {
         //更改Redis的标志
         RedisUtils.set(CustomerConstants.TASK_STATUS_KEY,"N");
     }
+
+
 
 
 

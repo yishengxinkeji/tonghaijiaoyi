@@ -9,7 +9,7 @@ import java.util.List;
  * 我的申诉 服务层
  * 
  * @author ruoyi
- * @date 2019-03-08
+ * @date 2019-03-13
  */
 public interface IVipAppealService 
 {
@@ -52,7 +52,13 @@ public interface IVipAppealService
      * @return 结果
      */
 	public int deleteVipAppealByIds(String ids);
-
 	//申诉
-    int appeal(VipUser vipUser, VipAppeal vipAppeal) throws Exception;
+	int appeal(VipUser vipUser, VipAppeal vipAppeal) throws Exception;
+
+	/**
+	 * 处理客户申诉
+	 * @param vipAppeal
+	 * @return
+	 */
+    int dealAppeal(VipAppeal vipAppeal);
 }

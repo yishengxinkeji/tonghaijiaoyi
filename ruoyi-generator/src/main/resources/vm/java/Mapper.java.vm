@@ -1,6 +1,6 @@
 package ${package}.mapper;
 
-import ${package}.domain.vipUser.${className};
+import ${package}.domain.${className};
 import java.util.List;
 import org.springframework.stereotype.Repository;
 

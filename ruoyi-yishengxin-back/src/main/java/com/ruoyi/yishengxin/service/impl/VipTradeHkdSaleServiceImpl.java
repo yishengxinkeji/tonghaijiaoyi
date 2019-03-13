@@ -7,13 +7,12 @@ import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ProfitType;
 import com.ruoyi.common.enums.TradeStatus;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.exception.frontException.VipUserException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.Distribution;
 import com.ruoyi.yishengxin.domain.Trade;
-import com.ruoyi.yishengxin.domain.vipUser.VipProfitDetail;
-import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdBuy;
-import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.mapper.DistributionMapper;
 import com.ruoyi.yishengxin.mapper.TradeMapper;
 import com.ruoyi.yishengxin.mapper.vipUser.VipProfitDetailMapper;
@@ -22,7 +21,6 @@ import com.ruoyi.yishengxin.mapper.vipUser.VipUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.yishengxin.mapper.vipUser.VipTradeHkdSaleMapper;
-import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import com.ruoyi.yishengxin.service.IVipTradeHkdSaleService;
 import com.ruoyi.common.support.Convert;
 import org.springframework.transaction.annotation.Transactional;
@@ -128,6 +126,11 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             maxTradeTime = Double.parseDouble(trades.get(0).getMaxHdkTradeTime());
         }
 
+        if (Double.parseDouble(number) > hkd) {
+            //hkd余额不足
+            return 100;
+        }
+
         //交易的hkd需要是100的整数倍
         if(Double.parseDouble(number) % 100 != 0){
             return 400;
@@ -145,6 +148,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             return 300;
         }
 
+
+
         //内扣手续费之后,实际卖的HKD是多少
         double mulCharge = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, hkdCharge));
 
@@ -152,13 +157,14 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         vipTradeHkdSale.setVipId(vipUser.getId());
         vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
         vipTradeHkdSale.setSaleNo(IdUtil.simpleUUID());
-        vipTradeHkdSale.setSaleNumber(number);       //订单数量
+        vipTradeHkdSale.setSaleNumber(String.valueOf(mulCharge));       //订单数量
         vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
         vipTradeHkdSale.setSaleTotal(String.valueOf(mulCharge));    //实际订单数量,是扣除手续费之后的数量
+        vipTradeHkdSale.setSaleType(TradeType.SALE_HKD.getCode());
 
         vipTradeHkdSaleMapper.insertVipTradeHkdSale(vipTradeHkdSale);
-        vipUser.setHkdMoney(String.valueOf(NumberUtil.sub(hkd, mulCharge)));
+        vipUser.setHkdMoney(String.valueOf(NumberUtil.sub(hkd, Double.parseDouble(number))));
         return vipUserMapper.updateVipUser(vipUser);
     }
 
@@ -202,5 +208,30 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             throw new VipUserException();
         }
 
+    }
+
+
+    /**
+     * 取消挂售
+     * @param vipUser
+     * @param id
+     * @return
+     */
+    //更新用户余额,更新订单状态
+    @Override
+    public int cancelSale(VipUser vipUser, String id) {
+        VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
+        VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleMapper.selectVipTradeHkdSaleById(Integer.parseInt(id));
+        Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
+        String hkdCharge = trade.getHkdCharge();
+        //原订单金额
+        double yNo = NumberUtil.div(Double.parseDouble(vipTradeHkdSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(hkdCharge)));
+
+        vipUser1.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getHkdMoney()),yNo)));
+        //更新用户
+        vipUserMapper.updateVipUser(vipUser1);
+        //更新订单状态
+        vipTradeHkdSale.setSaleStatus(TradeStatus.CANCEL.getCode());
+        return vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
     }
 }

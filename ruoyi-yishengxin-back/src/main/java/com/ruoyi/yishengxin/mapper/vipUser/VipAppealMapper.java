@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
  * 我的申诉 数据层
  * 
  * @author ruoyi
- * @date 2019-03-08
+ * @date 2019-03-13
  */
 @Repository
 public interface VipAppealMapper {

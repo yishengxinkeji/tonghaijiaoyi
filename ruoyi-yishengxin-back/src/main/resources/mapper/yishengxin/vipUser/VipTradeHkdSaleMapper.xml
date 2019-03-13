@@ -46,7 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="isAppeal != null  and isAppeal != '' "> and is_appeal = #{isAppeal}</if>
              <if test="appealStatus != null  and appealStatus != '' "> and appeal_status = #{appealStatus}</if>
          </where>
-        ${params.VipTradeHkdBuy}
+        ${params.VipTradeHkdSale}
     </select>
     
     <select id="selectVipTradeHkdSaleById" parameterType="Integer" resultMap="VipTradeHkdSaleResult">
@@ -111,7 +111,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus},</if>
             <if test="proof != null  and proof != ''  ">proof = #{proof},</if>
         </trim>
-        where id = #{id}
+        <where>
+            1=1
+            <if test="id != null  "> and id = #{id}</if>
+            <if test="saleNo != null  and saleNo != ''  "> and sale_no = #{saleNo}</if>
+        </where>
     </update>
 
 	<delete id="deleteVipTradeHkdSaleById" parameterType="Integer">

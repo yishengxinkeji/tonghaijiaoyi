@@ -12,10 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="profitDescription"    column="profit_description"    />
         <result property="profitDate"    column="profit_date"    />
         <result property="profitType"    column="profit_type"    />
+        <result property="childrenVipId"    column="children_vip_id"    />
     </resultMap>
 	
 	<sql id="selectVipProfitDetailVo">
-        select id, vip_id, vip_avater, vip_name, profit_description, profit_date,profit_type from ysx_vip_profit_detail
+        select id, vip_id, vip_avater, vip_name, profit_description, profit_date,profit_type,children_vip_id from ysx_vip_profit_detail
     </sql>
 	
     <select id="selectVipProfitDetailList" parameterType="VipProfitDetail" resultMap="VipProfitDetailResult">
@@ -28,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="profitDescription != null  and profitDescription != '' "> and profit_description = #{profitDescription}</if>
              <if test="profitDate != null  and profitDate != '' "> and profit_date = #{profitDate}</if>
              <if test="profitType != null  and profitType != '' "> and profit_type = #{profitType}</if>
+             <if test="childrenVipId != null  and childrenVipId != '' "> and children_vip_id = #{childrenVipId}</if>
          </where>
     </select>
     
@@ -45,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="profitDescription != null  and profitDescription != ''  ">profit_description,</if>
 			<if test="profitDate != null  and profitDate != ''  ">profit_date,</if>
             <if test="profitType != null  and profitType != ''  ">profit_type,</if>
+            <if test="childrenVipId != null  and childrenVipId != ''  ">children_vip_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="vipId != null  ">#{vipId},</if>
@@ -53,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="profitDescription != null  and profitDescription != ''  ">#{profitDescription},</if>
 			<if test="profitDate != null  and profitDate != ''  ">#{profitDate},</if>
             <if test="profitType != null  and profitType != ''  ">#{profitType},</if>
+            <if test="childrenVipId != null  and childrenVipId != ''  ">#{childrenVipId},</if>
          </trim>
     </insert>
 	 
@@ -65,6 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="profitDescription != null  and profitDescription != ''  ">profit_description = #{profitDescription},</if>
             <if test="profitDate != null  and profitDate != ''  ">profit_date = #{profitDate},</if>
             <if test="profitType != null  and profitType != ''  ">profit_type = #{profitType},</if>
+            <if test="childrenVipId != null  and childrenVipId != ''  ">children_vip_id = #{childrenVipId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -2,7 +2,12 @@ package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.util.List;
 
+import com.ruoyi.common.enums.DutyDealWay;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.yishengxin.domain.Trade;
+import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
+import com.ruoyi.yishengxin.service.IVipTradeSslBuyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +30,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
  * 我的申诉 信息操作处理
  *
  * @author ruoyi
- * @date 2019-03-08
+ * @date 2019-03-13
  */
 @Controller
 @RequestMapping("/yishengxin/vipAppeal")
@@ -34,6 +39,10 @@ public class VipAppealController extends BaseController {
 
     @Autowired
     private IVipAppealService vipAppealService;
+    @Autowired
+    private IVipTradeSslBuyService vipTradeSslBuyService;
+
+
 
     @RequiresPermissions("yishengxin:vipAppeal:view")
     @GetMapping()
@@ -119,4 +128,14 @@ public class VipAppealController extends BaseController {
         return toAjax(vipAppealService.deleteVipAppealByIds(ids));
     }
 
+    /**
+     * 客服处理申诉
+     */
+    @RequiresPermissions("yishengxin:vipAppeal:deal")
+    @Log(title = "我的申诉", businessType = BusinessType.UPDATE)
+    @PostMapping("/deal")
+    @ResponseBody
+    public AjaxResult dealAppeal(VipAppeal vipAppeal) {
+        return toAjax(vipAppealService.dealAppeal(vipAppeal));
+    }
 }

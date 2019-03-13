@@ -6,6 +6,7 @@ import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.enums.TradeStatus;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.RegexUtils;
@@ -66,6 +67,10 @@ public class TradeSaleController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+        }
         VipAccount vipAccount = new VipAccount();
         vipAccount.setVipId(vipUser.getId());
         vipAccount.setIsDefault(CustomerConstants.YES);
@@ -89,7 +94,7 @@ public class TradeSaleController extends BaseFrontController {
         try{
             if(type.equalsIgnoreCase(CustomerConstants.SSL)){
                 if(Double.parseDouble(number) < 100){
-                    //挂售ssl最低100其
+                    //挂售ssl最低100起
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSL_NOT_ENOUGH);
                 }
 
@@ -106,6 +111,16 @@ public class TradeSaleController extends BaseFrontController {
                     //单次交易量已超上限
                     return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_TIME);
                 }
+
+                if(i == 400){
+                    //单价太低
+                    return ResponseResult.responseResult(ResponseEnum.UNITE_PRICE_TOO_LOW);
+                }
+                if(i == 500){
+                    //单价太高
+                    return ResponseResult.responseResult(ResponseEnum.UNITE_PRICE_TOO_HIGH);
+                }
+
             }else if(type.equalsIgnoreCase(CustomerConstants.HKD)){
                int i = vipTradeHkdSaleService.saleHkd(vipUser,number);
                 if(i == 100){
@@ -135,56 +150,101 @@ public class TradeSaleController extends BaseFrontController {
 
     /**
      * 挂卖列表
-     * @param token
+     * @param token 传值查的是个人,不传值查的是系统
+     * @param type  类型,如果查的是个人,需要有type(卖ssl,卖hkd)
      * @return
      */
     @PostMapping("/saleList")
-    public ResponseResult saleSslList(@RequestHeader("token") String token){
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-        vipTradeSslSale.setVipId(vipUser.getId());
-        //交易中
-        vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
-        vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
-        List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
-
-        VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-        vipTradeHkdSale.setVipId(vipUser.getId());
-        vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
-        vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
-
-        List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
+    public ResponseResult saleSslList(@RequestHeader(value = "token",required = false) String token,
+                                      @RequestParam(value = "type",required = false) String type){
 
         List list = new ArrayList();
-        vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-            Map map = new HashMap();
-            map.put("type","SSL");
-            map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
-            map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
-            map.put("time",vipTradeSslSale1.getSaleTime());  //时间
-            map.put("id",vipTradeSslSale1.getId());
-            list.add(map);
-        });
 
-        vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("type","HKD");
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
-            map.put("id",vipTradeHkdSale1.getId());
-            list.add(map);
-        });
-        Collections.sort(list, new Comparator<Map<String, Object>>() {
-            public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
-                String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
-                return name2.compareTo(name1);
-            }
-        });
+        if(type.equalsIgnoreCase(TradeType.SALE_SSL.getCode())){
+            //查的是ssl售卖列表
+            VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
+            //交易中
+            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
+            List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
+
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map = new HashMap();
+                map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
+                map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
+                map.put("time",vipTradeSslSale1.getSaleTime());  //时间
+                list.add(map);
+            });
+            Collections.sort(list, new Comparator<Map<String, Object>>() {
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
+                    String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
+                    return name2.compareTo(name1);
+                }
+            });
+        }else if(type.equalsIgnoreCase(TradeType.SALE_HKD.getCode())){
+            //查的是hkd列表
+            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
+            vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
+
+            List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
+
+            vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("type", TradeType.SALE_HKD.getCode());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("vipId",vipTradeHkdSale1.getVipId());
+                list.add(map);
+            });
+            Collections.sort(list, new Comparator<Map<String, Object>>() {
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
+                    String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
+                    return name2.compareTo(name1);
+                }
+            });
+        }else {
+            //查询该用户下的挂卖记录
+            VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
+            //交易中
+            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
+            List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
+
+            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
+            vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
+
+            List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map = new HashMap();
+                map.put("type", TradeType.SALE_SSL.getCode());
+                map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
+                map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
+                map.put("time",vipTradeSslSale1.getSaleTime());  //时间
+                map.put("id",vipTradeSslSale1.getId());
+                list.add(map);
+            });
+
+            vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("type", TradeType.SALE_HKD.getCode());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
+                map.put("id",vipTradeHkdSale1.getId());
+                list.add(map);
+            });
+            Collections.sort(list, new Comparator<Map<String, Object>>() {
+                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+                    String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
+                    String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
+                    return name2.compareTo(name1);
+                }
+            });
+        }
 
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
@@ -194,26 +254,45 @@ public class TradeSaleController extends BaseFrontController {
      * 取消挂售
      * @param token
      * @Param id  订单id
+     * @Param type  类型(6,2),卖ssl,卖hkd
      * @return
      */
     @PostMapping("/cancelSale")
-    public ResponseResult cancelSale(@RequestHeader("token") String token,@RequestParam("id") String id){
+    public ResponseResult cancelSale(@RequestHeader("token") String token,
+                                     @RequestParam("id") String id,
+                                     @RequestParam("type") String type){
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
-        if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
-            //表示任务正在进行中,所以暂时不能操作
-            return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
         }
 
-        VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-        vipTradeSslSale.setId(Integer.parseInt(id));
-        vipTradeSslSale.setSaleStatus(TradeStatus.CANCEL.getCode());
-        if(vipTradeSaleService.updateVipTradeSale(vipTradeSslSale) > 0){
-            return ResponseResult.success();
+        try{
+            if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY) == null || RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("N")){
+                if(type.equalsIgnoreCase(TradeType.SALE_SSL.getCode())){
+                    if(vipTradeSaleService.cancelSale(vipUser,id) > 0){
+                        return ResponseResult.success();
+                    }
+                }
+
+                if(type.equals(TradeType.SALE_HKD.getCode())){
+                    if(vipTradeHkdSaleService.cancelSale(vipUser,id) > 0){
+                        return ResponseResult.success();
+                    }
+                }
+
+                return ResponseResult.error();
+            }else if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
+                //表示任务正在进行中,所以暂时不能操作
+                return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
         return ResponseResult.error();
     }

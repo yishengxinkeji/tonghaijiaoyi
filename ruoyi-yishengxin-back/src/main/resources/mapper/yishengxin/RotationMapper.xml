@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.RotationMapper">
+    
+    <resultMap type="Rotation" id="RotationResult">
+        <result property="id"    column="id"    />
+        <result property="picTitle"    column="pic_title"    />
+        <result property="picDetail"    column="pic_detail"    />
+        <result property="picLink"    column="pic_link"    />
+        <result property="isShow"    column="is_show"    />
+    </resultMap>
+	
+	<sql id="selectRotationVo">
+        select id, pic_title, pic_detail, pic_link, is_show from ysx_rotation
+    </sql>
+	
+    <select id="selectRotationList" parameterType="Rotation" resultMap="RotationResult">
+        <include refid="selectRotationVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="picTitle != null  and picTitle != '' "> and pic_title = #{picTitle}</if>
+             <if test="picDetail != null  and picDetail != '' "> and pic_detail = #{picDetail}</if>
+             <if test="picLink != null  and picLink != '' "> and pic_link = #{picLink}</if>
+             <if test="isShow != null  and isShow != '' "> and is_show = #{isShow}</if>
+         </where>
+    </select>
+    
+    <select id="selectRotationById" parameterType="Integer" resultMap="RotationResult">
+        <include refid="selectRotationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertRotation" parameterType="Rotation" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_rotation
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="picTitle != null  and picTitle != ''  ">pic_title,</if>
+			<if test="picDetail != null  and picDetail != ''  ">pic_detail,</if>
+			<if test="picLink != null  and picLink != ''  ">pic_link,</if>
+			<if test="isShow != null  and isShow != ''  ">is_show,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="picTitle != null  and picTitle != ''  ">#{picTitle},</if>
+			<if test="picDetail != null  and picDetail != ''  ">#{picDetail},</if>
+			<if test="picLink != null  and picLink != ''  ">#{picLink},</if>
+			<if test="isShow != null  and isShow != ''  ">#{isShow},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateRotation" parameterType="Rotation">
+        update ysx_rotation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="picTitle != null  and picTitle != ''  ">pic_title = #{picTitle},</if>
+            <if test="picDetail != null  and picDetail != ''  ">pic_detail = #{picDetail},</if>
+            <if test="picLink != null  and picLink != ''  ">pic_link = #{picLink},</if>
+            <if test="isShow != null  and isShow != ''  ">is_show = #{isShow},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteRotationById" parameterType="Integer">
+        delete from ysx_rotation where id = #{id}
+    </delete>
+	
+    <delete id="deleteRotationByIds" parameterType="String">
+        delete from ysx_rotation where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

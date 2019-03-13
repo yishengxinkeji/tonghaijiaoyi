@@ -74,6 +74,11 @@ public class TradeBuyController extends BaseFrontController {
             //数字格式不正确
             return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
         }
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+
+        }
 
         try{
             int i = vipTradeBuyService.buySsl(vipUser, number, price);
@@ -93,27 +98,35 @@ public class TradeBuyController extends BaseFrontController {
     }
 
     /**
-     * 挂买列表
-     * @param token
+     * ssl的挂买列表
+     * @param token     如果传说明查的是该用户的,如果不传说明查的是列表
      * @return
      */
-    @PostMapping("/buyList")
-    public ResponseResult busSslList(@RequestHeader("token") String token){
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+    @PostMapping("/buySslList")
+    public ResponseResult buySslList(@RequestHeader(value = "token") String token,
+                                     @RequestParam(value = "type",defaultValue = "") String type){
+        VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
+        vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
+        List list = new ArrayList();
+        List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
+        if("".equals(type)){
+            //查的是列表
+            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+
+        }else if(!type.equals("")){
+            //查的是个人
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+            vipTradeSslBuy.setVipId(vipUser.getId());
+            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
         }
 
-        VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-        vipTradeSslBuy.setVipId(vipUser.getId());
-        //交易中
-        vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
-        vipTradeSslBuy.getParams().put("vipTradeSslBuy"," order by buy_time desc");
-        List<VipTradeSslBuy> vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-        List list = new ArrayList();
         vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
             Map map = new HashMap();
-            map.put("type","SSL");
+            map.put("type",TradeType.BUY_SSL.getCode());
             map.put("number",vipTradeBuy1.getBuyNumber());  //数量
             map.put("price",vipTradeBuy1.getUnitPrice());   //单价
             map.put("time",vipTradeBuy1.getBuyTime());  //时间
@@ -138,40 +151,20 @@ public class TradeBuyController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+        }
+
+        if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY) == null || RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("N")){
+            if(vipTradeBuyService.cancelBuy(vipUser,id) > 0){
+                return ResponseResult.success();
+            }
+        }else if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
             //表示任务正在进行中,所以暂时不能操作
             return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
         }
-
-        VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-        vipTradeSslBuy.setId(Integer.parseInt(id));
-        vipTradeSslBuy.setBuyStatus(TradeStatus.CANCEL.getCode());
-        if(vipTradeBuyService.updateVipTradeBuy(vipTradeSslBuy) > 0){
-            return ResponseResult.success();
-        }
         return ResponseResult.error();
-    }
-
-    /**
-     * ssl的挂买列表
-     * @return
-     */
-    @PostMapping("/buySslList")
-    public ResponseResult buySslList(){
-
-        VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
-        List<VipTradeSslBuy> vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-        List list = new ArrayList();
-        vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
-            Map map = new HashMap();
-            map.put("type","SSL");
-            map.put("number",vipTradeBuy1.getBuyNumber());  //数量
-            map.put("price",vipTradeBuy1.getUnitPrice());   //单价
-            map.put("time",vipTradeBuy1.getBuyTime());  //时间
-            list.add(map);
-        });
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
 
@@ -199,6 +192,17 @@ public class TradeBuyController extends BaseFrontController {
         if(!DigestUtils.md5Hex(tradeWord + vipUser1.getSalt()).equals(vipUser1.getTradePassword())){
             //交易密码错误
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_TRADPASSWORDERROR);
+        }
+
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+        }
+        //用户冻结
+        VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleService.selectVipTradeHkdSaleById(Integer.parseInt(id));
+        if(vipTradeHkdSale.getVipId().equals(vipUser.getId())){
+            //不能与自己订单交易
+            return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
         }
 
         try {
@@ -250,7 +254,6 @@ public class TradeBuyController extends BaseFrontController {
             Map map = new HashMap();
             map.put("orderNo",vipTradeHkdBuy.getBuyNo());
             map.put("time",vipTradeHkdBuy.getBuyTime());
-            map.put("type", CustomerConstants.HKD);
             map.put("number",vipTradeHkdBuy.getBuyNumber());
             map.put("total",vipTradeHkdBuy.getBuyTotal());
             map.put("saleId",vipTradeHkdBuy.getSaleId());

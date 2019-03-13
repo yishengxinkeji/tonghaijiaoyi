@@ -6,28 +6,42 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="VipAppeal" id="VipAppealResult">
         <result property="id"    column="id"    />
-        <result property="vipId"    column="vip_id"    />
+        <result property="saleId"    column="sale_id"    />
         <result property="content"    column="content"    />
         <result property="appealTime"    column="appeal_time"    />
         <result property="appealStatus"    column="appeal_status"    />
         <result property="orderType"    column="order_type"    />
         <result property="orderId"    column="order_id"    />
+        <result property="dutyFor"    column="duty_for"    />
+        <result property="appealReason"    column="appeal_reason"    />
+        <result property="dealResult"    column="deal_result"    />
+        <result property="salePhone"    column="sale_phone"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="buyPhone"    column="buy_phone"    />
+        <result property="buyId"    column="buy_id"    />
     </resultMap>
 	
 	<sql id="selectVipAppealVo">
-        select id, vip_id, content, appeal_time, appeal_status, order_type, order_id from ysx_vip_appeal
+        select id, sale_id, content, appeal_time, appeal_status, order_type, order_id, duty_for, appeal_reason, deal_result, sale_phone, order_no, buy_phone, buy_id from ysx_vip_appeal
     </sql>
 	
     <select id="selectVipAppealList" parameterType="VipAppeal" resultMap="VipAppealResult">
         <include refid="selectVipAppealVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="vipId != null "> and vip_id = #{vipId}</if>
+             <if test="saleId != null "> and sale_id = #{saleId}</if>
              <if test="content != null  and content != '' "> and content = #{content}</if>
              <if test="appealTime != null  and appealTime != '' "> and appeal_time = #{appealTime}</if>
              <if test="appealStatus != null  and appealStatus != '' "> and appeal_status = #{appealStatus}</if>
              <if test="orderType != null  and orderType != '' "> and order_type = #{orderType}</if>
              <if test="orderId != null  and orderId != '' "> and order_id = #{orderId}</if>
+             <if test="dutyFor != null  and dutyFor != '' "> and duty_for = #{dutyFor}</if>
+             <if test="appealReason != null  and appealReason != '' "> and appeal_reason = #{appealReason}</if>
+             <if test="dealResult != null  and dealResult != '' "> and deal_result = #{dealResult}</if>
+             <if test="salePhone != null  and salePhone != '' "> and sale_phone = #{salePhone}</if>
+             <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
+             <if test="buyPhone != null  and buyPhone != '' "> and buy_phone = #{buyPhone}</if>
+             <if test="buyId != null "> and buy_id = #{buyId}</if>
          </where>
     </select>
     
@@ -39,32 +53,53 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertVipAppeal" parameterType="VipAppeal" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_vip_appeal
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="vipId != null  ">vip_id,</if>
+			<if test="saleId != null  ">sale_id,</if>
 			<if test="content != null  and content != ''  ">content,</if>
 			<if test="appealTime != null  and appealTime != ''  ">appeal_time,</if>
 			<if test="appealStatus != null  and appealStatus != ''  ">appeal_status,</if>
 			<if test="orderType != null  and orderType != ''  ">order_type,</if>
 			<if test="orderId != null  and orderId != ''  ">order_id,</if>
+			<if test="dutyFor != null  and dutyFor != ''  ">duty_for,</if>
+			<if test="appealReason != null  and appealReason != ''  ">appeal_reason,</if>
+			<if test="dealResult != null  and dealResult != ''  ">deal_result,</if>
+			<if test="salePhone != null  and salePhone != ''  ">sale_phone,</if>
+			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
+			<if test="buyPhone != null  and buyPhone != ''  ">buy_phone,</if>
+			<if test="buyId != null  ">buy_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="vipId != null  ">#{vipId},</if>
+			<if test="saleId != null  ">#{saleId},</if>
 			<if test="content != null  and content != ''  ">#{content},</if>
 			<if test="appealTime != null  and appealTime != ''  ">#{appealTime},</if>
 			<if test="appealStatus != null  and appealStatus != ''  ">#{appealStatus},</if>
 			<if test="orderType != null  and orderType != ''  ">#{orderType},</if>
 			<if test="orderId != null  and orderId != ''  ">#{orderId},</if>
+			<if test="dutyFor != null  and dutyFor != ''  ">#{dutyFor},</if>
+			<if test="appealReason != null  and appealReason != ''  ">#{appealReason},</if>
+			<if test="dealResult != null  and dealResult != ''  ">#{dealResult},</if>
+			<if test="salePhone != null  and salePhone != ''  ">#{salePhone},</if>
+			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
+			<if test="buyPhone != null  and buyPhone != ''  ">#{buyPhone},</if>
+			<if test="buyId != null  ">#{buyId},</if>
          </trim>
     </insert>
 	 
     <update id="updateVipAppeal" parameterType="VipAppeal">
         update ysx_vip_appeal
         <trim prefix="SET" suffixOverrides=",">
-            <if test="vipId != null  ">vip_id = #{vipId},</if>
+            <if test="saleId != null  ">sale_id = #{saleId},</if>
             <if test="content != null  and content != ''  ">content = #{content},</if>
             <if test="appealTime != null  and appealTime != ''  ">appeal_time = #{appealTime},</if>
             <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus},</if>
             <if test="orderType != null  and orderType != ''  ">order_type = #{orderType},</if>
             <if test="orderId != null  and orderId != ''  ">order_id = #{orderId},</if>
+            <if test="dutyFor != null  and dutyFor != ''  ">duty_for = #{dutyFor},</if>
+            <if test="appealReason != null  and appealReason != ''  ">appeal_reason = #{appealReason},</if>
+            <if test="dealResult != null  and dealResult != ''  ">deal_result = #{dealResult},</if>
+            <if test="salePhone != null  and salePhone != ''  ">sale_phone = #{salePhone},</if>
+            <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
+            <if test="buyPhone != null  and buyPhone != ''  ">buy_phone = #{buyPhone},</if>
+            <if test="buyId != null  ">buy_id = #{buyId},</if>
         </trim>
         where id = #{id}
     </update>

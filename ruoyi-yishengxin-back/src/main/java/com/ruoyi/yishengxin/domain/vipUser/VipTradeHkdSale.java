@@ -24,7 +24,7 @@ public class VipTradeHkdSale extends BaseEntity
 	private Integer vipId;
 	/** 交易类型(挂买HKD为2) */
 	private String saleType;
-	/** 交易状态(交易中,(交易中,等待买家打款),(交易中,等待卖家确认)交易成功,交易失败) */
+	/** 交易状态(StradeStatus) */
 	private String saleStatus;
 	/** 订单编号 */
 	private String saleNo;

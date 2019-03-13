@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.NewsMapper">
+    
+    <resultMap type="News" id="NewsResult">
+        <result property="id"    column="id"    />
+        <result property="newsTitle"    column="news_title"    />
+        <result property="newsTime"    column="news_time"    />
+        <result property="newsPic"    column="news_pic"    />
+        <result property="newsIntroduction"    column="news_introduction"    />
+        <result property="newsContent"    column="news_content"    />
+    </resultMap>
+	
+	<sql id="selectNewsVo">
+        select id, news_title, news_time, news_pic, news_introduction, news_content from ysx_news
+    </sql>
+	
+    <select id="selectNewsList" parameterType="News" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="newsTitle != null  and newsTitle != '' "> and news_title = #{newsTitle}</if>
+             <if test="newsTime != null  and newsTime != '' "> and news_time = #{newsTime}</if>
+             <if test="newsPic != null  and newsPic != '' "> and news_pic = #{newsPic}</if>
+             <if test="newsIntroduction != null  and newsIntroduction != '' "> and news_introduction = #{newsIntroduction}</if>
+             <if test="newsContent != null  and newsContent != '' "> and news_content = #{newsContent}</if>
+         </where>
+    </select>
+    
+    <select id="selectNewsById" parameterType="Integer" resultMap="NewsResult">
+        <include refid="selectNewsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertNews" parameterType="News" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_news
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="newsTitle != null  and newsTitle != ''  ">news_title,</if>
+			<if test="newsTime != null  and newsTime != ''  ">news_time,</if>
+			<if test="newsPic != null  and newsPic != ''  ">news_pic,</if>
+			<if test="newsIntroduction != null  and newsIntroduction != ''  ">news_introduction,</if>
+			<if test="newsContent != null  and newsContent != ''  ">news_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="newsTitle != null  and newsTitle != ''  ">#{newsTitle},</if>
+			<if test="newsTime != null  and newsTime != ''  ">#{newsTime},</if>
+			<if test="newsPic != null  and newsPic != ''  ">#{newsPic},</if>
+			<if test="newsIntroduction != null  and newsIntroduction != ''  ">#{newsIntroduction},</if>
+			<if test="newsContent != null  and newsContent != ''  ">#{newsContent},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateNews" parameterType="News">
+        update ysx_news
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newsTitle != null  and newsTitle != ''  ">news_title = #{newsTitle},</if>
+            <if test="newsTime != null  and newsTime != ''  ">news_time = #{newsTime},</if>
+            <if test="newsPic != null  and newsPic != ''  ">news_pic = #{newsPic},</if>
+            <if test="newsIntroduction != null  and newsIntroduction != ''  ">news_introduction = #{newsIntroduction},</if>
+            <if test="newsContent != null  and newsContent != ''  ">news_content = #{newsContent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteNewsById" parameterType="Integer">
+        delete from ysx_news where id = #{id}
+    </delete>
+	
+    <delete id="deleteNewsByIds" parameterType="String">
+        delete from ysx_news where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

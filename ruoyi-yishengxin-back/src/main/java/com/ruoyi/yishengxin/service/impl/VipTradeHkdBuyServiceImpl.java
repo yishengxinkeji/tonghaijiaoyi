@@ -6,6 +6,7 @@ import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.TradeStatus;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
@@ -142,6 +143,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdBuy.setSaleNickname(saleUser.getNickname());
             vipTradeHkdBuy.setSalePhone(saleUser.getPhone());
             vipTradeHkdBuy.setIsAppeal(CustomerConstants.NO);
+            vipTradeHkdBuy.setBuyType(TradeType.BUY_HKD.getCode());
 
             vipTradeHkdBuyMapper.insertVipTradeHkdBuy(vipTradeHkdBuy);
         }else if(saleNumber > buyNumber){
@@ -160,6 +162,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdBuy.setSaleNickname(saleUser.getNickname());
             vipTradeHkdBuy.setSalePhone(saleUser.getPhone());
             vipTradeHkdBuy.setIsAppeal(CustomerConstants.NO);
+            vipTradeHkdBuy.setBuyType(TradeType.BUY_HKD.getCode());
 
             vipTradeHkdBuyMapper.insertVipTradeHkdBuy(vipTradeHkdBuy);
 
@@ -175,6 +178,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdSale1.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
             vipTradeHkdSale1.setSaleNumber(number);
             vipTradeHkdSale1.setIsAppeal(CustomerConstants.NO);
+            vipTradeHkdSale1.setSaleType(TradeType.SALE_HKD.getCode());
 
             vipTradeHkdSaleMapper.insertVipTradeHkdSale(vipTradeHkdSale1);
 

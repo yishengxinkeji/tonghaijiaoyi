@@ -1,16 +1,17 @@
 package com.ruoyi.yishengxin.mapper;
 
 import com.ruoyi.yishengxin.domain.RollMessage;
-import java.util.List;	
+import java.util.List;
+import org.springframework.stereotype.Repository;
 
 /**
  * 滚动消息 数据层
  * 
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-13
  */
-public interface RollMessageMapper 
-{
+@Repository
+public interface RollMessageMapper {
 	/**
      * 查询滚动消息信息
      * 

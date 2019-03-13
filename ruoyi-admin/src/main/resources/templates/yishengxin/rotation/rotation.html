@@ -11,21 +11,8 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								消息标题：<input type="text" name="title"/>
+								图片标题：<input type="text" name="picTitle"/>
 							</li>
-
-							<li>
-								消息内容：<input type="text" name="content"/>
-							</li>
-
-							<li>
-								消息简介：<input type="text" name="description"/>
-							</li>
-
-							<li>
-								消息类别：<input type="text" name="mtype"/>
-							</li>
-
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -36,18 +23,15 @@
 			</div>
 			
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:pullMessage:add">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:rotation:add">
 					<i class="fa fa-plus"></i> 添加
 				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:pullMessage:edit">
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:rotation:edit">
 					<i class="fa fa-edit"></i> 修改
 				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:pullMessage:remove">
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:rotation:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:pullMessage:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -56,9 +40,10 @@
 	</div>
     <div th:include="include :: footer"></div>
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('yishengxin:pullMessage:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('yishengxin:pullMessage:remove')}]];
-        var prefix = ctx + "yishengxin/pullMessage";
+        var editFlag = [[${@permission.hasPermi('yishengxin:rotation:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('yishengxin:rotation:remove')}]];
+        var prefix = ctx + "yishengxin/rotation";
+		var datas = [[${@dict.getType('sys_yes_no')}]];
 
         $(function() {
             var options = {
@@ -67,7 +52,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
-                modalName: "推送消息",
+                modalName: "轮播图",
 				search: false,
 		        showExport: true,
                 columns: [{
@@ -79,24 +64,27 @@
 					visible: false
 				},
 				{
-					field : 'title', 
-					title : '消息标题',
+					field : 'picTitle', 
+					title : '图片标题',
 					sortable: true
 				},
 				{
-					field : 'content', 
-					title : '消息内容',
+					field : 'picDetail', 
+					title : '图片地址',
 					sortable: true
 				},
 				{
-					field : 'description', 
-					title : '消息简介',
+					field : 'picLink', 
+					title : '图片链接',
 					sortable: true
 				},
 				{
-					field : 'mtype', 
-					title : '消息类别',
-					sortable: true
+					field : 'isShow', 
+					title : '是否显示',
+					align: 'center',
+					formatter: function (value, row, index) {
+						return $.table.selectDictLabel(datas, value);
+					}
 				},
 		        {
 		            title: '操作',

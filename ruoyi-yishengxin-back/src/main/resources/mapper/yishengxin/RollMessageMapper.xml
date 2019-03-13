@@ -6,34 +6,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="RollMessage" id="RollMessageResult">
         <result property="id"    column="id"    />
-        <result property="title"    column="title"    />
-        <result property="content"    column="content"    />
-        <result property="description"    column="description"    />
-        <result property="rolltime"    column="rolltime"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="remark"    column="remark"    />
+        <result property="rollTitle"    column="roll_title"    />
+        <result property="rollContent"    column="roll_content"    />
+        <result property="isShow"    column="is_show"    />
     </resultMap>
 	
 	<sql id="selectRollMessageVo">
-        select id, title, content, description, rolltime, create_by, create_time, update_by, update_time, remark from ysx_roll_message
+        select id, roll_title, roll_content, is_show from ysx_roll_message
     </sql>
 	
     <select id="selectRollMessageList" parameterType="RollMessage" resultMap="RollMessageResult">
         <include refid="selectRollMessageVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
-             <if test="title != null  and title != '' "> and title = #{title}</if>
-             <if test="content != null  and content != '' "> and content = #{content}</if>
-             <if test="description != null  and description != '' "> and description = #{description}</if>
-             <if test="rolltime != null  and rolltime != '' "> and rolltime = #{rolltime}</if>
-             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
-             <if test="createTime != null "> and create_time = #{createTime}</if>
-             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
-             <if test="updateTime != null "> and update_time = #{updateTime}</if>
-             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="rollTitle != null  and rollTitle != '' "> and roll_title = #{rollTitle}</if>
+             <if test="rollContent != null  and rollContent != '' "> and roll_content = #{rollContent}</if>
+             <if test="isShow != null  and isShow != '' "> and is_show = #{isShow}</if>
          </where>
     </select>
     
@@ -45,36 +33,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertRollMessage" parameterType="RollMessage" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_roll_message
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-			<if test="title != null  and title != ''  ">title,</if>
-			<if test="content != null  and content != ''  ">content,</if>
-			<if test="description != null  and description != ''  ">description,</if>
-			<if test="rolltime != null  and rolltime != ''  ">rolltime,</if>
-			<if test="createBy != null  and createBy != ''  ">create_by,</if>
-			create_time,
-			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="rollTitle != null  and rollTitle != ''  ">roll_title,</if>
+			<if test="rollContent != null  and rollContent != ''  ">roll_content,</if>
+			<if test="isShow != null  and isShow != ''  ">is_show,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-			<if test="title != null  and title != ''  ">#{title},</if>
-			<if test="content != null  and content != ''  ">#{content},</if>
-			<if test="description != null  and description != ''  ">#{description},</if>
-			<if test="rolltime != null  and rolltime != ''  ">#{rolltime},</if>
-			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
-			sysdate(),
-			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="rollTitle != null  and rollTitle != ''  ">#{rollTitle},</if>
+			<if test="rollContent != null  and rollContent != ''  ">#{rollContent},</if>
+			<if test="isShow != null  and isShow != ''  ">#{isShow},</if>
          </trim>
     </insert>
 	 
     <update id="updateRollMessage" parameterType="RollMessage">
         update ysx_roll_message
         <trim prefix="SET" suffixOverrides=",">
-            <if test="title != null  and title != ''  ">title = #{title},</if>
-            <if test="content != null  and content != ''  ">content = #{content},</if>
-            <if test="description != null  and description != ''  ">description = #{description},</if>
-            <if test="rolltime != null  and rolltime != ''  ">rolltime = #{rolltime},</if>
-
-            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
-            update_time = sysdate(),
-            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="rollTitle != null  and rollTitle != ''  ">roll_title = #{rollTitle},</if>
+            <if test="rollContent != null  and rollContent != ''  ">roll_content = #{rollContent},</if>
+            <if test="isShow != null  and isShow != ''  ">is_show = #{isShow},</if>
         </trim>
         where id = #{id}
     </update>

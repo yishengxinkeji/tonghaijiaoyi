@@ -1,13 +1,16 @@
 package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.enums.TradeStatus;
+import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
@@ -61,6 +64,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         return vipTradeSslSaleMapper.selectVipTradeSaleList(vipTradeSslSale);
     }
 
+
     /**
      * 新增挂卖SSL
      *
@@ -112,13 +116,18 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         double sslCharge = 0.00;
         double maxTradeDay = 0.00; //每天最大交易量
         double maxTradeTime = 0.00; //每次最大交易量
+        double maxPrice = 0.00; //峰值
+        double minPrice = 0.00; //谷值
 
         List<Trade> trades = tradeMapper.selectTradeList(new Trade());
         if (trades.size() > 0) {
             sslCharge = Double.parseDouble(trades.get(0).getSslCharge());
             maxTradeDay = Double.parseDouble(trades.get(0).getMaxSslTradeDay());
             maxTradeTime = Double.parseDouble(trades.get(0).getMaxSslTradeTime());
+            maxPrice = Double.parseDouble(trades.get(0).getHigh());
+            minPrice = Double.parseDouble(trades.get(0).getLow());
         }
+
 
         //查询该用户今日总共交易了多少ssl
         double maxNumber = vipTradeSslSaleMapper.selectSslMaxNumberByDay(vipUser.getId());
@@ -132,29 +141,65 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
             return 300;
         }
 
-        //交易的是ssl
-        double mul = NumberUtil.mul(Double.parseDouble(number), Double.parseDouble(price));
-        if (mul > ssl) {
+        if (Double.parseDouble(number) > ssl) {
             //ssl余额不足
             return 100;
         }
+
+        if(Double.parseDouble(price) < minPrice){
+            //单价太低
+            return 400;
+        }
+
+        if(Double.parseDouble(price) > maxPrice){
+            //单价太高
+            return 500;
+        }
+
         //内扣手续费后,实际应得的
-        double mulCharge = NumberUtil.mul(mul, NumberUtil.sub(1, sslCharge));
+        double mulCharge = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, sslCharge));
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
         vipTradeSslSale.setVipId(vipUser.getId());
         vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
         vipTradeSslSale.setSaleNo(IdUtil.simpleUUID());
-        vipTradeSslSale.setSaleNumber(number);
+        vipTradeSslSale.setSaleNumber(String.valueOf(mulCharge));   //实际订单金额是扣除了手续费之后的
         vipTradeSslSale.setUnitPrice(price);
         vipTradeSslSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
-        vipTradeSslSale.setSaleTotal(String.valueOf(mulCharge));
+        vipTradeSslSale.setSaleTotal(String.valueOf(NumberUtil.mul(mulCharge,Double.parseDouble(price))));
+        vipTradeSslSale.setSaleType(TradeType.SALE_SSL.getCode());
 
         vipTradeSslSaleMapper.insertVipTradeSale(vipTradeSslSale);
         vipUser.setSslMoney(String.valueOf(NumberUtil.sub(ssl, Double.parseDouble(number))));
         return vipUserMapper.updateVipUser(vipUser);
     }
 
+    /**
+     * 取消挂售
+     * @param vipUser
+     * @param id
+     * @return
+     */
+    //更新用户余额,更新订单状态
+    @Override
+    public int cancelSale(VipUser vipUser, String id) {
+        VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
+        VipTradeSslSale vipTradeSslSale = vipTradeSslSaleMapper.selectVipTradeSaleById(Integer.parseInt(id));
+        Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
+        String sslCharge = trade.getSslCharge();
+        //原订单金额
+        double yNo = NumberUtil.div(Double.parseDouble(vipTradeSslSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(sslCharge)));
 
+        vipUser1.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getSslMoney()),yNo)));
+        //更新用户
+        vipUserMapper.updateVipUser(vipUser1);
+        //更新订单状态
+        vipTradeSslSale.setSaleStatus(TradeStatus.CANCEL.getCode());
+        return vipTradeSslSaleMapper.updateVipTradeSale(vipTradeSslSale);
+    }
 
+    @Override
+    public double selectAvg(DateTime beginOfDay, DateTime endOfDay) {
+        return vipTradeSslSaleMapper.selectAvg(beginOfDay,endOfDay);
+    }
 }

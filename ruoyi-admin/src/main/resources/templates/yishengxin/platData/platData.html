@@ -8,18 +8,6 @@
 		<div class="row">
 			<div class="col-sm-12 search-collapse">
 				<form id="formId">
-					<div class="select-list">
-						<ul>
-							<li>
-								平台收款账号：<input type="text" name="platAccount"/>
-							</li>
-
-							<li>
-								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-							</li>
-						</ul>
-					</div>
 				</form>
 			</div>
 			
@@ -33,9 +21,6 @@
 				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:platData:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:platData:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
 			</div>
 			<div class="col-sm-12 select-table table-striped">
 				<table id="bootstrap-table" data-mobile-responsive="true"></table>
@@ -69,6 +54,16 @@
 				{
 					field : 'platAccount', 
 					title : '平台收款账号',
+					sortable: true
+				},
+				{
+					field : 'newsBigPic', 
+					title : '新闻资讯大图片',
+					sortable: true
+				},
+				{
+					field : 'noticeBigPic', 
+					title : '公告中心大图片',
 					sortable: true
 				},
 		        {

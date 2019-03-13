@@ -61,8 +61,8 @@ public class LockController extends BaseFrontController {
      * @param type  锁仓类型(1,3,6,12);
      * @return
      */
-    @PostMapping("/Locking")
-    public ResponseResult Locking(@RequestHeader("token") String token,@RequestParam("type") String type){
+    @PostMapping("/locking")
+    public ResponseResult locking(@RequestHeader("token") String token,@RequestParam(value = "type",required = false) String type){
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -71,7 +71,9 @@ public class LockController extends BaseFrontController {
 
         VipLock vipLock = new VipLock();
         vipLock.setLockStatus(LockStatus.LOCKING.getCode());
-        vipLock.setLockType(type);
+        if(type != null && !type.equals("")){
+            vipLock.setLockType(type);
+        }
         vipLock.setVipId(vipUser.getId());
 
         List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
@@ -81,7 +83,7 @@ public class LockController extends BaseFrontController {
                 Map map = new HashMap();
                 map.put("time",vipLock1.getLockTime());
                 map.put("number",vipLock1.getLockNumber());
-                map.put("profit",vipLock1.getLockProfit());
+                map.put("profit",NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber())));
                 map.put("id",vipLock1.getId());
                 list.add(map);
             });
@@ -96,7 +98,7 @@ public class LockController extends BaseFrontController {
      * @return
      */
     @PostMapping("/lockProfit")
-    public ResponseResult lockProfit(@RequestHeader("token") String token,@RequestParam("type") String type){
+    public ResponseResult lockProfit(@RequestHeader("token") String token,@RequestParam(value = "type",required = false) String type){
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -104,24 +106,23 @@ public class LockController extends BaseFrontController {
         }
 
         VipLock vipLock = new VipLock();
-        vipLock.setLockType(type);
         vipLock.setVipId(vipUser.getId());
+        if(type != null && !type.equals("")){
+            vipLock.setLockType(type);
+        }
         List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
         List list = new ArrayList();
-
-        List<Trade> trades = tradeService.selectTradeList(new Trade());
-        Trade trade = trades.get(0);
-        String minLockPosition = trade.getMinLockPosition();    //锁仓最低值
-        String lockMultipleNumber = trade.getLockMultipleNumber();  //锁仓的整数倍
 
         if(vipLocks.size() > 0){
             vipLocks.stream().forEach(vipLock1 -> {
                 Map map = new HashMap();
                 map.put("time",vipLock1.getLockTime());
                 map.put("number",vipLock1.getLockNumber());
-                map.put("profit",vipLock1.getLockProfit());
-                map.put("minLock", minLockPosition);    //锁仓最低值
-                map.put("lockMul",lockMultipleNumber);  //锁仓的整数倍
+                if(Double.parseDouble(vipLock1.getLockProfit())< 0){
+                    map.put("profit",vipLock1.getLockProfit());
+                }else {
+                    map.put("profit",String.valueOf(NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber()))));
+                }
                 list.add(map);
             });
         }
@@ -177,7 +178,7 @@ public class LockController extends BaseFrontController {
             vipLock.setLockStatus(LockStatus.LOCKING.getCode());
             vipLock.setLockTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD));
             vipLock.setLockNumber(number);
-            if(type.equals(LockType.ONE)){
+            if(type.equals(LockType.ONE.getCode())){
                 //1个月
                 String oneRate = trade.getOneRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(oneRate)));
@@ -185,7 +186,7 @@ public class LockController extends BaseFrontController {
                 vipLock.setLockType(LockType.ONE.getCode());
                 vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.nextMonth()));//下个月
                 vipLock.setLockProfit(String.valueOf(mul));
-            }else if(type.equals(LockType.THREE)){
+            }else if(type.equals(LockType.THREE.getCode())){
                 //3个月
                 String threeRate = trade.getThreeRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(threeRate)));
@@ -193,14 +194,14 @@ public class LockController extends BaseFrontController {
                 vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offset(new Date(), DateField.MONTH,3)));//3个月
                 vipLock.setLockProfit(String.valueOf(mul));
 
-            }else if(type.equals(LockType.SIX)){
+            }else if(type.equals(LockType.SIX.getCode())){
                 //6个月
                 String sixRate = trade.getSixRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(sixRate)));
                 vipLock.setLockType(LockType.SIX.getCode());
                 vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offset(new Date(), DateField.MONTH,6)));//6个月
                 vipLock.setLockProfit(String.valueOf(mul));
-            }else if(type.equals(LockType.TWELVE)){
+            }else if(type.equals(LockType.TWELVE.getCode())){
                 //12个月
                 String twelveRate = trade.getTwelveRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(twelveRate)));

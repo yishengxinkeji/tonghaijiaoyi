@@ -7,7 +7,7 @@ public enum ResponseEnum {
     PHONE_EXIST_ERROR("1002","该号码已注册"),
     PHONE_DIFFERENT_ERROR("1003","两次密码不相同"),
     PHONE_NOTEXIST_ERROR("1004","未找到该用户"),
-    VIP_USER_FROZEN("1005","该邀请码对应用户已经被冻结,无法邀请"),
+    VIP_USER_FROZEN("1005","该用户已经被冻结"),
     VIP_PASSWORD_ERROR("1006","密码错误"),
     VIP_GIFT_RECEIVE("1007","礼包已领取"),
     VIP_USER_INVITE("1008","邀请码不存在"),
@@ -34,13 +34,15 @@ public enum ResponseEnum {
     MAX_TRADE_BY_DAY("1104","今日交易已达上限"),
     MAX_TRADE_BY_TIME("1105","单次交易已超上限"),
     OVER_ORDER_TOP("1106","购买数量超出订单数量"),
-    MIN_TRADE_BY_TIME("1107","一次转出太少"),
+    MIN_TRADE_BY_TIME("1107","单次转出低于最低限度"),
     HKD_MULTIPLE_100("1108","单次交易只能是100的整数倍"),
     NUMBER_INTEGRAL("1109","只能输入整数"),
     NUMBER_LOW_LOCK("1110","低于锁仓最小值"),
     NUMBER_MULTIPLE_LOCK("1111","有锁仓整数倍限制"),
     ALREADY_FINISH_LOCK("1112","该订单已经锁仓结束"),
-    CAN_NOT_BUY_YOURSELF("1113","不能购买自己的订单"),
+    CAN_NOT_BUY_YOURSELF("1113","不能与自己的订单交易"),
+    UNITE_PRICE_TOO_LOW("1114","单价太低"),
+    UNITE_PRICE_TOO_HIGH("1115","单价太高"),
 
 
 

@@ -13,7 +13,7 @@ import com.ruoyi.common.support.Convert;
  * 滚动消息 服务层实现
  *
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-13
  */
 @Service
 public class RollMessageServiceImpl implements IRollMessageService {

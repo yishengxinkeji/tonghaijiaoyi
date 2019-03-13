@@ -20,7 +20,7 @@ public class VipTradeSslSale extends BaseEntity
 	private Integer vipId;
 	/** 交易类型(挂卖SSL为6) */
 	private String saleType;
-	/** 交易状态(Y.成功,N.失败) */
+	/** 交易状态(TradeStatus) */
 	private String saleStatus;
 	/** 订单编号 */
 	private String saleNo;

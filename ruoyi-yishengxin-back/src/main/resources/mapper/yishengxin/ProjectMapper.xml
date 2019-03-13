@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.ProjectMapper">
+    
+    <resultMap type="Project" id="ProjectResult">
+        <result property="id"    column="id"    />
+        <result property="projectTitle"    column="project_title"    />
+        <result property="projectTime"    column="project_time"    />
+        <result property="projectPic"    column="project_pic"    />
+        <result property="projectIntroduction"    column="project_introduction"    />
+        <result property="projectContent"    column="project_content"    />
+    </resultMap>
+	
+	<sql id="selectProjectVo">
+        select id, project_title, project_time, project_pic, project_introduction, project_content from ysx_project
+    </sql>
+	
+    <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="projectTitle != null  and projectTitle != '' "> and project_title = #{projectTitle}</if>
+             <if test="projectTime != null  and projectTime != '' "> and project_time = #{projectTime}</if>
+             <if test="projectPic != null  and projectPic != '' "> and project_pic = #{projectPic}</if>
+             <if test="projectIntroduction != null  and projectIntroduction != '' "> and project_introduction = #{projectIntroduction}</if>
+             <if test="projectContent != null  and projectContent != '' "> and project_content = #{projectContent}</if>
+         </where>
+    </select>
+    
+    <select id="selectProjectById" parameterType="Integer" resultMap="ProjectResult">
+        <include refid="selectProjectVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_project
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="projectTitle != null  and projectTitle != ''  ">project_title,</if>
+			<if test="projectTime != null  and projectTime != ''  ">project_time,</if>
+			<if test="projectPic != null  and projectPic != ''  ">project_pic,</if>
+			<if test="projectIntroduction != null  and projectIntroduction != ''  ">project_introduction,</if>
+			<if test="projectContent != null  and projectContent != ''  ">project_content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="projectTitle != null  and projectTitle != ''  ">#{projectTitle},</if>
+			<if test="projectTime != null  and projectTime != ''  ">#{projectTime},</if>
+			<if test="projectPic != null  and projectPic != ''  ">#{projectPic},</if>
+			<if test="projectIntroduction != null  and projectIntroduction != ''  ">#{projectIntroduction},</if>
+			<if test="projectContent != null  and projectContent != ''  ">#{projectContent},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateProject" parameterType="Project">
+        update ysx_project
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="projectTitle != null  and projectTitle != ''  ">project_title = #{projectTitle},</if>
+            <if test="projectTime != null  and projectTime != ''  ">project_time = #{projectTime},</if>
+            <if test="projectPic != null  and projectPic != ''  ">project_pic = #{projectPic},</if>
+            <if test="projectIntroduction != null  and projectIntroduction != ''  ">project_introduction = #{projectIntroduction},</if>
+            <if test="projectContent != null  and projectContent != ''  ">project_content = #{projectContent},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteProjectById" parameterType="Integer">
+        delete from ysx_project where id = #{id}
+    </delete>
+	
+    <delete id="deleteProjectByIds" parameterType="String">
+        delete from ysx_project where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

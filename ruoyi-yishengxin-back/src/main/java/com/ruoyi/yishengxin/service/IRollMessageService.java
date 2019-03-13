@@ -8,7 +8,7 @@ import java.util.List;
  * 滚动消息 服务层
  *
  * @author ruoyi
- * @date 2019-02-26
+ * @date 2019-03-13
  */
 public interface IRollMessageService {
     /**

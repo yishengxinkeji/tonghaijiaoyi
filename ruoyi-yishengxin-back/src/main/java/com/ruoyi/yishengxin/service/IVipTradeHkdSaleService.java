@@ -69,4 +69,7 @@ public interface IVipTradeHkdSaleService
 	 * @throws Exception
 	 */
 	void confirmOrder(VipUser vipUser, String id) throws Exception;
+
+	//取消挂售
+	int cancelSale(VipUser vipUser, String id);
 }

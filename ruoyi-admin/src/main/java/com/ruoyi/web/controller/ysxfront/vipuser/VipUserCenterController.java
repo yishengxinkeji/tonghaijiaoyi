@@ -156,107 +156,7 @@ public class VipUserCenterController extends BaseFrontController {
             map.put("ssl",vipUser.getSslMoney());
             map.put("hkd",vipUser.getHkdMoney());
             map.put("moneyCode",vipUser.getMoneyCode());
-
-            List list = new ArrayList();
-            //交易明细
-            VipTrade vipTrade = new VipTrade();
-            vipTrade.setVipId(vipUser.getId());
-            vipTrade.getParams().put("tradeTime","order by trade_time desc");
-            List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
-
-            vipTrades.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
-
-            VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-            vipTradeSslBuy.setVipId(vipUser.getId());
-            vipTradeSslBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc");
-
-            List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-
-            VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-            vipTradeSslSale.setVipId(vipUser.getId());
-            vipTradeSslSale.setSaleStatus(TradeStatus.FAIL.getCode());
-            vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc");
-
-            List<VipTradeSslSale> vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
-
-            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-            vipTradeHkdSale.setVipId(vipUser.getId());
-            vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
-
-            List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
-
-            VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
-            vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
-
-            List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
-
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_SSL);    //挂卖ssl
-                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeSslSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
-                list.add(map2);
-            });
-            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_SSL);    //挂买SSL
-                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeSslBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
-                list.add(map2);
-            });
-
-            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_HKD);    //挂卖hkd
-                map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeHkdSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
-                list.add(map2);
-            });
-
-            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_HKD);    //挂买ssl
-                map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
-                list.add(map2);
-            });
-
-            Collections.sort(list, new Comparator<Map<String, Object>>() {
-                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                    Integer name1 = Integer.valueOf(o1.get("tradeTime").toString()) ;//name1是从你list里面拿出来的一个
-                    Integer name2 = Integer.valueOf(o2.get("tradeTime").toString()) ; //name1是从你list里面拿出来的第二个name
-                    return name2.compareTo(name1);
-                }
-            });
-
-            //将用户最新的信息保存到Redis中
-            RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseResult.error();
@@ -285,6 +185,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+        }
         VipUser myVip = vipUserService.selectVipUserById(vipUser.getId());
 
         String sslMoney = myVip.getSslMoney();
@@ -360,7 +264,7 @@ public class VipUserCenterController extends BaseFrontController {
 
                 vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
                 String tranDay = vipTradeService.selectTranByDay(vipTrade);
-                if(Double.parseDouble(tranDay) > maxSslDeliverDay){
+                if(Double.parseDouble(tranDay) > maxHdkDeliverDay){
                     //今日交易已达上限
                     return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
                 }
@@ -489,10 +393,11 @@ public class VipUserCenterController extends BaseFrontController {
     /**
      * 用户收货地址列表
      * @param token
+     * @param id  可以查询某一个
      * @return
      */
     @PostMapping("/userAddressList")
-    public ResponseResult userAddressList(@RequestHeader("token") String token) {
+    public ResponseResult userAddressList(@RequestHeader("token") String token,@RequestParam(value = "id",required = false) String id) {
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -501,6 +406,9 @@ public class VipUserCenterController extends BaseFrontController {
         try{
             VipAddress address = new VipAddress();
             address.setVipId(vipUser.getId());
+            if(id != null && !id.equals("")){
+                address.setId(Integer.parseInt(id));
+            }
             List<VipAddress> vipAddresses = vipAddressService.selectVipAddressList(address);
             List list = new ArrayList();
             vipAddresses.stream().forEach(vipAddress->{
@@ -550,6 +458,41 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.error();
         }
 
+    }
+
+    /**
+     * 购买页面查询默认地址
+     * @param token
+     * @return
+     */
+    @PostMapping("/userAddress")
+    public ResponseResult userAddress(@RequestHeader("token") String token) {
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        VipAddress vipAddress = new VipAddress();
+        vipAddress.setVipId(vipUser.getId());
+        vipAddress.setIsDefault(CustomerConstants.YES);
+        List<VipAddress> vipAddresses = vipAddressService.selectVipAddressList(vipAddress);
+        if(vipAddresses.size() == 0){
+            return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
+        }
+
+        vipAddress = vipAddresses.get(0);
+        Map map = new HashMap();
+        map.put("id",vipAddress.getId());
+        map.put("vipId",vipAddress.getVipId());
+        map.put("phone",vipAddress.getPhone());
+        map.put("receivUser",vipAddress.getReceivUser());
+        map.put("addressDetail",vipAddress.getAddressDetail());
+        map.put("isDefault",vipAddress.getIsDefault());
+        map.put("province",vipAddress.getProvince());
+        map.put("city",vipAddress.getCity());
+        map.put("district",vipAddress.getDistrict());
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
     /**
@@ -930,6 +873,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+        }
         try{
             VipUser nowUser = vipUserService.selectVipUserById(vipUser.getId());
             double excount = Double.parseDouble(exchange.getExchangeAmount());
@@ -1023,6 +970,7 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -1057,6 +1005,11 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+            //用户已被冻结
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
         }
         try{
             VipUser nowUser = vipUserService.selectVipUserById(vipUser.getId());

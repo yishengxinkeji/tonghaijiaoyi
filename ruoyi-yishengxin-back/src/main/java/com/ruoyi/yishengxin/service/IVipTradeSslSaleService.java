@@ -1,9 +1,11 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 挂卖SSL 服务层
@@ -56,4 +58,9 @@ public interface IVipTradeSslSaleService
 	//处理挂卖ssl
     int saleSsl(VipUser vipUser,String number, String price) throws Exception;
 
+    //取消挂售
+	int cancelSale(VipUser vipUser, String id);
+
+
+    double selectAvg(DateTime beginOfDay, DateTime endOfDay);
 }
