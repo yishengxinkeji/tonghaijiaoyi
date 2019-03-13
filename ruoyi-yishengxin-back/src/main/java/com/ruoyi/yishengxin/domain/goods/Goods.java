@@ -1,5 +1,7 @@
 package com.ruoyi.yishengxin.domain.goods;
 
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.base.BaseEntity;
@@ -7,20 +9,24 @@ import java.util.Date;
 
 /**
  * 商品表 ysx_goods
- * 
+ *
  * @author ruoyi
- * @date 2019-03-07
+ * @date 2019-03-11
  */
+@Data
+@ToString
 public class Goods extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
-	
+
 	/** 商品id */
 	private Integer id;
 	/** 商品名称 */
 	private String goodsName;
 	/** 商品介绍 */
 	private String goodsIntroduce;
+	/** 商品收藏状态 */
+	private Integer collectionStatus;
 	/** 商品详情 */
 	private String goodsDetails;
 	/** 商品价格 */
@@ -50,179 +56,5 @@ public class Goods extends BaseEntity
 	/** 备注 */
 	private String remark;
 
-	public void setId(Integer id) 
-	{
-		this.id = id;
-	}
 
-	public Integer getId() 
-	{
-		return id;
-	}
-	public void setGoodsName(String goodsName) 
-	{
-		this.goodsName = goodsName;
-	}
-
-	public String getGoodsName() 
-	{
-		return goodsName;
-	}
-	public void setGoodsIntroduce(String goodsIntroduce) 
-	{
-		this.goodsIntroduce = goodsIntroduce;
-	}
-
-	public String getGoodsIntroduce() 
-	{
-		return goodsIntroduce;
-	}
-	public void setGoodsDetails(String goodsDetails) 
-	{
-		this.goodsDetails = goodsDetails;
-	}
-
-	public String getGoodsDetails() 
-	{
-		return goodsDetails;
-	}
-	public void setGoodsPrice(String goodsPrice) 
-	{
-		this.goodsPrice = goodsPrice;
-	}
-
-	public String getGoodsPrice() 
-	{
-		return goodsPrice;
-	}
-	public void setGoodsDetailsPicture(String goodsDetailsPicture) 
-	{
-		this.goodsDetailsPicture = goodsDetailsPicture;
-	}
-
-	public String getGoodsDetailsPicture() 
-	{
-		return goodsDetailsPicture;
-	}
-	public void setGoodsInventory(Integer goodsInventory) 
-	{
-		this.goodsInventory = goodsInventory;
-	}
-
-	public Integer getGoodsInventory() 
-	{
-		return goodsInventory;
-	}
-	public void setGoodsSoldNumber(Integer goodsSoldNumber) 
-	{
-		this.goodsSoldNumber = goodsSoldNumber;
-	}
-
-	public Integer getGoodsSoldNumber() 
-	{
-		return goodsSoldNumber;
-	}
-	public void setStandUpAndDown(String standUpAndDown) 
-	{
-		this.standUpAndDown = standUpAndDown;
-	}
-
-	public String getStandUpAndDown() 
-	{
-		return standUpAndDown;
-	}
-	public void setServiceTel(String serviceTel) 
-	{
-		this.serviceTel = serviceTel;
-	}
-
-	public String getServiceTel() 
-	{
-		return serviceTel;
-	}
-	public void setGoodsSlideShow(String goodsSlideShow) 
-	{
-		this.goodsSlideShow = goodsSlideShow;
-	}
-
-	public String getGoodsSlideShow() 
-	{
-		return goodsSlideShow;
-	}
-	public void setGoodsMainFigure(String goodsMainFigure) 
-	{
-		this.goodsMainFigure = goodsMainFigure;
-	}
-
-	public String getGoodsMainFigure() 
-	{
-		return goodsMainFigure;
-	}
-	public void setCreateBy(String createBy) 
-	{
-		this.createBy = createBy;
-	}
-
-	public String getCreateBy() 
-	{
-		return createBy;
-	}
-	public void setCreateTime(Date createTime) 
-	{
-		this.createTime = createTime;
-	}
-
-	public Date getCreateTime() 
-	{
-		return createTime;
-	}
-	public void setUpdateBy(String updateBy) 
-	{
-		this.updateBy = updateBy;
-	}
-
-	public String getUpdateBy() 
-	{
-		return updateBy;
-	}
-	public void setUpdateTime(Date updateTime) 
-	{
-		this.updateTime = updateTime;
-	}
-
-	public Date getUpdateTime() 
-	{
-		return updateTime;
-	}
-	public void setRemark(String remark) 
-	{
-		this.remark = remark;
-	}
-
-	public String getRemark() 
-	{
-		return remark;
-	}
-
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("goodsName", getGoodsName())
-            .append("goodsIntroduce", getGoodsIntroduce())
-            .append("goodsDetails", getGoodsDetails())
-            .append("goodsPrice", getGoodsPrice())
-            .append("goodsDetailsPicture", getGoodsDetailsPicture())
-            .append("goodsInventory", getGoodsInventory())
-            .append("goodsSoldNumber", getGoodsSoldNumber())
-            .append("standUpAndDown", getStandUpAndDown())
-            .append("serviceTel", getServiceTel())
-            .append("goodsSlideShow", getGoodsSlideShow())
-            .append("goodsMainFigure", getGoodsMainFigure())
-            .append("createBy", getCreateBy())
-            .append("createTime", getCreateTime())
-            .append("updateBy", getUpdateBy())
-            .append("updateTime", getUpdateTime())
-            .append("remark", getRemark())
-            .toString();
-    }
 }

@@ -3,10 +3,12 @@ import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.order.Order;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.domain.goods.GoodsSalesreturn;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
+import com.ruoyi.yishengxin.service.IGoodsService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.yishengxin.service.IGoodsSalesreturnService;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,6 +44,8 @@ public class GoodsSalesreturnController extends BaseFrontController
 	@Autowired
 	private IVipUserService vipUserService;
 
+	@Autowired
+	private IGoodsService goodsService;
 	/**
 	 * 查询商品退货列表
 	 */
@@ -221,7 +224,11 @@ public class GoodsSalesreturnController extends BaseFrontController
 					vipUser1.setSslMoney(sslMony);
 					int i1 = vipUserService.updateVipUser(vipUser1);
 					if (i1 > 0){
-
+						String goodsName = goodsOrder.getGoodsName();
+						Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
+						Integer goodsSoldNumber = goods.getGoodsSoldNumber();
+						goods.setGoodsSoldNumber(goodsSoldNumber - 1);
+						goodsService.updateGoods(goods);
 						return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 					}
 					return ResponseResult.responseResult(ResponseEnum.GOODS__RETURNMANY_ERROR);

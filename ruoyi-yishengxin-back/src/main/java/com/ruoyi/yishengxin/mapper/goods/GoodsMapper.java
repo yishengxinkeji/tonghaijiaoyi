@@ -1,6 +1,7 @@
 package com.ruoyi.yishengxin.mapper.goods;
 
 import com.ruoyi.yishengxin.domain.goods.Goods;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -19,7 +20,15 @@ public interface GoodsMapper
      * @return 商品信息
      */
 	public Goods selectGoodsById(Integer id);
-	
+
+	/**
+	 * 查询商品信息
+	 *
+	 * @param  goodsName 商品名称
+	 * @return 商品信息
+	 */
+	@Select("select * from ysx_goods  WHERE  goodsName = #{goodsName}")
+	public Goods selectGoodsByGoodsName(String goodsName);
 	/**
      * 查询商品列表
      * 

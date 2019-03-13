@@ -4,16 +4,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.utils.Uuid;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.goods.Goods;
+import com.ruoyi.yishengxin.domain.goods.GoodsCollection;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IGoodsCollectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.yishengxin.service.IGoodsService;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +37,25 @@ public class GoodsController extends BaseFrontController {
     @Autowired
     private IGoodsService goodsService;
 
+    @Autowired
+    private IGoodsCollectionService goodsCollectionService;
+
+
+    @PostMapping("/upload")
+    @ResponseBody
+    public AjaxResult updateAvatar(@RequestParam("file") MultipartFile file) {
+        try {
+            if (!file.isEmpty()) {
+                String avatar = FileUploadUtils.upload(Global.getAvatarPath(), file);
+                return AjaxResult.success(Global.getAvatarPath() + avatar);
+            }
+            return error();
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+    }
+
+
 
     /**
      * 查询商品列表
@@ -39,14 +63,42 @@ public class GoodsController extends BaseFrontController {
 
     @PostMapping("/list")
     @ResponseBody
-    public ResponseResult list() {
+    public ResponseResult list(@RequestHeader(value = "token",required = false)String token) {
+
+
         Goods goods = new Goods();
         goods.setStandUpAndDown("上架");
 
         List<Goods> list = goodsService.selectGoodsList(goods);
         for (int i = 0; i < list.size(); i++) {
-            Goods goods1 = list.get(0);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+            Goods goods1 = list.get(i);
+
+            //校验传参
+            if (null == token || "".equals(token)) {
+                goods1.setCollectionStatus(0);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+            }
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
+
+            if (null == vipUser ) {
+                goods1.setCollectionStatus(0);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+
+            }else {
+
+                Integer id = goods1.getId();
+                Integer id1 = vipUser.getId();
+                GoodsCollection goodsCollection = new GoodsCollection();
+                goodsCollection.setUid(id);
+                goodsCollection.setUid(id1);
+                List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
+                goods1.setCollectionStatus(0);
+                if (goodsCollections.size()>0){
+                    goods1.setCollectionStatus(1);
+                }
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+            }
         }
       
        return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);
@@ -62,6 +114,8 @@ public class GoodsController extends BaseFrontController {
      * @return
      * @throws IOException
      */
+
+
 
     @PostMapping("/add")
     @ResponseBody

@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service;
 
 import com.ruoyi.yishengxin.domain.goods.Goods;
 
+
 import java.util.List;
 
 /**
@@ -27,6 +28,14 @@ public interface IGoodsService
      * @return 商品集合
      */
 	public List<Goods> selectGoodsList(Goods goods);
+
+	/**
+	 * 查询商品信息
+	 *
+	 * @param  goodsName 商品名称
+	 * @return 商品信息
+	 */
+	public Goods selectGoodsByGoodsName(String goodsName);
 	
 	/**
      * 新增商品

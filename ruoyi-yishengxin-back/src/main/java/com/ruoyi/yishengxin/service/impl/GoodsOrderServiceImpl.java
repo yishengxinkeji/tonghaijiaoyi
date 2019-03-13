@@ -56,7 +56,8 @@ public class GoodsOrderServiceImpl implements IGoodsOrderService
 	@Override
 	public int insertGoodsOrder(GoodsOrder goodsOrder)
 	{
-	    return goodsOrderMapper.insertGoodsOrder(goodsOrder);
+		goodsOrderMapper.insertGoodsOrder(goodsOrder);
+		return goodsOrder.getId();
 	}
 	
 	/**

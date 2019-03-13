@@ -4,8 +4,15 @@ import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.order.Order;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.Vo.OraderVo;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import com.ruoyi.yishengxin.domain.goods.GoodsSalesreturn;
+import com.ruoyi.yishengxin.domain.vipUser.VipAddress;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IGoodsSalesreturnService;
+import com.ruoyi.yishengxin.service.IGoodsService;
+import com.ruoyi.yishengxin.service.IVipAddressService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,7 +37,14 @@ public class GoodsOrderController extends BaseFrontController {
     @Autowired
     private IGoodsOrderService goodsOrderService;
 
+    @Autowired
+    private IGoodsSalesreturnService goodsSalesreturnService;
 
+    @Autowired
+    private IVipAddressService vipAddressService;
+
+    @Autowired
+    private IGoodsService goodsService;
 
     /**
      * 新增保存商品订单
@@ -60,7 +74,12 @@ public class GoodsOrderController extends BaseFrontController {
         int i = goodsOrderService.insertGoodsOrder(goodsOrder);
 
         if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            String goodsName = goodsOrder.getGoodsName();
+            Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
+            Integer goodsSoldNumber = goods.getGoodsSoldNumber();
+            goods.setGoodsSoldNumber(goodsSoldNumber + 1);
+            goodsService.updateGoods(goods);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,i);
         }
 
         return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_ADDERROR);
@@ -74,7 +93,7 @@ public class GoodsOrderController extends BaseFrontController {
 
     @PostMapping("/remove")
     @ResponseBody
-    public ResponseResult remove(@RequestHeader("token")String token, String ids) {
+    public ResponseResult remove(@RequestHeader("token")String token, String ids,String goodsName) {
         //校验传参
         if (null == token || "".equals(token) || ids.length() == 0 || null == token) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
@@ -91,6 +110,10 @@ public class GoodsOrderController extends BaseFrontController {
 
         if (i > 0) {
 
+            Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
+            Integer goodsSoldNumber = goods.getGoodsSoldNumber();
+            goods.setGoodsSoldNumber(goodsSoldNumber - 1);
+            goodsService.updateGoods(goods);
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
         }
 
@@ -120,9 +143,29 @@ public class GoodsOrderController extends BaseFrontController {
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        if(null != goodsOrder.getId()){
+            goodsOrder.setUid(vipUser.getId());
+            GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(goodsOrder.getId());
+            Integer shippingAddress = goodsOrder1.getShippingAddress();
+
+            VipAddress vipAddress = vipAddressService.selectVipAddressById(shippingAddress);
+            OraderVo oraderVo = new OraderVo();
+            oraderVo.setGoodsOrder(goodsOrder1);
+            oraderVo.setVipAddress(vipAddress);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,oraderVo);
+        }
+
         goodsOrder.setUid(vipUser.getId());
         List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
+        if(goodsOrder.getGoodsStatus().equals("退款/售后")){
+            for (int i = 0; i < goodsOrders.size(); i++) {
+                String orderNumber = goodsOrders.get(i).getOrderNumber();
+                GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+                String refundStatus = goodsSalesreturn.getRefundStatus();
+                goodsOrders.get(i).setGoodsStatus(refundStatus);
+            }
 
+        }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
 
     }

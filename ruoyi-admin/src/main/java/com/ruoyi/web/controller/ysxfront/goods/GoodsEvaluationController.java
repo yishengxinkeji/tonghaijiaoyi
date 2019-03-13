@@ -2,12 +2,13 @@ package com.ruoyi.web.controller.ysxfront.goods;
 
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.utils.SplitString;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.Vo.GoodsEvalutionVo;
 import com.ruoyi.yishengxin.Vo.VipUserEvaluation;
 import com.ruoyi.yishengxin.domain.goods.GoodsEvaluation;
+import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IGoodsOrderService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +42,9 @@ public class GoodsEvaluationController extends BaseFrontController {
     @Autowired
     private IVipUserService iVipUserService;
 
+    @Autowired
+    private IGoodsOrderService goodsOrderService;
+
     /**
      * 用户查询商品评价列表
      */
@@ -57,21 +62,19 @@ public class GoodsEvaluationController extends BaseFrontController {
 
             GoodsEvaluation goodsEvaluation1 = goodsEvaluations.get(i);
 
-            String evaluationImage = goodsEvaluations.get(i).getEvaluationImage();
-            List<String> strings = SplitString.diveString(evaluationImage, ",");
-
+            String evaluationImage = goodsEvaluation1.getEvaluationImage();
+            String[] split = evaluationImage.split(",");
             GoodsEvalutionVo goodsEvalutionVo = new GoodsEvalutionVo();
                             goodsEvalutionVo.setDescribeEvaluation(goodsEvaluation1.getDescribeEvaluation());
                             goodsEvalutionVo.setEvaluationContent(goodsEvaluation1.getEvaluationContent());
-                            goodsEvalutionVo.setEvaluationImage(strings);
-            Integer uid = goodsEvaluations.get(i).getUid();
+                            goodsEvalutionVo.setEvaluationImage(split);
+            Integer uid = goodsEvaluation1.getUid();
             VipUser vipUser = iVipUserService.selectVipUserById(uid);
                 vipUserEvaluation.setVipUser(vipUser);
                 vipUserEvaluation.setGoodsEvalutionVo(goodsEvalutionVo);
                  vipUserEvaluations.add(vipUserEvaluation);
 
         }
-
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,vipUserEvaluations);
     }
 
@@ -93,6 +96,15 @@ public class GoodsEvaluationController extends BaseFrontController {
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
+
+        goodsEvaluation.setUid(vipUser.getId());
+        List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
+
+        if (goodsEvaluations.size() > 0){
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,"已评价");
+        }
+
+
         String imagesPath = "";
         for (int i = 0; i < filename.length; i++) {
 
@@ -109,8 +121,15 @@ public class GoodsEvaluationController extends BaseFrontController {
             imagesPath = imagesPath + images;
         }
         goodsEvaluation.setEvaluationImage(imagesPath);
+        goodsEvaluation.setUid(vipUser.getId());
+        goodsEvaluation.setCreateTime(new Date());
+
+
         int i = goodsEvaluationService.insertGoodsEvaluation(goodsEvaluation);
         if (i > 0 ){
+            GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(goodsEvaluation.getOid());
+            goodsOrder.setGoodsStatus("已评价");
+            goodsOrderService.updateGoodsOrder(goodsOrder);
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
         }
 
@@ -145,7 +164,8 @@ public class GoodsEvaluationController extends BaseFrontController {
 
     @PostMapping("/remove")
     @ResponseBody
-    public AjaxResult remove(String ids) {
+    public ResponseResult remove(String ids) {
+
         return null;
     }
 }

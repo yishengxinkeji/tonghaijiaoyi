@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse">
+				<form id="formId">
+					<div class="select-list">
+						<ul>
+							<li>
+								用户id：<input type="text" name="uid"/>
+							</li>
+
+							<li>
+								订单编号：<input type="text" name="orderNumber"/>
+							</li>
+
+							<li>
+								订单时间：<input type="text" name="orderTime"/>
+							</li>
+
+							<li>
+								商品的名称：<input type="text" name="goodsName"/>
+							</li>
+
+							<li>
+								商品的图片：<input type="text" name="goodsImages"/>
+							</li>
+
+							<li>
+								商品介绍：<input type="text" name="goodsIntroduce"/>
+							</li>
+
+							<li>
+								商品单价：<input type="text" name="goodsUnitPrice"/>
+							</li>
+
+							<li>
+								购买数量：<input type="text" name="buyNumber"/>
+							</li>
+
+							<li>
+								退款方式：<input type="text" name="refundWay"/>
+							</li>
+
+							<li>
+								退款原因：<input type="text" name="refundReason"/>
+							</li>
+
+							<li>
+								退款失败原因：<input type="text" name="reasonFailure"/>
+							</li>
+
+							<li>
+								退款说明：<input type="text" name="efundInstructions"/>
+							</li>
+
+							<li>
+								上传凭证：<input type="text" name="ploadDocuments"/>
+							</li>
+
+							<li>
+								退款金额：<input type="text" name="refundAmount"/>
+							</li>
+
+							<li>
+								退货数量：<input type="text" name="refundNumber"/>
+							</li>
+
+							<li>
+								申请退款时间：<input type="text" name="refundTime"/>
+							</li>
+
+							<li>
+								退款编号：<input type="text" name="refundSerialNumber"/>
+							</li>
+
+							<li>
+								退货物流公司：<input type="text" name="refundCompany"/>
+							</li>
+
+							<li>
+								退货物流号：<input type="text" name="refundLogistics"/>
+							</li>
+
+							<li>
+								退货状态：<input type="text" name="refundStatus"/>
+							</li>
+
+							<li>
+								创建者：<input type="text" name="createBy"/>
+							</li>
+
+							<li>
+								创建时间：<input type="text" name="createTime"/>
+							</li>
+
+							<li>
+								更新者：<input type="text" name="updateBy"/>
+							</li>
+
+							<li>
+								更新时间：<input type="text" name="updateTime"/>
+							</li>
+
+							<li>
+								备注：<input type="text" name="remark"/>
+							</li>
+
+							<li>
+								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+							</li>
+						</ul>
+					</div>
+				</form>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:goodsSalesreturn:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:goodsSalesreturn:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goodsSalesreturn:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goodsSalesreturn:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:remove')}]];
+        var prefix = ctx + "yishengxin/goodsSalesreturn";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "商品退货",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '退货id',
+					visible: false
+				},
+				{
+					field : 'uid', 
+					title : '用户id',
+					sortable: true
+				},
+				{
+					field : 'orderNumber', 
+					title : '订单编号',
+					sortable: true
+				},
+				{
+					field : 'orderTime', 
+					title : '订单时间',
+					sortable: true
+				},
+				{
+					field : 'goodsName', 
+					title : '商品的名称',
+					sortable: true
+				},
+				{
+					field : 'goodsImages', 
+					title : '商品的图片',
+					sortable: true
+				},
+				{
+					field : 'goodsIntroduce', 
+					title : '商品介绍',
+					sortable: true
+				},
+				{
+					field : 'goodsUnitPrice', 
+					title : '商品单价',
+					sortable: true
+				},
+				{
+					field : 'buyNumber', 
+					title : '购买数量',
+					sortable: true
+				},
+				{
+					field : 'refundWay', 
+					title : '退款方式',
+					sortable: true
+				},
+				{
+					field : 'refundReason', 
+					title : '退款原因',
+					sortable: true
+				},
+				{
+					field : 'reasonFailure', 
+					title : '退款失败原因',
+					sortable: true
+				},
+				{
+					field : 'efundInstructions', 
+					title : '退款说明',
+					sortable: true
+				},
+				{
+					field : 'ploadDocuments', 
+					title : '上传凭证',
+					sortable: true
+				},
+				{
+					field : 'refundAmount', 
+					title : '退款金额',
+					sortable: true
+				},
+				{
+					field : 'refundNumber', 
+					title : '退货数量',
+					sortable: true
+				},
+				{
+					field : 'refundTime', 
+					title : '申请退款时间',
+					sortable: true
+				},
+				{
+					field : 'refundSerialNumber', 
+					title : '退款编号',
+					sortable: true
+				},
+				{
+					field : 'refundCompany', 
+					title : '退货物流公司',
+					sortable: true
+				},
+				{
+					field : 'refundLogistics', 
+					title : '退货物流号',
+					sortable: true
+				},
+				{
+					field : 'refundStatus', 
+					title : '退货状态',
+					sortable: true
+				},
+				{
+					field : 'createBy', 
+					title : '创建者',
+					sortable: true
+				},
+				{
+					field : 'createTime', 
+					title : '创建时间',
+					sortable: true
+				},
+				{
+					field : 'updateBy', 
+					title : '更新者',
+					sortable: true
+				},
+				{
+					field : 'updateTime', 
+					title : '更新时间',
+					sortable: true
+				},
+				{
+					field : 'remark', 
+					title : '备注',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>
