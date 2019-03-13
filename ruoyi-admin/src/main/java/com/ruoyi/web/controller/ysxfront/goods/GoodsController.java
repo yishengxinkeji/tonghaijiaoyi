@@ -103,7 +103,12 @@ public class GoodsController extends BaseFrontController {
       
        return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);
     }
-
+    @PostMapping("/ceshi")
+    @ResponseBody
+    public ResponseResult addSave1(Goods goods){
+        int i = goodsService.insertGoods(goods);
+        return null;
+    }
 
     /**
      * 新增保存商品
@@ -120,7 +125,6 @@ public class GoodsController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1,MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
-
 
         String id1 = Uuid.getId();
         //主图片存放路径，

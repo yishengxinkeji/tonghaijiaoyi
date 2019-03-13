@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.ysxfront.goods;
 
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.utils.Uuid;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.Vo.GoodsEvalutionVo;
 import com.ruoyi.yishengxin.Vo.VipUserEvaluation;
@@ -25,6 +28,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 商品评价 信息操作处理
@@ -45,6 +49,27 @@ public class GoodsEvaluationController extends BaseFrontController {
     @Autowired
     private IGoodsOrderService goodsOrderService;
 
+
+    /**
+     * 上传文件
+     * @param file
+     * @return  图片路径
+     * @throws IOException
+     */
+    @PostMapping("/upload")
+    @ResponseBody
+    protected String uploadFile(MultipartFile file) throws IOException {
+        //生成唯一标识
+        String id = Uuid.getId();
+        //图片存放路径，
+
+        String images = "192.168.1.100:8080/1/" + id ;
+        String images1 = "D:/1/" + id ;
+        file.transferTo(new File(images1));
+        return images;
+    }
+
+
     /**
      * 用户查询商品评价列表
      */
@@ -61,13 +86,16 @@ public class GoodsEvaluationController extends BaseFrontController {
             VipUserEvaluation vipUserEvaluation = new VipUserEvaluation();
 
             GoodsEvaluation goodsEvaluation1 = goodsEvaluations.get(i);
-
-            String evaluationImage = goodsEvaluation1.getEvaluationImage();
-            String[] split = evaluationImage.split(",");
             GoodsEvalutionVo goodsEvalutionVo = new GoodsEvalutionVo();
+            String evaluationImage = goodsEvaluation1.getEvaluationImage();
+            if (null != evaluationImage || "".equals(evaluationImage)){
+                String[] split = evaluationImage.split(",");
+                goodsEvalutionVo.setEvaluationImage(split);
+            }
+
                             goodsEvalutionVo.setDescribeEvaluation(goodsEvaluation1.getDescribeEvaluation());
                             goodsEvalutionVo.setEvaluationContent(goodsEvaluation1.getEvaluationContent());
-                            goodsEvalutionVo.setEvaluationImage(split);
+
             Integer uid = goodsEvaluation1.getUid();
             VipUser vipUser = iVipUserService.selectVipUserById(uid);
                 vipUserEvaluation.setVipUser(vipUser);
