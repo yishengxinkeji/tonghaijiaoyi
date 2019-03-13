@@ -199,7 +199,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     }
 
     @Override
-    public double selectAvg(DateTime beginOfDay, DateTime endOfDay) {
-        return vipTradeSslSaleMapper.selectAvg(beginOfDay,endOfDay);
+    public List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay) {
+        return vipTradeSslSaleMapper.selectSale(beginOfDay,endOfDay);
     }
 }

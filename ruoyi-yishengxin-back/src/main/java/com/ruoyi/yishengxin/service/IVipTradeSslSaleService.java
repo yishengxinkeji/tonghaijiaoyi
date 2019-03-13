@@ -62,5 +62,5 @@ public interface IVipTradeSslSaleService
 	int cancelSale(VipUser vipUser, String id);
 
 
-    double selectAvg(DateTime beginOfDay, DateTime endOfDay);
+    List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay);
 }

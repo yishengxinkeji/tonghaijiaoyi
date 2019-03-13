@@ -956,75 +956,78 @@ public class TradeRecordController extends BaseFrontController {
     @PostMapping("/kline")
     public ResponseResult kline(@RequestParam(value = "type",defaultValue = "day") String type){
 
-        List<String> x_list = new LinkedList();
-        List y_list = new LinkedList();
-        if(type.equalsIgnoreCase("day")){
+        List n_list = new LinkedList();
+        if(type.equalsIgnoreCase("day") || type.equalsIgnoreCase("week")){
 
-            String now = DateUtil.format(new Date(), DateUtils.YYYY_MM_DD); //现在
+            String now = DateUtil.format(DateUtil.offsetDay(new Date(),1), DateUtils.YYYY_MM_DD); //明天
 
-            String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -6),DateUtils.YYYY_MM_DD); //6天以前
+            String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -1),DateUtils.YYYY_MM_DD); //昨天
 
+            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
 
-
-
-            x_list.add(now);
-            for(String time : x_list){
-                //查询一天之内的交易单价平均值
-                double avg = vipTradeSaleService.selectAvg(DateUtil.beginOfDay(DateUtils.parseDate(time)),DateUtil.endOfDay(DateUtils.parseDate(time)));
-                y_list.add(avg);
+            if(list.size() > 1000){
+                list = list.subList(list.size()-1001,list.size()-1);
             }
+            list.stream().forEach(map -> {
+                List<String> list1 = new ArrayList();
+                Map map1 = new HashMap();
+                map1.put("name",map.get("time"));
+                list1.add(0,map.get("time"));
+                list1.add(1,map.get("number"));
+                map1.put("value",list1);
+                n_list.add(map1);
+            });
 
-            Map map = new HashMap();
-            map.put("x",x_list);
-            map.put("y",y_list);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
         }
 
         if(type.equalsIgnoreCase("week")){
 
-            List<String> list_week = new LinkedList<>();
+            String now = DateUtil.format(DateUtil.offsetDay(new Date(),1), DateUtils.YYYY_MM_DD); //1天以后
 
-            String now = DateUtil.format(new Date(), DateUtils.YYYY_MM_DD); //现在
-            x_list.add(now);
-            list_week.add("周 "+DateUtil.thisDayOfWeek());
-            for(int i=-6;i<0;i++){
-                DateTime dateTime = DateUtil.offsetDay(new Date(), i);
-                x_list.add(DateUtil.format(dateTime,DateUtils.YYYY_MM_DD));
-                list_week.add("周 "+DateUtil.dayOfWeek(dateTime));
+            String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -6),DateUtils.YYYY_MM_DD); //6天以前
+
+            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
+
+            if(list.size() > 1000){
+                list = list.subList(list.size()-1001,list.size()-1);
             }
+            list.stream().forEach(map -> {
+                List<String> list1 = new ArrayList();
+                Map map1 = new HashMap();
+                map1.put("name",map.get("time"));
+                list1.add(0,map.get("time"));
+                list1.add(1,map.get("number"));
+                map1.put("value",list1);
+                n_list.add(map1);
+            });
 
-            for(String time : x_list){
-                //查询一天之内的交易单价平均值
-                double avg = vipTradeSaleService.selectAvg(DateUtil.beginOfDay(DateUtils.parseDate(time)),DateUtil.endOfDay(DateUtils.parseDate(time)));
-                y_list.add(avg);
-            }
-
-            Map map = new HashMap();
-            map.put("x",list_week);
-            map.put("y",y_list);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
 
         }
 
         if(type.equalsIgnoreCase("month")){
 
-            String now = DateUtil.format(new Date(), DateUtils.YYYY_MM_DD); //现在
+            String now = DateUtil.format(DateUtil.offsetDay(new Date(),1), DateUtils.YYYY_MM_DD); //1天以后
 
-            for(int i=-30;i<0;i++){
-                DateTime dateTime = DateUtil.offsetDay(new Date(), i);
-                x_list.add(DateUtil.format(dateTime,DateUtils.YYYY_MM_DD));
-            }
-            x_list.add(now);
-            for(String time : x_list){
-                //查询一天之内的交易单价平均值
-                double avg = vipTradeSaleService.selectAvg(DateUtil.beginOfDay(DateUtils.parseDate(time)),DateUtil.endOfDay(DateUtils.parseDate(time)));
-                y_list.add(avg);
-            }
+            String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -30),DateUtils.YYYY_MM_DD); //30天以前
 
-            Map map = new HashMap();
-            map.put("x",x_list);
-            map.put("y",y_list);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
+
+            if(list.size() > 1000){
+                list = list.subList(list.size()-1001,list.size()-1);
+            }
+            list.stream().forEach(map -> {
+                List<String> list1 = new ArrayList();
+                Map map1 = new HashMap();
+                map1.put("name",map.get("time"));
+                list1.add(0,map.get("time"));
+                list1.add(1,map.get("number"));
+                map1.put("value",list1);
+                n_list.add(map1);
+            });
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
 
         }
         return ResponseResult.success();

@@ -44,8 +44,6 @@ public class VipAppeal extends BaseEntity
 	private String dutyFor;
 	/** 申诉原因(订单失败原因) */
 	private String appealReason;
-	/** 处理结果 */
-	private String dealResult;
 
 
 

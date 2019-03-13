@@ -132,7 +132,7 @@ public class VipAppealController extends BaseController {
      * 客服处理申诉
      */
     @RequiresPermissions("yishengxin:vipAppeal:deal")
-    @Log(title = "我的申诉", businessType = BusinessType.UPDATE)
+    @Log(title = "处理申诉", businessType = BusinessType.UPDATE)
     @PostMapping("/deal")
     @ResponseBody
     public AjaxResult dealAppeal(VipAppeal vipAppeal) {

@@ -112,6 +112,7 @@
 						actions.push('<a class="btn btn-danger btn-xs ' + frozenFlag + '" href="#" onclick="frozen(\'' + row.id + '\')"><i class="fa fa-remove"></i>冻结/解冻</a> ');
 						actions.push('<a class="btn btn-warning btn-xs ' + rechargeFlag + '" href="#" onclick="recharge(\'' + row.id + '\')"><i class="fa fa-warning"></i>充值</a> ');
 						actions.push('<a class="btn btn-info btn-xs ' + addressDetail + '" href="#" onclick="detail(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>地址列表</a> ');
+						actions.push('<a class="btn btn-primary btn-xs ' + addressDetail + '" href="#" onclick="rechRecord(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>充值记录</a> ');
 
 						return actions.join('');
 					}
@@ -139,6 +140,12 @@
 	function detail(id) {
 		var url = prefix + '/detail/' + id;
 		createMenuItem(url, "地址明细");
+	}
+
+	/*充值记录*/
+	function rechRecord(id) {
+		var url = prefix + '/rechRecord/' + id;
+		createMenuItem(url, "充值记录");
 	}
 </script>
 </body>

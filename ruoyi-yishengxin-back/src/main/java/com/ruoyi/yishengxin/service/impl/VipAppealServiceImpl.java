@@ -174,60 +174,30 @@ public class VipAppealServiceImpl implements IVipAppealService {
             saleDutyCharge = Double.parseDouble(trades.get(0).getSaleDutyCharge());
         }
 
-        String dealResult = vipAppeal.getDealResult();  //处理结果
         String buyNumber = vipTradeHkdBuy.getBuyNumber(); //订单数量
-        if(dealResult.equalsIgnoreCase(DutyDealWay.BUY.getCode())){
-            //买家责任,未打款
-            //把卖家的hkd全部返回去,更新余额,更新订单,
+        //把卖家的hkd全部返回去,更新余额,更新订单,
 
-            //应返回给卖家多少钱 卖的数量 / (1-扣的手续费)
-            double money = NumberUtil.div(Double.parseDouble(buyNumber), NumberUtil.sub(1, hkdCharge));
-            saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(saleUser.getHkdMoney()),money))); //更新用户信息
-            vipUserMapper.updateVipUser(saleUser);
+        //应返回给卖家多少钱 卖的数量 / (1-扣的手续费)
+        double money = NumberUtil.div(Double.parseDouble(buyNumber), NumberUtil.sub(1, hkdCharge));
+        saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(saleUser.getHkdMoney()),money))); //更新用户信息
+        vipUserMapper.updateVipUser(saleUser);
 
-            vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdBuy.setFailReason(vipAppeal.getAppealReason());
-            vipTradeHkdBuy.setIsAppeal(CustomerConstants.YES);
-            vipTradeHkdBuy.setAppealStatus(AppealType.SUCCESS.getCode());
-            vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
+        vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
+        vipTradeHkdBuy.setFailReason(vipAppeal.getAppealReason());
+        vipTradeHkdBuy.setIsAppeal(CustomerConstants.YES);
+        vipTradeHkdBuy.setAppealStatus(AppealType.SUCCESS.getCode());
+        vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
 
-            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-            vipTradeHkdSale.setSaleNo(vipAppeal.getOrderNo());
-            vipTradeHkdSale.setFailReason(vipAppeal.getAppealReason());
-            vipTradeHkdSale.setIsAppeal(CustomerConstants.YES);
-            vipTradeHkdSale.setAppealStatus(AppealType.SUCCESS.getCode());
-            vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);   //更新卖订单
+        VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
+        vipTradeHkdSale.setSaleNo(vipAppeal.getOrderNo());
+        vipTradeHkdSale.setFailReason(vipAppeal.getAppealReason());
+        vipTradeHkdSale.setIsAppeal(CustomerConstants.YES);
+        vipTradeHkdSale.setAppealStatus(AppealType.SUCCESS.getCode());
+        vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
+        vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);   //更新卖订单
 
-            vipAppeal.setAppealStatus(AppealType.SUCCESS.getCode());
-            return vipAppealMapper.updateVipAppeal(vipAppeal);
-        }else if(dealResult.equalsIgnoreCase(DutyDealWay.SALE_ONE.getCode())){
-            //买家打款,卖家未确认,交易失败,将金额转账买家账户上,扣除卖家责任手续费
-            buyUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(buyUser.getHkdMoney()),Double.parseDouble(buyNumber))));
-            vipUserMapper.updateVipUser(buyUser);
+        vipAppeal.setAppealStatus(AppealType.SUCCESS.getCode());
+        return vipAppealMapper.updateVipAppeal(vipAppeal);
 
-            vipTradeHkdBuy.setFailReason(vipAppeal.getAppealReason());
-            vipTradeHkdBuy.setIsAppeal(CustomerConstants.YES);
-            vipTradeHkdBuy.setAppealStatus(AppealType.SUCCESS.getCode());
-            vipTradeHkdBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
-
-            VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-            vipTradeHkdSale.setSaleNo(vipAppeal.getOrderNo());
-            vipTradeHkdSale.setFailReason(vipAppeal.getAppealReason());
-            vipTradeHkdSale.setIsAppeal(CustomerConstants.YES);
-            vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdSale.setAppealStatus(AppealType.SUCCESS.getCode());
-
-            vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);   //更新卖订单
-
-            double charge = NumberUtil.mul(Double.parseDouble(buyNumber), saleDutyCharge);  //需要扣除卖家的手续费
-            saleUser.setHkdMoney(String.valueOf(NumberUtil.sub(Double.parseDouble(saleUser.getHkdMoney()),charge)));
-            vipUserMapper.updateVipUser(saleUser);
-
-            vipAppeal.setAppealStatus(AppealType.SUCCESS.getCode());
-            return vipAppealMapper.updateVipAppeal(vipAppeal);
-        }
-        return 0;
     }
 }

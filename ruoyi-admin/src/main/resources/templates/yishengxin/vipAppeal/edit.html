@@ -32,14 +32,6 @@
 					<input id="appealReason" name="appealReason" th:field="*{appealReason}" class="form-control" type="text">
 				</div>
 			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">处理结果：</label>
-				<div class="col-sm-8">
-					<select id="dealResult" name="dealResult" class="form-control m-b" th:with="type=${@dict.getType('appeal_deal_way')}">
-						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{dealResult}"></option>
-					</select>
-				</div>
-			</div>
 		</form>
     </div>
     <div th:include="include::footer"></div>

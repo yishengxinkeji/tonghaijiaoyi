@@ -195,4 +195,14 @@ public class VipUserController extends BaseController
 		mmap.put("vipId",id);
 		return "yishengxin/vipAddress/vipAddress";
 	}
+
+	/**
+	 * 查询充值记录
+	 */
+	@RequiresPermissions("yishengxin:vipUser:address")
+	@GetMapping("/rechRecord/{id}")
+	public String rechRecord(@PathVariable("id") Integer id, ModelMap mmap) {
+		mmap.put("vipId",id);
+		return "yishengxin/vipTradeHkdBuy/vipTradeHkdBuy";
+	}
 }
