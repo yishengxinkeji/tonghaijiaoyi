@@ -25,6 +25,10 @@ public class ServerConfig {
 
     public static String getDomain(HttpServletRequest request) {
         StringBuffer url = request.getRequestURL();
+        System.out.println(url);
+        System.out.println(url);
+        System.out.println(url);
+        System.out.println(url);
         String contextPath = request.getServletContext().getContextPath();
         return url.delete(url.length() - request.getRequestURI().length(), url.length()).append(contextPath).toString();
     }
