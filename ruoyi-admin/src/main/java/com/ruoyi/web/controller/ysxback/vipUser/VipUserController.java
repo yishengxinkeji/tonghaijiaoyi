@@ -3,9 +3,18 @@ package com.ruoyi.web.controller.ysxback.vipUser;
 import java.math.BigDecimal;
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.json.JSONObject;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.CustomerConstants;
+import com.ruoyi.common.enums.CustomerLogType;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.yishengxin.domain.CustomerLog;
+import com.ruoyi.yishengxin.service.ICustomerLogService;
+import io.swagger.models.auth.In;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +43,8 @@ public class VipUserController extends BaseController
 	
 	@Autowired
 	private IVipUserService vipUserService;
+	@Autowired
+	private ICustomerLogService iCustomerLogService;
 	
 	@RequiresPermissions("yishengxin:vipUser:view")
 	@GetMapping()
@@ -163,26 +174,36 @@ public class VipUserController extends BaseController
 	@Log(title = "会员基本", businessType = BusinessType.RECHARGE)
 	@PostMapping("/recharge")
 	@ResponseBody
-	public AjaxResult addRecharge(VipUser vipUser){
-		Integer id = vipUser.getId();
-		VipUser oldVip = vipUserService.selectVipUserById(id);
-		String sslMoney = vipUser.getSslMoney();
-		String hkdMoney = vipUser.getHkdMoney();
-		if(sslMoney != null){
+	public AjaxResult addRecharge(String id,String sslMoney,String hkdMoney,String reason){
+		VipUser oldVip = vipUserService.selectVipUserById(Integer.parseInt(id));
+
+		if(sslMoney != null && !"".equals(sslMoney)){
 			if(!NumberUtil.isNumber(sslMoney) && !NumberUtil.isDouble(sslMoney) ){
 				return error("请填写正确的数值");
 			}
-			BigDecimal ssl = NumberUtil.add(new String[]{sslMoney,oldVip.getSslMoney()});
-			oldVip.setSslMoney(ssl.toString());
+			oldVip.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(sslMoney),Double.parseDouble(oldVip.getSslMoney()))));
 		}
-		if(hkdMoney != null){
+		if(hkdMoney != null && !"".equals(hkdMoney)){
 			if(!NumberUtil.isNumber(hkdMoney) && !NumberUtil.isDouble(hkdMoney)){
 				return error("请填写正确的数值");
 			}
-			BigDecimal hkd = NumberUtil.add(new String[]{hkdMoney,oldVip.getHkdMoney()});
-			oldVip.setHkdMoney(hkd.toString());
+			oldVip.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(hkdMoney),Double.parseDouble(oldVip.getHkdMoney()))));
 		}
-		return toAjax(vipUserService.updateVipUser(oldVip));
+
+		if(vipUserService.updateVipUser(oldVip) > 0){
+			CustomerLog customerLog = new CustomerLog();
+			customerLog.setCreateBy(ShiroUtils.getLoginName());
+			customerLog.setSslMoney(sslMoney);
+			customerLog.setHkdMoney(hkdMoney);
+			customerLog.setLogType(CustomerLogType.RECHARGE.getCode());	//扣除类型
+			customerLog.setNickname(oldVip.getNickname());
+			customerLog.setPhone(oldVip.getPhone());
+			customerLog.setReason(reason);
+			customerLog.setVipId(String.valueOf(oldVip.getId()));
+
+			return toAjax(iCustomerLogService.insertCustomerLog(customerLog));
+		}
+		return success();
 	}
 
 
@@ -196,13 +217,138 @@ public class VipUserController extends BaseController
 		return "yishengxin/vipAddress/vipAddress";
 	}
 
+
 	/**
-	 * 查询充值记录
+	 * 去扣除该用户金额
 	 */
-	@RequiresPermissions("yishengxin:vipUser:address")
+	@GetMapping("/reduce/{id}")
+	public String toReduce(@PathVariable("id") Integer id, ModelMap mmap) {
+		mmap.put("vipId",id);
+		return prefix + "/reduce";
+	}
+
+	/**
+	 * 扣除该用户金额
+	 */
+	@RequiresPermissions("yishengxin:vipUser:reduce")
+	@PostMapping("/reduce")
+	@ResponseBody
+	public AjaxResult reduce(String id,String sslMoney,String hkdMoney,String reason) {
+
+		VipUser vipUser = vipUserService.selectVipUserById(Integer.parseInt(id));
+
+		double vsslMoney = Double.parseDouble(vipUser.getSslMoney());
+		double vhkdMoney = Double.parseDouble(vipUser.getHkdMoney());
+
+		if(sslMoney != null && !"".equals(sslMoney)){
+			if(!NumberUtil.isNumber(sslMoney) && !NumberUtil.isDouble(sslMoney) ){
+				return error("请填写正确的数值");
+			}
+			if(vsslMoney < Double.parseDouble(sslMoney)){
+				return error("账户余额不够扣除");
+			}
+
+			vipUser.setSslMoney(String.valueOf(NumberUtil.sub(vsslMoney,Double.parseDouble(sslMoney))));
+		}
+		if(hkdMoney != null && !"".equals(hkdMoney)){
+			if(!NumberUtil.isNumber(hkdMoney) && !NumberUtil.isDouble(hkdMoney)){
+				return error("请填写正确的数值");
+			}
+
+			if(vhkdMoney < Double.parseDouble(hkdMoney)){
+				return error("账户余额不够扣除");
+			}
+			vipUser.setHkdMoney(String.valueOf(NumberUtil.sub(vhkdMoney,Double.parseDouble(hkdMoney))));
+		}
+
+		if(vipUserService.updateVipUser(vipUser) > 0){
+			CustomerLog customerLog = new CustomerLog();
+			customerLog.setCreateBy(ShiroUtils.getLoginName());
+			customerLog.setSslMoney(sslMoney);
+			customerLog.setHkdMoney(hkdMoney);
+			customerLog.setLogType(CustomerLogType.REDUCE.getCode());	//扣除类型
+			customerLog.setNickname(vipUser.getNickname());
+			customerLog.setPhone(vipUser.getPhone());
+			customerLog.setReason(reason);
+			customerLog.setVipId(String.valueOf(vipUser.getId()));
+
+			iCustomerLogService.insertCustomerLog(customerLog);
+			return success();
+		}
+		return success();
+	}
+
+
+	/**
+	 * 查询记录
+	 */
+	@RequiresPermissions("yishengxin:vipUser:log")
 	@GetMapping("/rechRecord/{id}")
 	public String rechRecord(@PathVariable("id") Integer id, ModelMap mmap) {
 		mmap.put("vipId",id);
-		return "yishengxin/vipTradeHkdBuy/vipTradeHkdBuy";
+		return "yishengxin/customerLog/customerLog";
+	}
+
+	/**
+	 * 用户根据时间查询会员注册情况
+	 * @param day	权重最高
+	 * @param month	次之
+	 * @param year	最低
+	 * @return
+	 */
+	@RequestMapping("/timeSearch")
+	@ResponseBody
+	public AjaxResult timeSearch(String day,String month,String year){
+
+		VipUser vipUser = new VipUser();
+
+		int number = 0;
+
+		if(!"".equals(day)){
+			DateTime beginOfDay = DateUtil.beginOfDay(DateUtils.parseDate(day));
+			DateTime endOfDay = DateUtil.endOfDay(DateUtils.parseDate(day));
+			vipUser.setCreateTime(beginOfDay);
+			vipUser.setUpdateTime(endOfDay);
+
+			number = vipUserService.selectCount(vipUser);
+		}else if("".equals(day) && !"".equals(month)){
+			DateTime beginOfMonth = DateUtil.beginOfMonth(DateUtils.parseDate(month));
+			DateTime endOfMonth = DateUtil.endOfMonth(DateUtils.parseDate(month));
+			vipUser.setCreateTime(beginOfMonth);
+			vipUser.setUpdateTime(endOfMonth);
+			number = vipUserService.selectCount(vipUser);
+		}else if(!"".equals(year) && "".equals(month) && "".equals(month)){
+			DateTime beginOfYear = DateUtil.beginOfYear(DateUtils.parseDate(year+"-01"));
+			DateTime endOfYear = DateUtil.endOfYear(DateUtils.parseDate(year+"-01"));
+			vipUser.setCreateTime(beginOfYear);
+			vipUser.setUpdateTime(endOfYear);
+			number = vipUserService.selectCount(vipUser);
+		}
+
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.put("number",number);
+		return ajaxResult;
+	}
+
+	/**
+	 * 查询记录
+	 */
+	@RequiresPermissions("yishengxin:vipUser:recommend")
+	@GetMapping("/recommend/{id}")
+	public String toRecommend(@PathVariable("id") Integer id, ModelMap mmap) {
+		VipUser vipUser = vipUserService.selectVipUserById(id);
+		mmap.put("parentCode",vipUser.getParentCode());
+		return prefix+"/recommend";
+	}
+
+	/**
+	 * 查询会员基本列表
+	 */
+	@PostMapping("/recommend")
+	@ResponseBody
+	public TableDataInfo recommend(VipUser vipUser){
+		startPage();
+		List<VipUser> list = vipUserService.selectVipUserList(vipUser);
+		return getDataTable(list);
 	}
 }

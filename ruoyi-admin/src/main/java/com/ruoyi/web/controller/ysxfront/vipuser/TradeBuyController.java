@@ -290,8 +290,8 @@ public class TradeBuyController extends BaseFrontController {
                 String path = uploadFile(file);
                 if(path != null){
                     Map map = new HashMap();
-                    map.put("picName",path);
-                    map.put("serverPath",CustomerConstants.SERVER_LINK+ Global.getFrontPath()+path);
+                    map.put("picName",Global.getFrontPath()+path);
+                    map.put("serverPath",Global.getFrontPath()+path);
                     return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
                 }
             }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.CustomerLogMapper">
+    
+    <resultMap type="CustomerLog" id="CustomerLogResult">
+        <result property="id"    column="id"    />
+        <result property="vipId"    column="vip_id"    />
+        <result property="logType"    column="log_type"    />
+        <result property="sslMoney"    column="ssl_money"    />
+        <result property="hkdMoney"    column="hkd_money"    />
+        <result property="phone"    column="phone"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="remark"    column="remark"    />
+        <result property="reason"    column="reason"    />
+    </resultMap>
+	
+	<sql id="selectCustomerLogVo">
+        select id, vip_id, log_type, ssl_money, hkd_money, phone, nickname, create_by, create_time, update_time, update_by, remark, reason from ysx_customer_log
+    </sql>
+	
+    <select id="selectCustomerLogList" parameterType="CustomerLog" resultMap="CustomerLogResult">
+        <include refid="selectCustomerLogVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="vipId != null  and vipId != '' "> and vip_id = #{vipId}</if>
+             <if test="logType != null  and logType != '' "> and log_type = #{logType}</if>
+             <if test="sslMoney != null  and sslMoney != '' "> and ssl_money = #{sslMoney}</if>
+             <if test="hkdMoney != null  and hkdMoney != '' "> and hkd_money = #{hkdMoney}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="nickname != null  and nickname != '' "> and nickname = #{nickname}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null  and createTime != '' "> and create_time = #{createTime}</if>
+             <if test="updateTime != null  and updateTime != '' "> and update_time = #{updateTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+             <if test="reason != null  and reason != '' "> and reason = #{reason}</if>
+         </where>
+    </select>
+    
+    <select id="selectCustomerLogById" parameterType="Integer" resultMap="CustomerLogResult">
+        <include refid="selectCustomerLogVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertCustomerLog" parameterType="CustomerLog" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_customer_log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  and vipId != ''  ">vip_id,</if>
+			<if test="logType != null  and logType != ''  ">log_type,</if>
+			<if test="sslMoney != null  and sslMoney != ''  ">ssl_money,</if>
+			<if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money,</if>
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="nickname != null  and nickname != ''  ">nickname,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			create_time,
+			<if test="remark != null  and remark != ''  ">remark,</if>
+			<if test="reason != null  and reason != ''  ">reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="vipId != null  and vipId != ''  ">#{vipId},</if>
+			<if test="logType != null  and logType != ''  ">#{logType},</if>
+			<if test="sslMoney != null  and sslMoney != ''  ">#{sslMoney},</if>
+			<if test="hkdMoney != null  and hkdMoney != ''  ">#{hkdMoney},</if>
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="nickname != null  and nickname != ''  ">#{nickname},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			sysdate(),
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+			<if test="reason != null  and reason != ''  ">#{reason},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateCustomerLog" parameterType="CustomerLog">
+        update ysx_customer_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vipId != null  and vipId != ''  ">vip_id = #{vipId},</if>
+            <if test="logType != null  and logType != ''  ">log_type = #{logType},</if>
+            <if test="sslMoney != null  and sslMoney != ''  ">ssl_money = #{sslMoney},</if>
+            <if test="hkdMoney != null  and hkdMoney != ''  ">hkd_money = #{hkdMoney},</if>
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="nickname != null  and nickname != ''  ">nickname = #{nickname},</if>
+            update_time = sysdate(),
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="reason != null  and reason != ''  ">reason = #{reason},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteCustomerLogById" parameterType="Integer">
+        delete from ysx_customer_log where id = #{id}
+    </delete>
+	
+    <delete id="deleteCustomerLogByIds" parameterType="String">
+        delete from ysx_customer_log where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

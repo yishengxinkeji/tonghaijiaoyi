@@ -148,14 +148,12 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             return 300;
         }
 
-
-
         //内扣手续费之后,实际卖的HKD是多少
         double mulCharge = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, hkdCharge));
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
-        vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+        vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
         vipTradeHkdSale.setSaleNo(IdUtil.simpleUUID());
         vipTradeHkdSale.setSaleNumber(String.valueOf(mulCharge));       //订单数量
         vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));

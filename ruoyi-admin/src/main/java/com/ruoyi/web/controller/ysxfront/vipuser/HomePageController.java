@@ -47,7 +47,7 @@ public class HomePageController {
                 Map map = new HashMap();
                 map.put("address",rotation1.getPicDetail());
                 map.put("link",rotation1.getPicLink());
-                list.add(list);
+                list.add(map);
             });
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
@@ -70,7 +70,7 @@ public class HomePageController {
                 Map map = new HashMap();
                 map.put("id",rollMessage1.getId());
                 map.put("content",rollMessage1.getRollContent());
-                list.add(list);
+                list.add(map);
             });
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
@@ -94,7 +94,7 @@ public class HomePageController {
                 map.put("pic",news1.getNewsPic());
                 map.put("time",news1.getNewsTime());
                 map.put("title",news1.getNewsTitle());
-                list.add(list);
+                list.add(map);
             });
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
@@ -139,7 +139,7 @@ public class HomePageController {
                 map.put("pic",project.getProjectPic());
                 map.put("time",project.getProjectTime());
                 map.put("title",project.getProjectTitle());
-                list.add(list);
+                list.add(map);
             });
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
@@ -181,7 +181,7 @@ public class HomePageController {
                 map.put("introduction",notice.getNoticeIntroduction());
                 map.put("time",notice.getNoticeTime());
                 map.put("title",notice.getNoticeTitle());
-                list.add(list);
+                list.add(map);
             });
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);

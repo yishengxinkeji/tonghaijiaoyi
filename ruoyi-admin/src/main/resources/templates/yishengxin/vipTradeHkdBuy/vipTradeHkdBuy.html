@@ -6,6 +6,31 @@
     
      <div class="container-div">
 		<div class="row">
+			<div class="col-sm-12 search-collapse" style="display: flex;flex-direction: column;align-items: center;">
+				<div class="select-list">
+					<ul>
+						<li>
+							年：<input type="text" id="year"/>
+						</li>
+						<li>
+							月：<input type="text" id="month"/>
+						</li>
+						<li>
+							日：<input type="text" id="day"/>
+						</li>
+						<li>
+							<!--onclick="$.table.search()"-->
+							<a class="btn btn-primary btn-rounded btn-sm"  onclick="timeSearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+						</li>
+					</ul>
+				</div>
+
+				<div>
+					<h1 style="font-size: 50px;color: #1ab394;" id="number">0</h1>
+				</div>
+			</div>
+
+
 			<div class="col-sm-12 search-collapse">
 				<form id="formId">
 				</form>

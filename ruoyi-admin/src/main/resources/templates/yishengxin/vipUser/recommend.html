@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
+<body class="gray-bg">
+
+<div class="container-div">
+	<div class="row">
+		<div class="col-sm-12 search-collapse">
+			<form id="formId">
+				<div class="select-list">
+					<input id="parentCode" name="parentCode" th:field="*{parentCode}"  type="hidden">
+					<ul>
+						<li>
+							手机号：<input type="text" name="phone"/>
+						</li>
+						<li>
+							昵称：<input type="text" name="nickname"/>
+						</li>
+						<li>
+							<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
+		</div>
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+	var prefix = ctx + "yishengxin/vipUser";
+	var datas = [[${@dict.getType('sys_yes_no')}]];
+
+	$(function() {
+		var options = {
+			url: prefix + "/list",
+			modalName: "会员基本",
+			search: false,
+			showExport: true,
+			columns: [{
+				checkbox: true
+			},
+				{
+					field : 'id',
+					title : '',
+					visible: false
+				},
+				{
+					field : 'phone',
+					title : '手机号',
+					sortable: true
+				},
+				{
+					field : 'nickname',
+					title : '昵称',
+					sortable: true
+				},
+				{
+					field : 'recommendCode',
+					title : '推荐码',
+					sortable: true
+				},
+			]
+		};
+		$.table.init(options);
+	});
+
+</script>
+</body>
+</html>

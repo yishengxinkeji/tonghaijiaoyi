@@ -6,6 +6,7 @@ package com.ruoyi.common.enums;
  * @author ruoyi
  */
 public enum TradeStatus {
+    WAITING("0", "等待交易"),
     TRADING("1", "交易中"),
     SUCCESS("2", "交易成功"),
     FAIL("3", "交易失败"),

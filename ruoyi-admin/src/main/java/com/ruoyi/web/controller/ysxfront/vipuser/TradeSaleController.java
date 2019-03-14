@@ -164,7 +164,7 @@ public class TradeSaleController extends BaseFrontController {
             //查的是ssl售卖列表
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             //交易中
-            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
             vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
@@ -207,15 +207,23 @@ public class TradeSaleController extends BaseFrontController {
                 }
             });
         }else {
+
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
             //查询该用户下的挂卖记录
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-            //交易中
-            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            //等待交易中
+            vipTradeSslSale.setSaleStatus(TradeStatus.WAITING.getCode());
+            vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-            vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeHkdSale.setVipId(vipUser.getId());
+            vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
             vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
