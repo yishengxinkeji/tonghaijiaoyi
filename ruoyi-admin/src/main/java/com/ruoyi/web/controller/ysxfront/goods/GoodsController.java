@@ -2,8 +2,7 @@ package com.ruoyi.web.controller.ysxfront.goods;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.base.ResponseResult;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.yishengxin.service.IGoodsService;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -43,16 +44,30 @@ public class GoodsController extends BaseFrontController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public AjaxResult updateAvatar(@RequestParam("file") MultipartFile file) {
-        try {
-            if (!file.isEmpty()) {
-                String avatar = FileUploadUtils.upload(Global.getAvatarPath(), file);
-                return AjaxResult.success(Global.getAvatarPath() + avatar);
-            }
-            return error();
-        } catch (Exception e) {
-            return error(e.getMessage());
-        }
+    public Map<String, Object> fileUpload(MultipartFile file)throws Exception{
+
+
+
+
+        // 获取input标签name的属性值
+        String name = UUID.randomUUID().toString().replace("-", "");
+
+        String originalFilename = file.getOriginalFilename();
+        int index = originalFilename.lastIndexOf(".");
+
+        String suffix = originalFilename.substring(index);
+        // 通过transferTo保存到服务器本地
+        String s =  "e:\\1\\" + name + suffix;
+
+       String s1= "http://localhost:8080/1/" + name + suffix;
+        file.transferTo(new File(s));
+
+        Map<String, Object> map = new HashMap();
+        Map<String, Object> map1 = new HashMap();
+        map.put("code", 0);
+        map.put("msg", s1);
+
+        return map;
     }
 
 
