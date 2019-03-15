@@ -35,7 +35,7 @@ public class HomePageController {
      * 轮播图
      * @return
      */
-    @PostMapping("/rotation")
+    @GetMapping("/rotation")
     public ResponseResult rotation(){
         Rotation rotation = new Rotation();
         rotation.setIsShow(CustomerConstants.YES);
@@ -57,7 +57,7 @@ public class HomePageController {
      * 滚动消息
      * @return
      */
-    @PostMapping("/rollMsg")
+    @GetMapping("/rollMsg")
     public ResponseResult rollMsg(){
 
         RollMessage rollMessage = new RollMessage();
@@ -80,7 +80,7 @@ public class HomePageController {
      * 新闻资讯
      * @return
      */
-    @PostMapping("/news")
+    @GetMapping("/news")
     public ResponseResult news(){
 
         List<News> news = newsService.selectNewsList(new News());

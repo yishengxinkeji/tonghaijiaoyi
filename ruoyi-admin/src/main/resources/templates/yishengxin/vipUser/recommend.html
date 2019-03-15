@@ -10,7 +10,7 @@
 		<div class="col-sm-12 search-collapse">
 			<form id="formId">
 				<div class="select-list">
-					<input id="parentCode" name="parentCode" th:field="*{parentCode}"  type="hidden">
+					<input id="parentCode" name="parentCode" th:value="${parentCode}"  type="hidden">
 					<ul>
 						<li>
 							手机号：<input type="text" name="phone"/>
@@ -38,10 +38,14 @@
 
 	$(function() {
 		var options = {
-			url: prefix + "/list",
+			url: prefix + "/recommend",
+			queryParams:{
+				"parentCode":$("#parentCode").val()
+			},
+			method: "POST",
 			modalName: "会员基本",
 			search: false,
-			showExport: true,
+			showExport: false,
 			columns: [{
 				checkbox: true
 			},
@@ -65,6 +69,11 @@
 					title : '推荐码',
 					sortable: true
 				},
+				{
+					field : 'invi',
+					title : '推荐关系',
+					sortable: true
+				}
 			]
 		};
 		$.table.init(options);

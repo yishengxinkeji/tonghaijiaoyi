@@ -1,7 +1,11 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdBuy;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -59,5 +63,7 @@ public interface VipTradeHkdBuyMapper {
      * @return 结果
      */
 	public int deleteVipTradeHkdBuyByIds(String[] ids);
-	
+
+	@Select("select ifNull(sum(buy_number),0) from ysx_vip_trade_hkd_buy where buy_time between #{begin} and #{end}" )
+	int selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

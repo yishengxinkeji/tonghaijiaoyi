@@ -26,8 +26,8 @@
 				</ul>
 			</div>
 
-			<div>
-				<h1 style="font-size: 50px;color: #1ab394;" id="number">0</h1>
+			<div style="display: flex;align-items: center">
+				<span style="margin-right: 10px;color: #1ab394;font-size: 20px;">注册人数:</span><h1 style="font-size: 50px;color: #1ab394;" id="number">0</h1>
 			</div>
 		</div>
 
@@ -225,7 +225,7 @@
 	}
 
 	function recommend(id){
-		$.modal.openFull("推荐情况", prefix+"/recommend/"+id);
+		$.modal.open("推荐情况", prefix+"/recommend/"+id);
 	}
 </script>
 </body>

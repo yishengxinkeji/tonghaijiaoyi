@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -231,5 +232,16 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         //更新订单状态
         vipTradeHkdSale.setSaleStatus(TradeStatus.CANCEL.getCode());
         return vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
+    }
+
+    /**
+     * 根据时间统计交易数量
+     * @param beginOfDay
+     * @param endOfDay
+     * @return
+     */
+    @Override
+    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+        return vipTradeHkdSaleMapper.selectSum(beginOfDay,endOfDay);
     }
 }

@@ -1,9 +1,18 @@
 package com.ruoyi.web.controller.ysxback.vipUser;
 
+import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IVipTradeHkdBuyService;
+import com.ruoyi.yishengxin.service.IVipTradeHkdSaleService;
+import com.ruoyi.yishengxin.service.IVipTradeSslBuyService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +44,14 @@ public class VipTradeSslSaleController extends BaseController
 	
 	@Autowired
 	private IVipTradeSslSaleService vipTradeSaleService;
+	@Autowired
+	private IVipTradeSslBuyService vipTradeSslBuyService;
+	@Autowired
+	private IVipTradeHkdSaleService vipTradeHkdSaleService;
+	@Autowired
+	private IVipTradeSslSaleService vipTradeSslSaleService;
+	@Autowired
+	private IVipTradeHkdBuyService vipTradeHkdBuyService;
 	
 	@RequiresPermissions("yishengxin:vipTradeSale:view")
 	@GetMapping()
@@ -119,5 +136,54 @@ public class VipTradeSslSaleController extends BaseController
 	public AjaxResult remove(String ids){
 		return toAjax(vipTradeSaleService.deleteVipTradeSaleByIds(ids));
 	}
-	
+
+	/**
+	 * 交易条件统计
+	 * @param day
+	 * @param month
+	 * @param year
+	 * @return
+	 */
+	@RequestMapping("/timeSearch")
+	@ResponseBody
+	public AjaxResult timeSearch(String day,String month,String year){
+
+		VipUser vipUser = new VipUser();
+
+		DateTime begin = DateUtil.beginOfDay(new Date());
+		DateTime end = DateUtil.endOfDay(new Date());
+		if(!"".equals(day)){
+			begin = DateUtil.beginOfDay(DateUtils.parseDate(day));
+			end = DateUtil.endOfDay(DateUtils.parseDate(day));
+
+
+
+		}else if("".equals(day) && !"".equals(month)){
+			begin = DateUtil.beginOfMonth(DateUtils.parseDate(month));
+			end = DateUtil.endOfMonth(DateUtils.parseDate(month));
+
+		}else if(!"".equals(year) && "".equals(month) && "".equals(month)){
+			begin = DateUtil.beginOfYear(DateUtils.parseDate(year+"-01"));
+			end = DateUtil.endOfYear(DateUtils.parseDate(year+"-01"));
+
+		}
+
+		int sslBuy = vipTradeSslBuyService.selectSum(begin,end);
+		int sslSale = vipTradeSslSaleService.selectSum(begin,end);
+		int hkdBuy = vipTradeHkdBuyService.selectSum(begin,end);
+		int hkdSale = vipTradeHkdSaleService.selectSum(begin,end);
+
+		//由于买和卖其实交易成功的订单是一样的,所以只用统计一种就行(单价和 / 条数)
+		double avg = vipTradeSslBuyService.selectAvgByDay(DateUtil.beginOfDay(new Date()),DateUtil.endOfDay(new Date()));
+
+		AjaxResult ajaxResult = new AjaxResult();
+		ajaxResult.put("sslBuy",sslBuy);
+		ajaxResult.put("sslSale",sslSale);
+		ajaxResult.put("hkdBuy",hkdBuy);
+		ajaxResult.put("hkdSale",hkdSale);
+		ajaxResult.put("avg",avg);
+		return ajaxResult;
+	}
+
+
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
@@ -72,4 +73,6 @@ public interface IVipTradeHkdSaleService
 
 	//取消挂售
 	int cancelSale(VipUser vipUser, String id);
+
+    int selectSum(DateTime beginOfDay, DateTime endOfDay);
 }

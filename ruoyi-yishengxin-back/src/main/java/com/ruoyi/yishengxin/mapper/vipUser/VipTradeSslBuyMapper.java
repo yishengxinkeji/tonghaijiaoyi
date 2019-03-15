@@ -1,6 +1,9 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -61,4 +64,9 @@ public interface VipTradeSslBuyMapper {
      */
     public int deleteVipTradeBuyByIds(String[] ids);
 
+    @Select("select ifNull(sum(buy_number),0) from ysx_vip_trade_ssl_buy where buy_status = 2 and buy_time between #{begin} and #{end}" )
+    int selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
+
+    @Select("select ifNull(avg(buy_number * unit_price),0) from ysx_vip_trade_ssl_buy where buy_time between #{beginOfDay} and #{endOfDay}")
+    double selectAvgByDay(@Param("beginOfDay") DateTime beginOfDay,@Param("endOfDay") DateTime endOfDay);
 }

@@ -1,7 +1,10 @@
 package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -342,13 +345,39 @@ public class VipUserController extends BaseController
 	}
 
 	/**
-	 * 查询会员基本列表
+	 * 会员推荐情况
 	 */
 	@PostMapping("/recommend")
 	@ResponseBody
 	public TableDataInfo recommend(VipUser vipUser){
 		startPage();
-		List<VipUser> list = vipUserService.selectVipUserList(vipUser);
+
+		List<Map> list = new ArrayList();
+		VipUser vipUser2 = new VipUser();
+		vipUser2.setRecommendCode(vipUser.getParentCode());
+		List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser2);
+
+		List<VipUser> list1 = vipUserService.selectVipUserList(vipUser);
+		if(vipUsers.size() > 0){
+			Map map = new HashMap();
+			map.put("id",vipUsers.get(0).getId());
+			map.put("phone",vipUsers.get(0).getPhone());
+			map.put("nickname",vipUsers.get(0).getNickname());
+			map.put("recommendCode",vipUsers.get(0).getRecommendCode());
+			map.put("invi","推荐人");
+			list.add(map);
+		}
+		for(VipUser vipUser1 : list1){
+			Map map = new HashMap();
+			map.put("id",vipUser1.getId());
+			map.put("phone",vipUser1.getPhone());
+			map.put("nickname",vipUser1.getNickname());
+			map.put("recommendCode",vipUser1.getRecommendCode());
+			map.put("invi","被推荐人");
+			list.add(map);
+		}
+
+
 		return getDataTable(list);
 	}
 }

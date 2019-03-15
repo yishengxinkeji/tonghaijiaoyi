@@ -133,7 +133,7 @@
 		function submitHandler() {
 			if ($.validate.form()) {
 				var sHTML = $('.summernote').summernote('code');
-				$("#content").val(sHTML);
+				$("#newsContent").val(sHTML);
 				$.operate.save(prefix + "/edit", $('#form-news-edit').serialize());
 			}
 		}

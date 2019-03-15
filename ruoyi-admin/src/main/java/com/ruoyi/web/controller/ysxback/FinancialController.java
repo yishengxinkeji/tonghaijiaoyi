@@ -1,0 +1,84 @@
+package com.ruoyi.web.controller.ysxback;
+
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
+import com.ruoyi.common.base.AjaxResult;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.framework.web.base.BaseController;
+import com.ruoyi.yishengxin.domain.Trade;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.*;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * 财务管理
+ */
+@Controller
+@RequestMapping("yishengxin/financial")
+public class FinancialController extends BaseController {
+    private String prefix = "yishengxin/financial";
+
+    @Autowired
+    private IVipBuyService vipBuyService;   //个人购买
+    @Autowired
+    private IVipExchangeService vipExchangeService;     //个人兑换
+    @Autowired
+    private IVipTradeSslSaleService vipTradeSslSaleService;
+    @Autowired
+    private IVipTradeHkdSaleService vipTradeHkdSaleService;
+    @Autowired
+    private ITradeService tradeService;
+
+
+//总资金[  现金[即兑换的差价], [ssl: 交易手续费+商品购买]   ] , [hkd:交易手续费 ] , 可用资金 [ 购买-兑换的差价 ],
+// 待返资金[当前用户未兑换金额总和], 已提现 [已兑换金额总和]
+    @RequiresPermissions("yishengxin:financial:view")
+    @GetMapping()
+    public String customer(ModelMap modelMap) {
+
+    /*    //总资金(兑换-购买的差价)
+        double buySum = vipBuyService.selectSum();    //购买总金额
+        double exchangeSum = vipExchangeService.selectSumByIfExchage("2");   //兑换总金额  --已提现
+        double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
+        double waitExchange = vipExchangeService.selectSumByIfExchage("1");  //当前未兑换的现金总和 -- 待返资金
+
+        //2019年一直到以后的今天,ssl交易总和
+        double sslSum = vipTradeSslSaleService.selectSum(DateUtil.beginOfYear(DateUtil.parseDate("2019-01-01")),DateUtil.endOfDay(new Date()));
+        //2019年一直到以后的今天,hkd交易总和
+        double hkdSum = vipTradeHkdSaleService.selectSum(DateUtil.beginOfYear(DateUtil.parseDate("2019-01-01")),DateUtil.endOfDay(new Date())); //
+
+        Trade trade = tradeService.selectTradeList(new Trade()).get(0);
+        //ssl交易手续费
+        String sslCharge = trade.getSslCharge();
+        //hkd交易手续费
+        String hkdCharge = trade.getHkdCharge();
+
+        double sslChargeSum = NumberUtil.mul(sslSum, Double.parseDouble(sslCharge));   //ssl手续费
+        double hkdChargeSum = NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge));   //hkd交易手续费
+
+
+        modelMap.put("buySum",buySum);
+        modelMap.put("exchangeSum",exchangeSum);
+        modelMap.put("divSum",divSum);
+        modelMap.put("waitExchange",waitExchange);
+        modelMap.put("sslChargeSum",sslChargeSum);
+        modelMap.put("hkdChargeSum",hkdChargeSum);*/
+
+        return prefix + "/financial";
+
+
+    }
+
+
+
+}

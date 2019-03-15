@@ -63,4 +63,6 @@ public interface IVipTradeSslSaleService
 
 
     List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay);
+
+    int selectSum(DateTime beginOfDay, DateTime endOfDay);
 }
