@@ -128,4 +128,9 @@ public class VipBuyServiceImpl implements IVipBuyService
 		return vipTradeMapper.insertVipTrade(trade);
 	}
 
+	@Override
+	public double selectSum() {
+		return vipBuyMapper.selectSum();
+	}
+
 }

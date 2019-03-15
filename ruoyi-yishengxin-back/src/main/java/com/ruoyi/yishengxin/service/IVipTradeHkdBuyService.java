@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
@@ -63,4 +64,6 @@ public interface IVipTradeHkdBuyService
     int buyHkd(VipUser vipUser, String id, String number) throws Exception;
 
     void updateBuyNo(String id, String img) throws Exception;
+
+    int selectSum(DateTime beginOfDay, DateTime endOfDay);
 }

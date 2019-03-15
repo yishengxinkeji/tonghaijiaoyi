@@ -116,14 +116,17 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        long expireTime = RedisUtils.getExpireTime(token);
+        System.out.println(expireTime);
         try {
             if (!file.isEmpty()) {
                 //图片地址
                 String path = uploadFile(file);
-                vipUser.setAvater(path);
+                vipUser.setAvater(Global.getFrontPath()+path);
                 if(vipUserService.updateVipUser(vipUser) > 0){
+
                     RedisUtils.setJson(token,vipUser, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
-                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,CustomerConstants.SERVER_LINK+Global.getFrontPath()+path);
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,Global.getFrontPath()+path);
                 }
             }
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER);
@@ -749,8 +752,8 @@ public class VipUserCenterController extends BaseFrontController {
                 String path = uploadFile(file);
                 if(path != null){
                     Map map = new HashMap();
-                    map.put("picName",path);
-                    map.put("serverPath",CustomerConstants.SERVER_LINK+Global.getFrontPath()+path);
+                    map.put("picName",Global.getFrontPath()+path);
+                    map.put("serverPath",Global.getFrontPath()+path);
                     return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
                 }
             }

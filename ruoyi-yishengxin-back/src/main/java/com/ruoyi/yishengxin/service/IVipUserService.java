@@ -1,7 +1,9 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 会员基本 服务层
@@ -82,4 +84,11 @@ public interface IVipUserService
 	 */
     int tranSport(VipUser vip, VipUser myVip, String type, String number, double tranMoney) throws Exception;
 
+	/**
+	 * 根据时间段统计注册人数
+	 * @param beginOfDay
+	 * @param endOfDay
+	 * @return
+	 */
+    int selectCount(VipUser vipUser);
 }

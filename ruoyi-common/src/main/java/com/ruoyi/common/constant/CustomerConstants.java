@@ -21,8 +21,7 @@ public class CustomerConstants {
     /**
      * 服务器地址
      */
-//    public static final String SERVER_LINK = IpUtils.getHostIp() + ":" + Global.getConfig("server.port");
-    public static final String SERVER_LINK = IpUtils.getHostIp() + ":" + 8080;
+    public static final String SERVER_LINK = IpUtils.getHostIp() + ":" + Global.getConfig("server.port");
 
     //邀请链接前缀,后面加上个人的推广码
     public static final String PRE_INVI_LINK = SERVER_LINK + "/front/vipUser/invite/";

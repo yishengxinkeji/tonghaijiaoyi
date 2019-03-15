@@ -69,6 +69,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id,phone,avater,nickname,create_time from ysx_vip_user where parent_code in(select recommend_code from ysx_vip_user where parent_code = #{parentCode})
     </select>
 
+    <select id="selectCount" parameterType="VipUser" resultType="Integer">
+       select count(*) from ysx_vip_user where create_time between #{createTime} and #{updateTime}
+    </select>
+
 
 
     <select id="selectVipUserById" parameterType="Integer" resultMap="VipUserResult">

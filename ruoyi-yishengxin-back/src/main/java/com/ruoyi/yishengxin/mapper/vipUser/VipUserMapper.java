@@ -1,6 +1,9 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -77,4 +80,5 @@ public interface VipUserMapper
 	List<VipUser> selectUserByGrandParentCode(VipUser oneUser);
 
 
+    public int selectCount(VipUser vipUser);
 }

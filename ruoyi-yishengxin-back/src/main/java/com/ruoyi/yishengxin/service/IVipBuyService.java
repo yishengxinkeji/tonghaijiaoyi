@@ -60,5 +60,6 @@ public interface IVipBuyService
 	 */
     int exchange(VipBuy vipBuy) throws Exception;
 
+	double selectSum();
 
 }

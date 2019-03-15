@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.util.List;
 
+import com.ruoyi.common.enums.AppealType;
 import com.ruoyi.common.enums.DutyDealWay;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.framework.util.ShiroUtils;
@@ -136,6 +137,7 @@ public class VipAppealController extends BaseController {
     @PostMapping("/deal")
     @ResponseBody
     public AjaxResult dealAppeal(VipAppeal vipAppeal) {
-        return toAjax(vipAppealService.dealAppeal(vipAppeal));
+        vipAppeal.setAppealStatus(AppealType.SUCCESS.getCode());
+        return toAjax(vipAppealService.updateVipAppeal(vipAppeal));
     }
 }

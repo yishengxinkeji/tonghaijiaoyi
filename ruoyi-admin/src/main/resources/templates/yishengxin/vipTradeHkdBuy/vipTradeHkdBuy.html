@@ -2,15 +2,51 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+<style>
+	.jiaoyi{
+		margin-right: 10px;
+		color: #1ab394;
+		font-size: 20px;
+	}
+	.numb {
+		font-size: 50px;
+		color: #1ab394;
+		margin-right: 10px;
+	}
+
+</style>
 <body class="gray-bg">
     
      <div class="container-div">
 		<div class="row">
-			<div class="col-sm-12 search-collapse">
-				<form id="formId">
-				</form>
+			<div class="col-sm-12 search-collapse" style="display: flex;flex-direction: column;align-items: center;">
+				<div class="select-list">
+					<ul>
+						<li>
+							年：<input type="text" id="year"/>
+						</li>
+						<li>
+							月：<input type="text" id="month"/>
+						</li>
+						<li>
+							日：<input type="text" id="day"/>
+						</li>
+						<li>
+							<!--onclick="$.table.search()"-->
+							<a class="btn btn-primary btn-rounded btn-sm"  onclick="timeSearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+						</li>
+					</ul>
+				</div>
+
+				<div style="display: flex;align-items: center;margin-top: 20px;">
+					<div><span class="jiaoyi">SSL购买量:</span><h1 class="numb"  id="sslBuy">0</h1></div>
+					<div><span class="jiaoyi">SSL卖出量:</span><h1 class="numb"  id="sslSale">0</h1></div>
+					<div><span class="jiaoyi">HKD购买量:</span><h1 class="numb" id="hkdBuy">0</h1></div>
+					<div><span class="jiaoyi">HKD卖出量:</span><h1 class="numb"  id="hkdSale">0</h1></div>
+					<div><span class="jiaoyi">今日SSL交易均值:</span><h1 class="numb" id="avg">0</h1></div>
+				</div>
 			</div>
-			
+
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
 				<!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:vipTradeHkdBuy:add">
 					<i class="fa fa-plus"></i> 添加
@@ -31,6 +67,24 @@
 		</div>
 	</div>
     <div th:include="include :: footer"></div>
+	 <script>
+		 layui.use('laydate', function(){
+			 var laydate = layui.laydate;
+
+			 laydate.render({
+				 elem: '#year'
+				 ,type: 'year'
+			 });
+			 laydate.render({
+				 elem: '#month'
+				 ,type: 'month'
+			 });
+			 laydate.render({
+				 elem: '#day'
+			 });
+
+		 });
+	 </script>
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('yishengxin:vipTradeHkdBuy:edit')}]];
         var removeFlag = [[${@permission.hasPermi('yishengxin:vipTradeHkdBuy:remove')}]];
@@ -126,6 +180,28 @@
             };
             $.table.init(options);
         });
+		function timeSearch(){
+			var day = $("#day").val();
+			var month = $("#month").val();
+			var year = $("#year").val();
+
+			$.ajax({
+				url: ctx + "yishengxin/vipTradeSslSale/timeSearch",
+				type: "post",
+				data : {
+					day: day,
+					month: month,
+					year: year
+				},
+				success: function(res){
+					$("#sslBuy").text(res.sslBuy);
+					$("#sslSale").text(res.sslSale)
+					$("#hkdBuy").text(res.hkdBuy)
+					$("#hkdSale").text(res.sslBuy)
+					$("#avg").text(res.avg)
+				}
+			});
+		}
     </script>
 </body>
 </html>

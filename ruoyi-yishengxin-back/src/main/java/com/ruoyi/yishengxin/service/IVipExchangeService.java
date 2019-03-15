@@ -57,4 +57,6 @@ public interface IVipExchangeService
 	 * @return
 	 */
     int exchange(VipExchange vipExchange) throws Exception;
+
+	double selectSumByIfExchage(String s);
 }

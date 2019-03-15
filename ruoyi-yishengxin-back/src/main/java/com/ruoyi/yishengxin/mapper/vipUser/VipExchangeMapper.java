@@ -2,6 +2,8 @@ package com.ruoyi.yishengxin.mapper.vipUser;
 
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -62,5 +64,12 @@ public interface VipExchangeMapper
      * @return 结果
      */
 	public int deleteVipExchangeByIds(String[] ids);
-	
+
+	/**
+	 * 查询不同状态的兑换和
+	 * @param status
+	 * @return
+	 */
+	@Select("select SUM(buy_money) from ysx_vip_exchange where exchange_status=#{status}")
+	double selectSumByIfExchage(@Param("status") String status);
 }

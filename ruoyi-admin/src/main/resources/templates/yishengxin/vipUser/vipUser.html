@@ -2,10 +2,36 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
 <body class="gray-bg">
 
 <div class="container-div">
 	<div class="row">
+		<div class="col-sm-12 search-collapse" style="display: flex;flex-direction: column;align-items: center;">
+			<div class="select-list">
+				<ul>
+					<li>
+						年：<input type="text" id="year"/>
+					</li>
+					<li>
+						月：<input type="text" id="month"/>
+					</li>
+					<li>
+						日：<input type="text" id="day"/>
+					</li>
+					<li>
+						<!--onclick="$.table.search()"-->
+						<a class="btn btn-primary btn-rounded btn-sm"  onclick="timeSearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+					</li>
+				</ul>
+			</div>
+
+			<div style="display: flex;align-items: center">
+				<span style="margin-right: 10px;color: #1ab394;font-size: 20px;">注册人数:</span><h1 style="font-size: 50px;color: #1ab394;" id="number">0</h1>
+			</div>
+		</div>
+
+
 		<div class="col-sm-12 search-collapse">
 			<form id="formId">
 				<div class="select-list">
@@ -39,11 +65,32 @@
 	</div>
 </div>
 <div th:include="include :: footer"></div>
+<script>
+	layui.use('laydate', function(){
+		var laydate = layui.laydate;
+
+		laydate.render({
+			elem: '#year'
+			,type: 'year'
+		});
+		laydate.render({
+			elem: '#month'
+			,type: 'month'
+		});
+		laydate.render({
+			elem: '#day'
+		});
+
+	});
+</script>
 <script th:inline="javascript">
 	var editFlag = [[${@permission.hasPermi('yishengxin:vipUser:edit')}]];
 	var frozenFlag = [[${@permission.hasPermi('yishengxin:vipUser:frozen')}]];
 	var rechargeFlag = [[${@permission.hasPermi('yishengxin:vipUser:recharge')}]];
 	var addressDetail = [[${@permission.hasPermi('yishengxin:vipUser:address')}]];
+	var reduceFlag = [[${@permission.hasPermi('yishengxin:vipUser:reduce')}]];
+	var logFlag = [[${@permission.hasPermi('yishengxin:vipUser:log')}]];
+	var recommendFlag = [[${@permission.hasPermi('yishengxin:vipUser:recommend')}]];
 	var prefix = ctx + "yishengxin/vipUser";
 	var datas = [[${@dict.getType('sys_yes_no')}]];
 
@@ -111,8 +158,10 @@
 						actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
 						actions.push('<a class="btn btn-danger btn-xs ' + frozenFlag + '" href="#" onclick="frozen(\'' + row.id + '\')"><i class="fa fa-remove"></i>冻结/解冻</a> ');
 						actions.push('<a class="btn btn-warning btn-xs ' + rechargeFlag + '" href="#" onclick="recharge(\'' + row.id + '\')"><i class="fa fa-warning"></i>充值</a> ');
+						actions.push('<a class="btn btn-primary btn-xs ' + reduceFlag + '" href="#" onclick="reduce(\'' + row.id + '\')"><i class="fa fa-warning"></i>扣除</a> ');
 						actions.push('<a class="btn btn-info btn-xs ' + addressDetail + '" href="#" onclick="detail(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>地址列表</a> ');
-						actions.push('<a class="btn btn-primary btn-xs ' + addressDetail + '" href="#" onclick="rechRecord(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>充值记录</a> ');
+						actions.push('<a class="btn btn-primary btn-xs ' + logFlag + '" href="#" onclick="rechRecord(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>操作记录</a> ');
+						actions.push('<a class="btn btn-success btn-xs ' + recommendFlag + '" href="#" onclick="recommend(\'' + row.id + '\')"><i class="fa fa-list-ul"></i>推荐情况</a> ');
 
 						return actions.join('');
 					}
@@ -142,10 +191,41 @@
 		createMenuItem(url, "地址明细");
 	}
 
+	/**
+	 * 扣除
+	 *
+	 * */
+	function reduce(id){
+		$.modal.open("扣除", prefix+"/reduce/"+id);
+	}
+
 	/*充值记录*/
 	function rechRecord(id) {
 		var url = prefix + '/rechRecord/' + id;
 		createMenuItem(url, "充值记录");
+	}
+
+	function timeSearch(){
+		var day = $("#day").val();
+		var month = $("#month").val();
+		var year = $("#year").val();
+
+		$.ajax({
+			url: prefix +"/timeSearch",
+			type: "post",
+			data : {
+				day: day,
+				month: month,
+				year: year
+			},
+			success: function(res){
+				$("#number").text(res.number)
+			}
+		});
+	}
+
+	function recommend(id){
+		$.modal.open("推荐情况", prefix+"/recommend/"+id);
 	}
 </script>
 </body>

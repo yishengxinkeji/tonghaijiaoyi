@@ -151,51 +151,6 @@ public class VipAppealServiceImpl implements IVipAppealService {
      */
     @Override
     public int dealAppeal(VipAppeal vipAppeal) {
-
-        String orderNo = vipAppeal.getOrderNo();    //订单号, 因为不管买还是卖,订单号是唯一的
-        VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
-        vipTradeHkdBuy.setBuyNo(orderNo);
-        //订单信息
-        List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyMapper.selectVipTradeHkdBuyList(vipTradeHkdBuy);
-        if(vipTradeHkdBuys.size() > 0){
-            vipTradeHkdBuy = vipTradeHkdBuys.get(0);
-        }
-
-        //卖家
-        VipUser saleUser = vipUserMapper.selectVipUserById(vipAppeal.getSaleId());
-        //买家
-        VipUser buyUser = vipUserMapper.selectVipUserById(vipAppeal.getBuyId());
-
-        double hkdCharge = 0.00;    //卖hkd时的手续费
-        double saleDutyCharge = 0.00;
-        List<Trade> trades = tradeMapper.selectTradeList(new Trade());
-        if (trades.size() > 0) {
-            hkdCharge = Double.parseDouble(trades.get(0).getHkdCharge());
-            saleDutyCharge = Double.parseDouble(trades.get(0).getSaleDutyCharge());
-        }
-
-        String buyNumber = vipTradeHkdBuy.getBuyNumber(); //订单数量
-        //把卖家的hkd全部返回去,更新余额,更新订单,
-
-        //应返回给卖家多少钱 卖的数量 / (1-扣的手续费)
-        double money = NumberUtil.div(Double.parseDouble(buyNumber), NumberUtil.sub(1, hkdCharge));
-        saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(saleUser.getHkdMoney()),money))); //更新用户信息
-        vipUserMapper.updateVipUser(saleUser);
-
-        vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-        vipTradeHkdBuy.setFailReason(vipAppeal.getAppealReason());
-        vipTradeHkdBuy.setIsAppeal(CustomerConstants.YES);
-        vipTradeHkdBuy.setAppealStatus(AppealType.SUCCESS.getCode());
-        vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
-
-        VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-        vipTradeHkdSale.setSaleNo(vipAppeal.getOrderNo());
-        vipTradeHkdSale.setFailReason(vipAppeal.getAppealReason());
-        vipTradeHkdSale.setIsAppeal(CustomerConstants.YES);
-        vipTradeHkdSale.setAppealStatus(AppealType.SUCCESS.getCode());
-        vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
-        vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);   //更新卖订单
-
         vipAppeal.setAppealStatus(AppealType.SUCCESS.getCode());
         return vipAppealMapper.updateVipAppeal(vipAppeal);
 

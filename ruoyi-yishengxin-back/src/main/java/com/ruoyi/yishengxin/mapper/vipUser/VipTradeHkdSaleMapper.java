@@ -1,8 +1,10 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
@@ -64,4 +66,7 @@ public interface VipTradeHkdSaleMapper {
 
 	@Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where to_days(sale_time) <= to_days(now())")
 	double selectHkdMaxNumberByDay(Integer id);
+
+	@Select("select ifNull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where sale_time between #{begin} and #{end}" )
+	int selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

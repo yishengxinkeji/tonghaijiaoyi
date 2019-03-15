@@ -124,4 +124,9 @@ public class VipExchangeServiceImpl implements IVipExchangeService
 		//插入到交易信息表中
 		return vipTradeMapper.insertVipTrade(trade);
 	}
+
+	@Override
+	public double selectSumByIfExchage(String s) {
+		return vipExchangeMapper.selectSumByIfExchage(s);
+	}
 }

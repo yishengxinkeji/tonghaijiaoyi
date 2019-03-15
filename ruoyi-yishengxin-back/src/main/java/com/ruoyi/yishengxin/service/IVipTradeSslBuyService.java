@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
@@ -71,4 +72,14 @@ public interface IVipTradeSslBuyService
 
 	//取消挂买
     int cancelBuy(VipUser vipUser, String id);
+
+	/**
+	 * 根据时间统计
+	 * @param beginOfDay
+	 * @param endOfDay
+	 * @return
+	 */
+    int selectSum(DateTime beginOfDay, DateTime endOfDay);
+
+    double selectAvgByDay(DateTime beginOfDay, DateTime endOfDay);
 }

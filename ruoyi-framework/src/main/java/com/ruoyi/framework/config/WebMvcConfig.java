@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
@@ -26,6 +27,13 @@ public class WebMvcConfig {
                         .allowedOrigins("*")
                         .exposedHeaders("Authorization")
                         .allowCredentials(true);
+            }
+
+            @Override
+            public void addResourceHandlers(ResourceHandlerRegistry registry){
+                String filePath = "file:/home/";
+                //指向外部目录
+                registry.addResourceHandler("home//**").addResourceLocations(filePath);
             }
         };
     }

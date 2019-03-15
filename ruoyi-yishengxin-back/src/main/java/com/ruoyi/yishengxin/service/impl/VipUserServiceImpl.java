@@ -3,6 +3,7 @@ package com.ruoyi.yishengxin.service.impl;
 import java.math.BigDecimal;
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -11,6 +12,7 @@ import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.exception.frontException.VipUserException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.yishengxin.domain.CustomerLog;
 import com.ruoyi.yishengxin.domain.Distribution;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.VipProfitDetail;
@@ -19,6 +21,7 @@ import com.ruoyi.yishengxin.mapper.DistributionMapper;
 import com.ruoyi.yishengxin.mapper.TradeMapper;
 import com.ruoyi.yishengxin.mapper.vipUser.VipProfitDetailMapper;
 import com.ruoyi.yishengxin.mapper.vipUser.VipTradeMapper;
+import com.ruoyi.yishengxin.service.ICustomerLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.yishengxin.mapper.vipUser.VipUserMapper;
@@ -50,6 +53,8 @@ public class VipUserServiceImpl implements IVipUserService {
 
     @Autowired
     private DistributionMapper distributionMapper;
+    @Autowired
+    private ICustomerLogService iCustomerLogService;
 
     /**
      * 查询会员基本信息
@@ -258,5 +263,8 @@ public class VipUserServiceImpl implements IVipUserService {
         return vipTradeMapper.insertVipTrade(toTrade);
     }
 
-
+    @Override
+    public int selectCount(VipUser vipUser) {
+        return vipUserMapper.selectCount(vipUser);
+    }
 }

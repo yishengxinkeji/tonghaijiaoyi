@@ -202,4 +202,15 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     public List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeSslSaleMapper.selectSale(beginOfDay,endOfDay);
     }
+
+    /**
+     * 根据时间统计交易数量
+     * @param beginOfDay
+     * @param endOfDay
+     * @return
+     */
+    @Override
+    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+        return vipTradeSslSaleMapper.selectSum(beginOfDay,endOfDay);
+    }
 }
