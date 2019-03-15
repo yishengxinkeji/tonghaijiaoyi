@@ -2,7 +2,10 @@ package com.ruoyi.yishengxin.mapper.goods;
 
 
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -60,5 +63,10 @@ public interface GoodsOrderMapper
      * @return 结果
      */
 	public int deleteGoodsOrderByIds(String[] ids);
+
+//@Select("select COUNT(*) from ysx_goods_order where goodsName=#{goodsName} and  UNIX_TIMESTAMP(create_time)  >= UNIX_TIMESTAMP('2015-01-01 13:50:42')  AND  UNIX_TIMESTAMP(create_time)  <= UNIX_TIMESTAMP('2020-02-06 00:00:00') and   goodsStatus != \"代付款\" and goodsStatus != \"已退款\"")
+//
+	@Select("select COUNT(*) from ysx_goods_order where goodsName=#{goodsName} and create_time between #{startTime} and #{stopTime} and   goodsStatus != \"代付款\" and goodsStatus != \"已退款\"")
+	public int selectSoleNumber(@Param("goodsName") String goodsName, @Param("startTime") Date startTime, @Param("stopTime") Date stopTime);
 	
 }

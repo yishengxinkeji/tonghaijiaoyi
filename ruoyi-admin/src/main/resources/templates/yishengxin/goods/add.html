@@ -11,14 +11,243 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">商品名称：</label>
 			<div class="col-sm-8">
-				<input id="noticeTitle" name="goodsName" class="form-control" type="text">
+				<input id="goodsName" name="goodsName" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品介绍：</label>
+			<div class="col-sm-8">
+				<input id="goodsIntroduce" name="goodsIntroduce" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品价格：</label>
+			<div class="col-sm-8">
+				<input id="goodsPrice" name="goodsPrice" class="form-control" type="text">
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-sm-3 control-label">公告内容：</label>
+			<label class="col-sm-3 control-label">商品库存：</label>
 			<div class="col-sm-8">
-				<input id="noticeContent" name="goodsSlideShow" type="hidden">
+				<input id="goodsInventory" name="goodsInventory" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品售出量：</label>
+			<div class="col-sm-8">
+				<input id="goodsSoldNumber" name="goodsSoldNumber" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品上下架：</label>
+			<div class="col-sm-8">
+				<input id="standUpAndDown" name="standUpAndDown" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">客服电话：</label>
+			<div class="col-sm-8">
+				<input id="serviceTel" name="serviceTel" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品主图：：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test1">
+					上传图片
+				</button>
+				<input id="newsPic" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品小图2：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test2">
+					上传图片
+				</button>
+				<input id="newsPic2" name="Figure2" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic2">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品小图3：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test3">
+					上传图片
+				</button>
+				<input id="newsPic3" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic3">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品小图4：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test4">
+					上传图片
+				</button>
+				<input id="newsPic4" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic4">
+			</div>
+		</div>
+
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品中图1：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test5">
+					上传图片
+				</button>
+				<input id="newsPic5" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic5">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品中图2：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test6">
+					上传图片
+				</button>
+				<input id="newsPic6" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic6">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品中图3：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test7">
+					上传图片
+				</button>
+				<input id="newsPic7" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic7">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品中图4：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test8">
+					上传图片
+				</button>
+				<input id="newsPic8" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic8">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品大图1：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test9">
+					上传图片
+				</button>
+				<input id="newsPic9" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic9">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品大图2：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test10">
+					上传图片
+				</button>
+				<input id="newsPic10" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic10">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品大图3：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test11">
+					上传图片
+				</button>
+				<input id="newsPic11" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic11">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品大图4：</label>
+			<div class="col-sm-8">
+				<button type="button" class="layui-btn" id="test12">
+					上传图片
+				</button>
+				<input id="newsPic12" name="goodsMainFigure" class="form-control" type="hidden">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
+				<img style="width: 200px;height: 200px;" id="pic12">
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品详情：</label>
+			<div class="col-sm-8">
+				<input id="newsContent" name="goodsDetailsPicture" type="hidden">
 				<div class="summernote"></div>
 			</div>
 		</div>
@@ -73,7 +302,29 @@
 			}
 		}
 	});
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
 
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test1' //绑定元素
+			,url: ctx + "yishengxin/news"+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic").attr("src",res.msg);
+					$("#newsPic").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
 	function submitHandler() {
 		if ($.validate.form()) {
 			var sHTML = $('.summernote').summernote('code');

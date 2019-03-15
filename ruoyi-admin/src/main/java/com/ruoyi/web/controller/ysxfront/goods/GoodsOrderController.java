@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.order.Order;
+import com.ruoyi.common.utils.DateConversion;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.Vo.OraderVo;
 import com.ruoyi.yishengxin.domain.goods.Goods;
@@ -249,5 +250,99 @@ public class GoodsOrderController extends BaseFrontController {
 
         return ResponseResult.responseResult(ResponseEnum. GOODS_DELIVERYERROR);
     }
+    @PostMapping("/statistical")
+    @ResponseBody
+    public int[] selectSoleNumber(String goodsName,Date years,Date month,Date day) throws Exception {
 
+            if(null != day) {
+                int[] soleNumbers = new int[24];
+                String dayTime = DateConversion.dateToString(day, "yyyy-MM-dd HH:mm:ss");
+                String dd = dayTime.substring(0, 11);
+                Date staHHO = DateConversion.stringToDate(dd + "00:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH0 = DateConversion.stringToDate(dd + "00:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH1 = DateConversion.stringToDate(dd + "01:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH1 = DateConversion.stringToDate(dd + "01:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH2 = DateConversion.stringToDate(dd + "02:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH2 = DateConversion.stringToDate(dd + "02:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH3 = DateConversion.stringToDate(dd + "03:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH3 = DateConversion.stringToDate(dd + "03:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH4 = DateConversion.stringToDate(dd + "04:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH4 = DateConversion.stringToDate(dd + "04:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH5 = DateConversion.stringToDate(dd + "05:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH5 = DateConversion.stringToDate(dd + "05:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH6 = DateConversion.stringToDate(dd + "06:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH6 = DateConversion.stringToDate(dd + "06:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH7 = DateConversion.stringToDate(dd + "07:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH7 = DateConversion.stringToDate(dd + "07:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH8 = DateConversion.stringToDate(dd + "08:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH8 = DateConversion.stringToDate(dd + "08:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH9 = DateConversion.stringToDate(dd + "09:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH9 = DateConversion.stringToDate(dd + "09:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH10 = DateConversion.stringToDate(dd + "10:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH10 = DateConversion.stringToDate(dd + "10:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH11 = DateConversion.stringToDate(dd + "11:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH11 = DateConversion.stringToDate(dd + "11:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH12 = DateConversion.stringToDate(dd + "12:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH12 = DateConversion.stringToDate(dd + "12:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH13 = DateConversion.stringToDate(dd + "13:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH13 = DateConversion.stringToDate(dd + "13:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH14 = DateConversion.stringToDate(dd + "14:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH14 = DateConversion.stringToDate(dd + "14:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH15 = DateConversion.stringToDate(dd + "15:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH15 = DateConversion.stringToDate(dd + "15:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH16 = DateConversion.stringToDate(dd + "16:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH16 = DateConversion.stringToDate(dd + "16:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH17 = DateConversion.stringToDate(dd + "17:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH17 = DateConversion.stringToDate(dd + "17:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH18 = DateConversion.stringToDate(dd + "18:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH18 = DateConversion.stringToDate(dd + "18:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH19 = DateConversion.stringToDate(dd + "19:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH19 = DateConversion.stringToDate(dd + "19:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH2O = DateConversion.stringToDate(dd + "20:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH20 = DateConversion.stringToDate(dd + "20:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH21 = DateConversion.stringToDate(dd + "21:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH21 = DateConversion.stringToDate(dd + "21:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH22 = DateConversion.stringToDate(dd + "22:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH22 = DateConversion.stringToDate(dd + "22:59:59", "yyyy-MM-dd HH:mm:ss");
+                Date staHH23 = DateConversion.stringToDate(dd + "23:00:00", "yyyy-MM-dd HH:mm:ss");
+                Date stopHH23 = DateConversion.stringToDate(dd + "23:59:59", "yyyy-MM-dd HH:mm:ss");
+                soleNumbers[0] = goodsOrderService.selectSoleNumber(goodsName,staHHO,stopHH0 );
+                soleNumbers[1] = goodsOrderService.selectSoleNumber(goodsName,staHH1,stopHH1 );
+                soleNumbers[2] = goodsOrderService.selectSoleNumber(goodsName,staHH2,stopHH2 );
+                soleNumbers[3] = goodsOrderService.selectSoleNumber(goodsName,staHH3,stopHH3 );
+                soleNumbers[4] = goodsOrderService.selectSoleNumber(goodsName,staHH4,stopHH4 );
+                soleNumbers[5] = goodsOrderService.selectSoleNumber(goodsName,staHH5,stopHH5 );
+                soleNumbers[6] = goodsOrderService.selectSoleNumber(goodsName,staHH6,stopHH6 );
+                soleNumbers[7] = goodsOrderService.selectSoleNumber(goodsName,staHH7,stopHH7 );
+                soleNumbers[8] = goodsOrderService.selectSoleNumber(goodsName,staHH8,stopHH8 );
+                soleNumbers[9] = goodsOrderService.selectSoleNumber(goodsName,staHH9,stopHH9 );
+                soleNumbers[10] = goodsOrderService.selectSoleNumber(goodsName,staHH10,stopHH10 );
+                soleNumbers[11] = goodsOrderService.selectSoleNumber(goodsName,staHH11,stopHH11 );
+                soleNumbers[12] = goodsOrderService.selectSoleNumber(goodsName,staHH12,stopHH12 );
+                soleNumbers[13] = goodsOrderService.selectSoleNumber(goodsName,staHH13,stopHH13 );
+                soleNumbers[14] = goodsOrderService.selectSoleNumber(goodsName,staHH14,stopHH14 );
+                soleNumbers[15] = goodsOrderService.selectSoleNumber(goodsName,staHH15,stopHH15 );
+                soleNumbers[16] = goodsOrderService.selectSoleNumber(goodsName,staHH16,stopHH16 );
+                soleNumbers[17] = goodsOrderService.selectSoleNumber(goodsName,staHH17,stopHH17 );
+                soleNumbers[18] = goodsOrderService.selectSoleNumber(goodsName,staHH18,stopHH18 );
+                soleNumbers[19] = goodsOrderService.selectSoleNumber(goodsName,staHH19,stopHH19 );
+                soleNumbers[20] = goodsOrderService.selectSoleNumber(goodsName,staHH2O,stopHH20 );
+                soleNumbers[21] = goodsOrderService.selectSoleNumber(goodsName,staHH21,stopHH21 );
+                soleNumbers[22] = goodsOrderService.selectSoleNumber(goodsName,staHH2,stopHH22 );
+                soleNumbers[23] = goodsOrderService.selectSoleNumber(goodsName,staHH23,stopHH23 );
+                return soleNumbers;
+            }
+
+        if(null == day && month != null ) {
+
+            String dayTime = DateConversion.dateToString(month, "yyyy-MM-dd HH:mm:ss");
+
+
+
+        }
+
+
+
+      return null;
+    }
 }

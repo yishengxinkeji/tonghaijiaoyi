@@ -23,12 +23,10 @@ import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.yishengxin.service.IGoodsEvaluationService;
 import com.ruoyi.common.base.AjaxResult;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 商品评价 信息操作处理
@@ -52,21 +50,53 @@ public class GoodsEvaluationController extends BaseFrontController {
 
     /**
      * 上传文件
+     *
      * @param file
-     * @return  图片路径
+     * @return 图片路径
      * @throws IOException
      */
     @PostMapping("/upload")
     @ResponseBody
-    protected String uploadFile(MultipartFile file) throws IOException {
-        //生成唯一标识
-        String id = Uuid.getId();
-        //图片存放路径，
+    public Map<String, Object> fileUpload(@RequestHeader("token") String token,MultipartFile file) throws Exception {
+        // 校验登录状态
+        VipUser vipUser = userExist(token);
 
-        String images = "192.168.1.100:8080/1/" + id ;
-        String images1 = "D:/1/" + id ;
-        file.transferTo(new File(images1));
-        return images;
+        if (null == vipUser) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        //校验传参
+        if (null == token || "".equals(token)) {
+            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+        }
+        try {
+
+            // 获取input标签name的属性值
+            String name = UUID.randomUUID().toString().replace("-", "");
+
+            String originalFilename = file.getOriginalFilename();
+            int index = originalFilename.lastIndexOf(".");
+
+            String suffix = originalFilename.substring(index);
+            // 通过transferTo保存到服务器本地
+            String s =  "e:\\1\\" + name + suffix;
+
+            String s1= "http://localhost:8080/1/" + name + suffix;
+            file.transferTo(new File(s));
+
+            Map<String, Object> map = new HashMap();
+
+            map.put("code", 0);
+            map.put("msg", s1);
+
+            return map;
+        } catch (Exception e) {
+            Map<String, Object> map = new HashMap();
+
+            map.put("code", 1);
+            map.put("msg", "上传失败");
+            return map;
+        }
+
     }
 
 
@@ -81,29 +111,29 @@ public class GoodsEvaluationController extends BaseFrontController {
         List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
         List<VipUserEvaluation> vipUserEvaluations = new ArrayList<>();
 
-        for (int i = 0; i <goodsEvaluations.size() ; i++) {
+        for (int i = 0; i < goodsEvaluations.size(); i++) {
 
             VipUserEvaluation vipUserEvaluation = new VipUserEvaluation();
 
             GoodsEvaluation goodsEvaluation1 = goodsEvaluations.get(i);
             GoodsEvalutionVo goodsEvalutionVo = new GoodsEvalutionVo();
             String evaluationImage = goodsEvaluation1.getEvaluationImage();
-            if (null != evaluationImage || "".equals(evaluationImage)){
+            if (null != evaluationImage || "".equals(evaluationImage)) {
                 String[] split = evaluationImage.split(",");
                 goodsEvalutionVo.setEvaluationImage(split);
             }
 
-                            goodsEvalutionVo.setDescribeEvaluation(goodsEvaluation1.getDescribeEvaluation());
-                            goodsEvalutionVo.setEvaluationContent(goodsEvaluation1.getEvaluationContent());
+            goodsEvalutionVo.setDescribeEvaluation(goodsEvaluation1.getDescribeEvaluation());
+            goodsEvalutionVo.setEvaluationContent(goodsEvaluation1.getEvaluationContent());
 
             Integer uid = goodsEvaluation1.getUid();
             VipUser vipUser = iVipUserService.selectVipUserById(uid);
-                vipUserEvaluation.setVipUser(vipUser);
-                vipUserEvaluation.setGoodsEvalutionVo(goodsEvalutionVo);
-                 vipUserEvaluations.add(vipUserEvaluation);
+            vipUserEvaluation.setVipUser(vipUser);
+            vipUserEvaluation.setGoodsEvalutionVo(goodsEvalutionVo);
+            vipUserEvaluations.add(vipUserEvaluation);
 
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,vipUserEvaluations);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, vipUserEvaluations);
     }
 
 
@@ -113,11 +143,11 @@ public class GoodsEvaluationController extends BaseFrontController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(@RequestHeader("token")String token, GoodsEvaluation goodsEvaluation, MultipartFile[] filename) throws IOException {
+    public ResponseResult addSave(@RequestHeader("token") String token, GoodsEvaluation goodsEvaluation) throws IOException {
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
-        if (vipUser == null) {
+        if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
         //校验传参
@@ -128,33 +158,15 @@ public class GoodsEvaluationController extends BaseFrontController {
         goodsEvaluation.setUid(vipUser.getId());
         List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
 
-        if (goodsEvaluations.size() > 0){
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,"已评价");
+        if (goodsEvaluations.size() > 0) {
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, "已评价");
         }
-
-
-        String imagesPath = "";
-        for (int i = 0; i < filename.length; i++) {
-
-            if (filename.length == 0) {
-                int i1 = goodsEvaluationService.insertGoodsEvaluation(goodsEvaluation);
-                if (i1 > 0) {
-                    return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-                }
-                return ResponseResult.responseResult(ResponseEnum.GOODS_EVALUATION_ADDERROR);
-            }
-            String images = "e:/" + filename[i].getOriginalFilename() + ",";
-
-            filename[i].transferTo(new File(images));
-            imagesPath = imagesPath + images;
-        }
-        goodsEvaluation.setEvaluationImage(imagesPath);
         goodsEvaluation.setUid(vipUser.getId());
         goodsEvaluation.setCreateTime(new Date());
 
 
         int i = goodsEvaluationService.insertGoodsEvaluation(goodsEvaluation);
-        if (i > 0 ){
+        if (i > 0) {
             GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(goodsEvaluation.getOid());
             goodsOrder.setGoodsStatus("已评价");
             goodsOrderService.updateGoodsOrder(goodsOrder);

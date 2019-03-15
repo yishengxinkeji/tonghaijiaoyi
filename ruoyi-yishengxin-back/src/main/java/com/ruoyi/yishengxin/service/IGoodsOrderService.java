@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service;
 
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,5 +52,6 @@ public interface IGoodsOrderService
      * @return 结果
      */
 	public int deleteGoodsOrderByIds(String ids);
-	
+
+	public int selectSoleNumber(String goodsName, Date startTime, Date stopTime);
 }

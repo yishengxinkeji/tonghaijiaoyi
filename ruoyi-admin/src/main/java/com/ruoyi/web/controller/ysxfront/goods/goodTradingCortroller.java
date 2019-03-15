@@ -38,17 +38,19 @@ public class goodTradingCortroller extends BaseFrontController{
     @PostMapping("/payment")
     @ResponseBody
     public ResponseResult payment(@RequestHeader("token")String token, String orderTotalAmount, String tradePassword, int orderId) {
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
-
-        if (vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-
-        }
         //校验传参
         if (null == token || "".equals(token) || null == orderTotalAmount || orderTotalAmount.length() == 0 || null == tradePassword || tradePassword.length() == 0 || orderId <= 0) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
+
+        // 校验登录状态
+        VipUser vipUser = userExist(token);
+
+        if (null == vipUser){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+
+        }
+
         Integer id = vipUser.getId();
 
         VipUser vipUser1 = iVipUserService.selectVipUserById(id);

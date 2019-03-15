@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
@@ -83,5 +84,10 @@ public class GoodsOrderServiceImpl implements IGoodsOrderService
 	{
 		return goodsOrderMapper.deleteGoodsOrderByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public int selectSoleNumber(String goodsName, Date startTime, Date stopTime) {
+		return goodsOrderMapper.selectSoleNumber(goodsName,startTime,stopTime);
+	}
+
 }

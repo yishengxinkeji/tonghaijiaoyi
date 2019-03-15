@@ -9,18 +9,24 @@ import java.util.Date;
 
 /**
  * 商品表 ysx_goods
- *
+ * 
  * @author ruoyi
- * @date 2019-03-11
+ * @date 2019-03-15
  */
 @Data
 @ToString
 public class Goods extends BaseEntity
 {
 	private static final long serialVersionUID = 1L;
-
+	
 	/** 商品id */
 	private Integer id;
+	/** 大图 */
+	private String bigPicture;
+	/** 中图 */
+	private String centerPicture;
+	/** 小图 */
+	private String smallPicture;
 	/** 商品名称 */
 	private String goodsName;
 	/** 商品介绍 */

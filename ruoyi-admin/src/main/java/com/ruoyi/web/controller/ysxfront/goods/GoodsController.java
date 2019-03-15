@@ -4,12 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.base.ResponseResult;
-import com.ruoyi.common.config.Global;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.utils.Uuid;
-import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsCollection;
@@ -20,8 +17,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.yishengxin.service.IGoodsService;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -139,7 +134,7 @@ public class GoodsController extends BaseFrontController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1,MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
+    public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1, MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
 
         String id1 = Uuid.getId();
         //主图片存放路径，

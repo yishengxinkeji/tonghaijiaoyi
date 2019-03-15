@@ -6,6 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Goods" id="GoodsResult">
         <result property="id"    column="id"    />
+        <result property="bigPicture"    column="bigPicture"    />
+        <result property="centerPicture"    column="centerPicture"    />
+        <result property="smallPicture"    column="smallPicture"    />
         <result property="goodsName"    column="goodsName"    />
         <result property="goodsIntroduce"    column="goodsIntroduce"    />
         <result property="collectionStatus"    column="collectionStatus"    />
@@ -26,13 +29,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGoodsVo">
-        select id, goodsName, goodsIntroduce, collectionStatus, goodsDetails, goodsPrice, goodsDetailsPicture, goodsInventory, goodsSoldNumber, standUpAndDown, serviceTel, goodsSlideShow, goodsMainFigure, create_by, create_time, update_by, update_time, remark from ysx_goods
+        select id, bigPicture, centerPicture, smallPicture, goodsName, goodsIntroduce, collectionStatus, goodsDetails, goodsPrice, goodsDetailsPicture, goodsInventory, goodsSoldNumber, standUpAndDown, serviceTel, goodsSlideShow, goodsMainFigure, create_by, create_time, update_by, update_time, remark from ysx_goods
     </sql>
 	
     <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
         <include refid="selectGoodsVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
+             <if test="bigPicture != null  and bigPicture != '' "> and bigPicture = #{bigPicture}</if>
+             <if test="centerPicture != null  and centerPicture != '' "> and centerPicture = #{centerPicture}</if>
+             <if test="smallPicture != null  and smallPicture != '' "> and smallPicture = #{smallPicture}</if>
              <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
              <if test="goodsIntroduce != null  and goodsIntroduce != '' "> and goodsIntroduce = #{goodsIntroduce}</if>
              <if test="collectionStatus != null "> and collectionStatus = #{collectionStatus}</if>
@@ -61,6 +67,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_goods
 		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="bigPicture != null  and bigPicture != ''  ">bigPicture,</if>
+			<if test="centerPicture != null  and centerPicture != ''  ">centerPicture,</if>
+			<if test="smallPicture != null  and smallPicture != ''  ">smallPicture,</if>
 			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
 			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce,</if>
 			<if test="collectionStatus != null  ">collectionStatus,</if>
@@ -80,6 +89,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="bigPicture != null  and bigPicture != ''  ">#{bigPicture},</if>
+			<if test="centerPicture != null  and centerPicture != ''  ">#{centerPicture},</if>
+			<if test="smallPicture != null  and smallPicture != ''  ">#{smallPicture},</if>
 			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
 			<if test="goodsIntroduce != null  and goodsIntroduce != ''  ">#{goodsIntroduce},</if>
 			<if test="collectionStatus != null  ">#{collectionStatus},</if>
@@ -103,6 +115,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateGoods" parameterType="Goods">
         update ysx_goods
         <trim prefix="SET" suffixOverrides=",">
+            <if test="bigPicture != null  and bigPicture != ''  ">bigPicture = #{bigPicture},</if>
+            <if test="centerPicture != null  and centerPicture != ''  ">centerPicture = #{centerPicture},</if>
+            <if test="smallPicture != null  and smallPicture != ''  ">smallPicture = #{smallPicture},</if>
             <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
             <if test="goodsIntroduce != null  and goodsIntroduce != ''  ">goodsIntroduce = #{goodsIntroduce},</if>
             <if test="collectionStatus != null  ">collectionStatus = #{collectionStatus},</if>

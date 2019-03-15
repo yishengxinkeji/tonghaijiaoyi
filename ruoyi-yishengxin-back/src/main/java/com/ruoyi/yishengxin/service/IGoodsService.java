@@ -1,7 +1,7 @@
 package com.ruoyi.yishengxin.service;
 
-import com.ruoyi.yishengxin.domain.goods.Goods;
 
+import com.ruoyi.yishengxin.domain.goods.Goods;
 
 import java.util.List;
 
@@ -62,5 +62,5 @@ public interface IGoodsService
 	public int deleteGoodsByIds(String ids);
 
 
-	
+
 }
