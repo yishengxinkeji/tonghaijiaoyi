@@ -64,7 +64,7 @@ public class CommonController {
     /**
      * 通用上传请求
      */
-    @PostMapping("/common/upload")
+    @PostMapping("common/upload")
     @ResponseBody
     public AjaxResult uploadFile(MultipartFile file) throws Exception {
         try {

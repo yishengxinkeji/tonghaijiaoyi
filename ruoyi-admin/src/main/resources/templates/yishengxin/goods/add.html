@@ -33,18 +33,7 @@
 				<input id="goodsInventory" name="goodsInventory" class="form-control" type="text">
 			</div>
 		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label">商品售出量：</label>
-			<div class="col-sm-8">
-				<input id="goodsSoldNumber" name="goodsSoldNumber" class="form-control" type="text">
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label">商品上下架：</label>
-			<div class="col-sm-8">
-				<input id="standUpAndDown" name="standUpAndDown" class="form-control" type="text">
-			</div>
-		</div>
+
 		<div class="form-group">
 			<label class="col-sm-3 control-label">客服电话：</label>
 			<div class="col-sm-8">
@@ -73,7 +62,7 @@
 				<button type="button" class="layui-btn" id="test2">
 					上传图片
 				</button>
-				<input id="newsPic2" name="Figure2" class="form-control" type="hidden">
+				<input id="newsPic2" name="figure2" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -89,7 +78,7 @@
 				<button type="button" class="layui-btn" id="test3">
 					上传图片
 				</button>
-				<input id="newsPic3" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic3" name="figure3" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -105,7 +94,7 @@
 				<button type="button" class="layui-btn" id="test4">
 					上传图片
 				</button>
-				<input id="newsPic4" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic4" name="figure4" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -122,7 +111,7 @@
 				<button type="button" class="layui-btn" id="test5">
 					上传图片
 				</button>
-				<input id="newsPic5" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic5" name="figure5" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -138,7 +127,7 @@
 				<button type="button" class="layui-btn" id="test6">
 					上传图片
 				</button>
-				<input id="newsPic6" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic6" name="figure6" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -154,7 +143,7 @@
 				<button type="button" class="layui-btn" id="test7">
 					上传图片
 				</button>
-				<input id="newsPic7" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic7" name="figure7" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -170,7 +159,7 @@
 				<button type="button" class="layui-btn" id="test8">
 					上传图片
 				</button>
-				<input id="newsPic8" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic8" name="figure8" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -186,7 +175,7 @@
 				<button type="button" class="layui-btn" id="test9">
 					上传图片
 				</button>
-				<input id="newsPic9" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic9" name="figure9" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -202,7 +191,7 @@
 				<button type="button" class="layui-btn" id="test10">
 					上传图片
 				</button>
-				<input id="newsPic10" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic10" name="figure10" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -218,7 +207,7 @@
 				<button type="button" class="layui-btn" id="test11">
 					上传图片
 				</button>
-				<input id="newsPic11" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic11" name="figure11" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -234,7 +223,7 @@
 				<button type="button" class="layui-btn" id="test12">
 					上传图片
 				</button>
-				<input id="newsPic12" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic12" name="figure12" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -260,14 +249,316 @@
 <script type="text/javascript">
 	var prefix = ctx + "yishengxin/goods";
 
-	$('.summernote').summernote({
-		height : '220px',
-		lang : 'zh-CN',
-		callbacks: {
-			onImageUpload: function (files) {
-				sendFile(files[0], this);
-			}
+	$("#form-goods-add").validate({
+		rules:{
+			xxxx:{
+				required:true,
+			},
 		}
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test1' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic").attr("src",res.msg);
+					$("#newsPic").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test3' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic3").attr("src",res.msg);
+					$("#newsPic3").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test2' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic2").attr("src",res.msg);
+					$("#newsPic2").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test4' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic4").attr("src",res.msg);
+					$("#newsPic4").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test5' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic5").attr("src",res.msg);
+					$("#newsPic5").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test6' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic6").attr("src",res.msg);
+					$("#newsPic6").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test7' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic7").attr("src",res.msg);
+					$("#newsPic7").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test8' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic8").attr("src",res.msg);
+					$("#newsPic8").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test9' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic9").attr("src",res.msg);
+					$("#newsPic9").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test10' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic10").attr("src",res.msg);
+					$("#newsPic10").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test11' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic11").attr("src",res.msg);
+					$("#newsPic11").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+	layui.use(['upload','laydate'], function(){
+		var upload = layui.upload;
+		var laydate = layui.laydate;
+
+		//执行实例
+		var uploadInst = upload.render({
+			elem: '#test12' //绑定元素
+			,url: prefix+'/upload/' //上传接口
+			,done: function(res){
+				//上传完毕回调
+				if(res.code == "0"){
+					$("#pic12").attr("src",res.msg);
+					$("#newsPic12").val(res.msg);
+				}
+			}
+			,error: function(){
+				//请求异常回调
+			}
+		});
+		laydate.render({
+			elem: '#newsTime' //指定元素
+		});
+	});
+
+
+	$(function() {
+		$('.summernote').summernote({
+			height : '220px',
+			lang : 'zh-CN',
+			callbacks: {
+				onImageUpload: function (files) {
+					sendFile(files[0], this);
+				}
+			}
+		});
 	});
 
 	// 上传文件
@@ -295,36 +586,6 @@
 		});
 	}
 
-	$("#form-goods-add").validate({
-		rules:{
-			noticeTitle:{
-				required:true,
-			}
-		}
-	});
-	layui.use(['upload','laydate'], function(){
-		var upload = layui.upload;
-		var laydate = layui.laydate;
-
-		//执行实例
-		var uploadInst = upload.render({
-			elem: '#test1' //绑定元素
-			,url: ctx + "yishengxin/news"+'/upload/' //上传接口
-			,done: function(res){
-				//上传完毕回调
-				if(res.code == "0"){
-					$("#pic").attr("src",res.msg);
-					$("#newsPic").val(res.msg);
-				}
-			}
-			,error: function(){
-				//请求异常回调
-			}
-		});
-		laydate.render({
-			elem: '#newsTime' //指定元素
-		});
-	});
 	function submitHandler() {
 		if ($.validate.form()) {
 			var sHTML = $('.summernote').summernote('code');
