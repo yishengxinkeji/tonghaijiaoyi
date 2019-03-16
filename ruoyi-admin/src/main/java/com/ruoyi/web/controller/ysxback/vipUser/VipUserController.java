@@ -1,10 +1,7 @@
 package com.ruoyi.web.controller.ysxback.vipUser;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
@@ -306,27 +303,22 @@ public class VipUserController extends BaseController
 		VipUser vipUser = new VipUser();
 
 		int number = 0;
-
+		DateTime begin = DateUtil.beginOfDay(new Date());
+		DateTime end = DateUtil.endOfDay(new Date());
 		if(!"".equals(day)){
-			DateTime beginOfDay = DateUtil.beginOfDay(DateUtils.parseDate(day));
-			DateTime endOfDay = DateUtil.endOfDay(DateUtils.parseDate(day));
-			vipUser.setCreateTime(beginOfDay);
-			vipUser.setUpdateTime(endOfDay);
-
-			number = vipUserService.selectCount(vipUser);
+			begin = DateUtil.beginOfDay(DateUtils.parseDate(day));
+			end = DateUtil.endOfDay(DateUtils.parseDate(day));
 		}else if("".equals(day) && !"".equals(month)){
-			DateTime beginOfMonth = DateUtil.beginOfMonth(DateUtils.parseDate(month));
-			DateTime endOfMonth = DateUtil.endOfMonth(DateUtils.parseDate(month));
-			vipUser.setCreateTime(beginOfMonth);
-			vipUser.setUpdateTime(endOfMonth);
-			number = vipUserService.selectCount(vipUser);
+			begin = DateUtil.beginOfMonth(DateUtils.parseDate(month));
+			end = DateUtil.endOfMonth(DateUtils.parseDate(month));
 		}else if(!"".equals(year) && "".equals(month) && "".equals(month)){
-			DateTime beginOfYear = DateUtil.beginOfYear(DateUtils.parseDate(year+"-01"));
-			DateTime endOfYear = DateUtil.endOfYear(DateUtils.parseDate(year+"-01"));
-			vipUser.setCreateTime(beginOfYear);
-			vipUser.setUpdateTime(endOfYear);
-			number = vipUserService.selectCount(vipUser);
+			begin = DateUtil.beginOfYear(DateUtils.parseDate(year+"-01"));
+			end = DateUtil.endOfYear(DateUtils.parseDate(year+"-01"));
 		}
+
+		vipUser.setCreateTime(begin);
+		vipUser.setUpdateTime(end);
+		number = vipUserService.selectCount(vipUser);
 
 		AjaxResult ajaxResult = new AjaxResult();
 		ajaxResult.put("number",number);

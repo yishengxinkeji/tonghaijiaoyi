@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
@@ -128,5 +129,10 @@ public class VipExchangeServiceImpl implements IVipExchangeService
 	@Override
 	public double selectSumByIfExchage(String s) {
 		return vipExchangeMapper.selectSumByIfExchage(s);
+	}
+
+	@Override
+	public double selectSumByIfExchageAndTime(String s, DateTime begin, DateTime end) {
+		return vipExchangeMapper.selectSumByIfExchageAndTime(s, begin, end);
 	}
 }

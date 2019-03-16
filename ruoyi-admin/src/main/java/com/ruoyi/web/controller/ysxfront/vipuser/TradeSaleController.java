@@ -185,7 +185,7 @@ public class TradeSaleController extends BaseFrontController {
         }else if(type.equalsIgnoreCase(TradeType.SALE_HKD.getCode())){
             //查的是hkd列表
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-            vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+            vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
             vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);

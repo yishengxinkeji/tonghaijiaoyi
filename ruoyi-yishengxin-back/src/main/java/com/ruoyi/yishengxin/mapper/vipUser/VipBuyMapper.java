@@ -1,7 +1,9 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipBuy;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -66,7 +68,9 @@ public interface VipBuyMapper
 	 * 所有已购买成功的金额总和
 	 * @return
 	 */
-	@Select("select SUM(buy_money) from ysx_vip_buy where buy_status=2")
+	@Select("select ifNull(SUM(buy_money),0) from ysx_vip_buy where buy_status=2")
     double selectSum();
 
+	@Select("select ifNull(SUM(buy_money),0) from ysx_vip_buy where buy_status=#{status} and create_time between #{begin} and #{end}")
+	double selectSumByTime(@Param("status") String status,@Param("begin") DateTime begin,@Param("end") DateTime end);
 }

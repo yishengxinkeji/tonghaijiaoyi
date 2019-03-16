@@ -2,6 +2,7 @@ package com.ruoyi.yishengxin.service.impl;
 
 import java.util.List;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
@@ -133,4 +134,8 @@ public class VipBuyServiceImpl implements IVipBuyService
 		return vipBuyMapper.selectSum();
 	}
 
+	@Override
+	public double selectSumByTime(String s,DateTime begin, DateTime end) {
+		return vipBuyMapper.selectSumByTime(s,begin, end);
+	}
 }
