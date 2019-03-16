@@ -120,6 +120,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
+            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
             list.add(map);
         });
 
@@ -131,6 +132,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
+            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
             list.add(map);
         });
 
@@ -180,6 +182,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
+            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
             list.add(map);
         });
 
@@ -191,6 +194,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
+            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
             list.add(map);
         });
 
@@ -241,6 +245,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
+            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
             list.add(map);
         });
 
@@ -252,6 +257,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
+            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
             list.add(map);
         });
 
@@ -302,6 +308,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
+            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
             list.add(map);
         });
 
@@ -313,6 +320,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
+            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
             list.add(map);
         });
 

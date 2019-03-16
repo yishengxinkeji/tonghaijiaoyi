@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service.impl;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 import cn.hutool.core.date.DateTime;
@@ -224,7 +225,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
         String hkdCharge = trade.getHkdCharge();
         //原订单金额
-        double yNo = NumberUtil.div(Double.parseDouble(vipTradeHkdSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(hkdCharge)));
+        double yNo = NumberUtil.div(Double.parseDouble(vipTradeHkdSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(hkdCharge)),2,RoundingMode.HALF_UP);
 
         vipUser1.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getHkdMoney()),yNo)));
         //更新用户
@@ -243,5 +244,34 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
     @Override
     public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeHkdSaleMapper.selectSum(beginOfDay,endOfDay);
+    }
+
+
+    /**
+     * 订单过期,根据订单号更新买/卖订单状态
+     * @param orderNo
+     * @return
+     */
+    @Override
+    public int updateOrderByNo(String orderNo) throws Exception{
+
+        VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
+        vipTradeHkdSale.setSaleNo(orderNo);
+        VipTradeHkdSale vipTradeHkdSale1 = vipTradeHkdSaleMapper.selectVipTradeHkdSaleList(vipTradeHkdSale).get(0);
+
+        VipUser vipUser = vipUserMapper.selectVipUserById(vipTradeHkdSale1.getVipId());
+        Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
+        //卖家实际花费的钱,保留两位小数
+        double div = NumberUtil.div(Double.parseDouble(vipTradeHkdSale1.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(trade.getHkdCharge())),2, RoundingMode.HALF_UP);
+        vipUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser.getHkdMoney()),div)));
+        vipUserMapper.updateVipUser(vipUser);   //更新用户hkd金额
+
+        VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
+        vipTradeHkdBuy.setBuyNo(orderNo);
+        vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
+        vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
+
+        vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
+        return vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);    //更新卖订单
     }
 }

@@ -61,7 +61,7 @@ public interface IVipTradeHkdBuyService
 	 * @param number
 	 * @return
 	 */
-    int buyHkd(VipUser vipUser, String id, String number) throws Exception;
+    String buyHkd(VipUser vipUser, String id, String number) throws Exception;
 
     void updateBuyNo(String id, String img) throws Exception;
 
