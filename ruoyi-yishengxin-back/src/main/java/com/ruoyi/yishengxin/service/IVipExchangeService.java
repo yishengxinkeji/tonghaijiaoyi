@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface IVipExchangeService
     int exchange(VipExchange vipExchange) throws Exception;
 
 	double selectSumByIfExchage(String s);
+
+    double selectSumByIfExchageAndTime(String s, DateTime begin, DateTime end);
 }

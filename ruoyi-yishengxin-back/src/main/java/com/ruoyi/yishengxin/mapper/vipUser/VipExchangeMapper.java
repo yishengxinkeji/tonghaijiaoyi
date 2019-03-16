@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import org.apache.ibatis.annotations.Param;
@@ -70,6 +71,16 @@ public interface VipExchangeMapper
 	 * @param status
 	 * @return
 	 */
-	@Select("select SUM(buy_money) from ysx_vip_exchange where exchange_status=#{status}")
+	@Select("select ifNull(SUM(exchange_money),0) from ysx_vip_exchange where exchange_status=#{status}")
 	double selectSumByIfExchage(@Param("status") String status);
+
+	/**
+	 * 指定时间段内指定状态的总和
+	 * @param status 状态码
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
+	@Select("select ifNull(SUM(exchange_money),0) from ysx_vip_exchange where exchange_status=#{status} and exchange_time between #{begin} and #{end}")
+	double selectSumByIfExchageAndTime(@Param("status") String status,@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

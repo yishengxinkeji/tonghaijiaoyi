@@ -46,7 +46,9 @@ public class FinancialController extends BaseController {
     @GetMapping()
     public String customer(ModelMap modelMap) {
 
-    /*    //总资金(兑换-购买的差价)
+        //TODO 商品购买金额还没算
+
+        //总资金(兑换-购买的差价)
         double buySum = vipBuyService.selectSum();    //购买总金额
         double exchangeSum = vipExchangeService.selectSumByIfExchage("2");   //兑换总金额  --已提现
         double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
@@ -67,16 +69,46 @@ public class FinancialController extends BaseController {
         double hkdChargeSum = NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge));   //hkd交易手续费
 
 
-        modelMap.put("buySum",buySum);
         modelMap.put("exchangeSum",exchangeSum);
         modelMap.put("divSum",divSum);
         modelMap.put("waitExchange",waitExchange);
         modelMap.put("sslChargeSum",sslChargeSum);
-        modelMap.put("hkdChargeSum",hkdChargeSum);*/
+        modelMap.put("hkdChargeSum",hkdChargeSum);
 
         return prefix + "/financial";
+    }
 
 
+    /**
+     * 用户根据时间查询会员注册情况
+     * @param day	权重最高
+     * @param month	次之
+     * @return
+     */
+    @RequestMapping("/timeSearch")
+    @ResponseBody
+    public AjaxResult timeSearch(String day,String month){
+
+        double buySum = 0.00;    //购买总金额
+        double exchangeSum = 0.00;   //兑换总金额  --已提现
+
+        DateTime begin = DateUtil.beginOfDay(new Date());
+        DateTime end = DateUtil.endOfDay(new Date());
+        if(!"".equals(day)){
+            begin = DateUtil.beginOfDay(DateUtils.parseDate(day));
+            end = DateUtil.endOfDay(DateUtils.parseDate(day));
+        }else if("".equals(day) && !"".equals(month)){
+            begin = DateUtil.beginOfMonth(DateUtils.parseDate(month));
+            end = DateUtil.endOfMonth(DateUtils.parseDate(month));
+        }
+        buySum = vipBuyService.selectSumByTime("2",begin,end);
+        exchangeSum = vipExchangeService.selectSumByIfExchageAndTime("2",begin,end);
+        double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
+        AjaxResult ajaxResult = new AjaxResult();
+        ajaxResult.put("buySum",buySum);
+        ajaxResult.put("exchangeSum",exchangeSum);
+        ajaxResult.put("divSum",divSum);
+        return ajaxResult;
     }
 
 

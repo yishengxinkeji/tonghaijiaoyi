@@ -1,0 +1,137 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	.mdiv{
+		display: flex;
+		justify-content: space-around;
+		flex-wrap: wrap;
+	}
+	.midiv {
+		width: 30%;
+		height: 200px;
+		background: #1ab394;
+		border-radius: 6px;
+		margin-top: 10px;
+		padding-top: 5px;
+		padding-bottom: 13px;
+		box-shadow: 1px 1px 3px rgba(0,0,0,.2);
+	}
+
+	.zi {
+		font-size: 20px;
+		color: white;
+		margin: 20px;
+		text-align: center;
+	}
+	h1 {
+		color: white;
+		text-align: center;
+	}
+	.jiaoyi{
+		margin-right: 10px;
+		color: #1ab394;
+		font-size: 20px;
+	}
+	.numb {
+		font-size: 50px;
+		color: #1ab394;
+		margin-right: 10px;
+	}
+
+</style>
+<body class="gray-bg">
+<div class="row">
+	<div class="col-sm-12 search-collapse" style="display: flex;flex-direction: column;align-items: center;">
+		<div class="select-list">
+			<ul>
+				<li>
+					月：<input type="text" id="month"/>
+				</li>
+				<li>
+					日：<input type="text" id="day"/>
+				</li>
+				<li>
+					<!--onclick="$.table.search()"-->
+					<a class="btn btn-primary btn-rounded btn-sm"  onclick="timeSearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+				</li>
+			</ul>
+		</div>
+
+		<div style="display: flex;align-items: center;margin-top: 20px;">
+			<div style="margin: 0 20px 0 20px;"><span class="jiaoyi">客户购买总额:</span><h1 class="numb"  id="buy">0</h1></div>
+			<div style="margin: 0 20px 0 20px;"><span class="jiaoyi">客户兑换总额:</span><h1 class="numb"  id="sale">0</h1></div>
+			<div style="margin: 0 20px 0 20px;"><span class="jiaoyi">沉淀资金:</span><h1 class="numb" id="surplus">0</h1></div>
+
+		</div>
+	</div>
+
+
+</div>
+<div class="mdiv">
+	<div class="midiv">
+		<span class="zi">现金总资金</span>
+		<h1 th:text="${divSum}">10</h1>
+	</div>
+	<div class="midiv">
+		<span class="zi">SSL总资金</span>
+		<h1 th:text="${sslChargeSum}">10</h1>
+	</div>
+	<div class="midiv">
+		<span class="zi">HKD总资金</span>
+		<h1 th:text="${hkdChargeSum}">10</h1>
+	</div>
+	<div class="midiv">
+		<span class="zi">可用资金</span>
+		<h1 th:text="${divSum}">10</h1>
+	</div>
+	<div class="midiv">
+		<span class="zi">待返资金</span>
+		<h1 th:text="${waitExchange}">10</h1>
+	</div>
+	<div class="midiv">
+		<span class="zi">已提现</span>
+		<h1 th:text="${exchangeSum}">10</h1>
+	</div>
+</div>
+<div th:include="include :: footer"></div>
+<script>
+	layui.use('laydate', function(){
+		var laydate = layui.laydate;
+
+		laydate.render({
+			elem: '#month'
+			,type: 'month'
+		});
+		laydate.render({
+			elem: '#day'
+		});
+
+	});
+</script>
+<script th:inline="javascript">
+
+	var prefix = ctx + "yishengxin/financial";
+	function timeSearch(){
+		var day = $("#day").val();
+		var month = $("#month").val();
+
+		$.ajax({
+			url: prefix +"/timeSearch",
+			type: "post",
+			data : {
+				day: day,
+				month: month
+			},
+			success: function(res){
+				$("#buy").text(res.buySum);
+				$("#sale").text(res.exchangeSum);
+				$("#surplus").text(res.divSum);
+			}
+		});
+	}
+
+</script>
+</body>
+</html>

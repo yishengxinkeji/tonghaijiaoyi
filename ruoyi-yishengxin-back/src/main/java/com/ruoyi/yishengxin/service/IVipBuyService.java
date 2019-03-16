@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service;
 
+import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
@@ -62,4 +63,5 @@ public interface IVipBuyService
 
 	double selectSum();
 
+    double selectSumByTime(String s,DateTime begin, DateTime end);
 }
