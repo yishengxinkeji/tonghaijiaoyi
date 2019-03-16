@@ -41,21 +41,20 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-sm-3 control-label">商品主图：：</label>
+			<label class="col-sm-3 control-label">商品小图1：</label>
 			<div class="col-sm-8">
 				<button type="button" class="layui-btn" id="test1">
 					上传图片
 				</button>
-				<input id="newsPic" name="goodsMainFigure" class="form-control" type="hidden">
+				<input id="newsPic1" name="figure1" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
 			<label class="col-sm-3 control-label"></label>
 			<div class="col-sm-8">
-				<img style="width: 200px;height: 200px;" id="pic">
+				<img style="width: 200px;height: 200px;" id="pic1">
 			</div>
 		</div>
-
 		<div class="form-group">
 			<label class="col-sm-3 control-label">商品小图2：</label>
 			<div class="col-sm-8">
@@ -106,12 +105,12 @@
 
 
 		<div class="form-group">
-			<label class="col-sm-3 control-label">商品中图1：</label>
+			<label class="col-sm-3 control-label">商品中图(主图)1：</label>
 			<div class="col-sm-8">
 				<button type="button" class="layui-btn" id="test5">
 					上传图片
 				</button>
-				<input id="newsPic5" name="figure5" class="form-control" type="hidden">
+				<input id="newsPic5" name="goodsMainFigure" class="form-control" type="hidden">
 			</div>
 		</div>
 		<div class="form-group">
@@ -236,7 +235,7 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">商品详情：</label>
 			<div class="col-sm-8">
-				<input id="newsContent" name="goodsDetailsPicture" type="hidden">
+				<input id="goodsDetailsPicture" name="goodsDetailsPicture" type="hidden">
 				<div class="summernote"></div>
 			</div>
 		</div>
@@ -268,8 +267,8 @@
 			,done: function(res){
 				//上传完毕回调
 				if(res.code == "0"){
-					$("#pic").attr("src",res.msg);
-					$("#newsPic").val(res.msg);
+					$("#pic1").attr("src",res.msg);
+					$("#newsPic1").val(res.msg);
 				}
 			}
 			,error: function(){
@@ -589,7 +588,7 @@
 	function submitHandler() {
 		if ($.validate.form()) {
 			var sHTML = $('.summernote').summernote('code');
-			$("#noticeContent").val(sHTML);
+			$("#goodsDetailsPicture").val(sHTML);
 			$.operate.save(prefix + "/add", $('#form-goods-add').serialize());
 		}
 	}

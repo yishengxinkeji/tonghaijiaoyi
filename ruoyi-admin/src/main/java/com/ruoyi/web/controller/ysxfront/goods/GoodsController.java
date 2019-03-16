@@ -135,7 +135,7 @@ public class GoodsController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1, MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
-
+            goods.setGoodsSoldNumber(0);
         String id1 = Uuid.getId();
         //主图片存放路径，
         String images1 = "e:/" + id1 ;
