@@ -481,13 +481,13 @@ public class TradeSaleController extends BaseFrontController {
 
         try{
             vipTradeHkdSaleService.confirmOrder(vipUser,id);
+            VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleService.selectVipTradeHkdSaleById(Integer.parseInt(id));
+            RedisUtils.del(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY+vipTradeHkdSale.getSaleNo());
             return ResponseResult.success();
         }catch (Exception e){
             e.printStackTrace();
             return ResponseResult.error();
         }
-
-
 
     }
 

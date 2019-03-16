@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import cn.hutool.core.date.DateTime;
@@ -103,20 +104,25 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
      * @return
      */
     @Override
-    public int buyHkd(VipUser vipUser, String id, String number) throws Exception{
+    public String buyHkd(VipUser vipUser, String id, String number) throws Exception{
+
 
         VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleMapper.selectVipTradeHkdSaleById(Integer.parseInt(id));
+        //原先的订单号 或 新创建的订单号
+        String mmNo = vipTradeHkdSale.getSaleNo();
+
         VipUser saleUser = vipUserMapper.selectVipUserById(vipTradeHkdSale.getVipId());
+
         //订单数量
         double saleNumber = Double.parseDouble(vipTradeHkdSale.getSaleNumber());
         double buyNumber = Double.parseDouble(number);
         if(saleNumber < buyNumber){
             //购买数量超出
-            return 100;
+            return "100";
         }
 
         if(vipUser.getId() == vipTradeHkdSale.getVipId()){
-            return 9999;
+            return "9999";
         }
 
 
@@ -129,6 +135,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdSale.setBuyNickname(vipUser.getNickname());
             vipTradeHkdSale.setBuyPhone(vipUser.getPhone());
             vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
+            vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
 
             vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
 
@@ -147,9 +154,10 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdBuy.setBuyType(TradeType.BUY_HKD.getCode());
 
             vipTradeHkdBuyMapper.insertVipTradeHkdBuy(vipTradeHkdBuy);
+
         }else if(saleNumber > buyNumber){
             //修改卖订单,创建买卖订单
-            String mmNo = IdUtil.simpleUUID(); //新订单的订单号
+            mmNo = IdUtil.simpleUUID(); //新订单的订单号
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
@@ -190,7 +198,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
             vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
         }
-        return 0;
+        return mmNo;
 
     }
 
@@ -210,12 +218,14 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
         //等待卖家确认
         vipTradeHkdBuy.setBuyStatus(TradeStatus.WAIT_SALE_CONFIRM.getCode());
         vipTradeHkdBuy.setProof(img);
+        vipTradeHkdBuy.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setSaleNo(buyNo);
         vipTradeHkdSale.setSaleStatus(TradeStatus.WAIT_SALE_CONFIRM.getCode()); //等待卖家确认
         vipTradeHkdSale.setProof(img);
+        vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
     }
 

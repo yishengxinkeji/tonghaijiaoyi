@@ -53,6 +53,15 @@ public class CustomerConstants {
     //redis的任务状态 Y:任务执行中
     public static final String TASK_STATUS_KEY = "ISCANCEL";
 
+    /**
+     * 交易购买订单的过期时间key前缀
+     */
+    public static final String LISTEN_TRADE_BUY_PREFIX_KEY = "TRADE_BUY_";
+    /**
+     * 交易卖订单的过期时间key前缀
+     */
+    public static final String LISTEN_TRADE_SALE_PREFIX_KEY = "TRADE_SALE_";
+
 
 
 

@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.base.ResponseResult;
@@ -206,16 +207,18 @@ public class TradeBuyController extends BaseFrontController {
         }
 
         try {
-            int i = vipTradeHkdBuyService.buyHkd(vipUser,id,number);
-            if(i == 100){
+            String order = vipTradeHkdBuyService.buyHkd(vipUser,id,number);
+            if("100".equals(order)){
                 //购买数量超出订单数量
                 return ResponseResult.responseResult(ResponseEnum.OVER_ORDER_TOP);
             }
 
-            if(i == 9999){
+            if("9999".equals(order)){
                 //不能购买自己的订单
                 return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
             }
+
+            RedisUtils.set(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+ order,order,120);
             return ResponseResult.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -326,6 +329,13 @@ public class TradeBuyController extends BaseFrontController {
 
         try{
             vipTradeHkdBuyService.updateBuyNo(id,img);
+
+            VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
+            vipTradeHkdBuy.setId(Integer.parseInt(id));
+            VipTradeHkdBuy vipTradeHkdBuy1 = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
+            //删掉买订单的计时,更新卖订单计时
+            RedisUtils.del(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo());
+            RedisUtils.set(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo(),vipTradeHkdBuy1.getBuyNo(),120);
             return ResponseResult.success();
         }catch (Exception e){
             e.printStackTrace();

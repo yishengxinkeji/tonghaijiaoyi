@@ -75,4 +75,12 @@ public interface IVipTradeHkdSaleService
 	int cancelSale(VipUser vipUser, String id);
 
     int selectSum(DateTime beginOfDay, DateTime endOfDay);
+
+
+	/**
+	 * 订单过期,根据订单号更新买/卖订单状态
+	 * @param orderNo
+	 * @return
+	 */
+	int updateOrderByNo(String orderNo) throws Exception;
 }
