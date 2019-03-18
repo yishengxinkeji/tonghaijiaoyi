@@ -2,7 +2,14 @@ package com.ruoyi.web.controller.ysxback.goods;
 
 import java.util.List;
 import com.ruoyi.framework.util.ShiroUtils;
+import com.ruoyi.yishengxin.Vo.GoodsEvaluationBack;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsEvaluation;
+import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IGoodsOrderService;
+import com.ruoyi.yishengxin.service.IGoodsService;
+import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +41,15 @@ public class GoodsEvaluationBackController extends BaseController
 	
 	@Autowired
 	private IGoodsEvaluationService goodsEvaluationService;
+
+	@Autowired
+	private IGoodsService goodsService;
+
+	@Autowired
+	private IVipUserService vipUserService;
+
+	@Autowired
+	private IGoodsOrderService goodsOrderService;
 	
 	@RequiresPermissions("yishengxin:goodsEvaluation:view")
 	@GetMapping()
@@ -47,9 +63,41 @@ public class GoodsEvaluationBackController extends BaseController
 	@RequiresPermissions("yishengxin:goodsEvaluation:list")
 	@PostMapping("/list")
 	@ResponseBody
-	public TableDataInfo list(GoodsEvaluation goodsEvaluation){
+	public TableDataInfo list(GoodsEvaluationBack goodsEvaluationBack){
 		startPage();
+
+		GoodsEvaluation goodsEvaluation = new GoodsEvaluation();
+		if (null != goodsEvaluationBack.getGoodName()){
+			String goodName = goodsEvaluationBack.getGoodName();
+			Goods goods = goodsService.selectGoodsByGoodsName(goodName);
+			Integer gid = goods.getId();
+			goodsEvaluation.setGid(gid);
+		}
+		if (null != goodsEvaluationBack.getOraderNumber()){
+			GoodsOrder goodsOrder = goodsOrderService.selectByOraderNumber(goodsEvaluationBack.getOraderNumber());
+			Integer oid = goodsOrder.getId();
+			goodsEvaluation.setOid(oid);
+		}
+		if (null != goodsEvaluationBack.getUserName()){
+			VipUser vipUser = vipUserService.selectUserByPhone(goodsEvaluationBack.getUserName());
+			Integer uid = vipUser.getId();
+			goodsEvaluation.setUid(uid);
+		}
+
+
+		/**
+		 * input type="text" name="uid"/>
+		 * 								商品的id：<input type="text" name="gid"/>
+		 * 								订单的id：<input type="text" name="oid"/>
+		 */
         List<GoodsEvaluation> list = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
+
+		for (int i = 0; i < list.size(); i++) {
+			Integer uid = list.get(i).getUid();
+			Integer gid = list.get(i).getGid();
+			list.get(i).getOid();
+		}
+        
 		return getDataTable(list);
 	}
 	

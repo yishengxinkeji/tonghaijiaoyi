@@ -57,7 +57,7 @@ public class GoodsEvaluationController extends BaseFrontController {
      */
     @PostMapping("/upload")
     @ResponseBody
-    public Map<String, Object> fileUpload(@RequestHeader("token") String token,MultipartFile file) throws Exception {
+    public Map<String, Object> fileUpload(@RequestHeader("token") String token, MultipartFile file) throws Exception {
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
@@ -78,25 +78,28 @@ public class GoodsEvaluationController extends BaseFrontController {
 
             String suffix = originalFilename.substring(index);
             // 通过transferTo保存到服务器本地
-            String s =  "e:\\1\\" + name + suffix;
+            String s = "\\home\\" + name + suffix;
 
-            String s1= "http://localhost:8080/1/" + name + suffix;
+            String s1 = "/home/" + name + suffix;
             file.transferTo(new File(s));
 
             Map<String, Object> map = new HashMap();
+            Map<String, Object> map1 = new HashMap();
 
-            map.put("code", 0);
-            map.put("msg", s1);
-
+            map1.put("picName",s1);
+            map1.put("serverPath",s1);
+            map.put("code", "1000");
+            map.put("msg", "成功");
+            map.put("data",map1);
             return map;
         } catch (Exception e) {
             Map<String, Object> map = new HashMap();
 
             map.put("code", 1);
             map.put("msg", "上传失败");
+
             return map;
         }
-
     }
 
 

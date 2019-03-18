@@ -11,55 +11,40 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								用户的id：<input type="text" name="uid"/>
+								用户的手机号：<input type="text" name="phone"/>
 							</li>
 
 							<li>
-								商品的id：<input type="text" name="gid"/>
+								商品的名称：<input type="text" name="goodsName"/>
 							</li>
 
 							<li>
-								订单的id：<input type="text" name="oid"/>
+								订单号：<input type="text" name=""/>
 							</li>
 
-							<li>
-								评价内容：<input type="text" name="evaluationContent"/>
-							</li>
 
 							<li>
-								评价图片：<input type="text" name="evaluationImage"/>
+								描述评价：<select name="status" th:with="type=${@dict.getType('goods_describe_evaluation')}">
+								<option value="">所有</option>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+							</select>
+							</li>
+							<li>
+								物流评价：<select name="status" th:with="type=${@dict.getType('goods_logistics_evaluation')}">
+								<option value="">所有</option>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+							</select>
+							</li>
+							<li>
+								服务态度：<select name="status" th:with="type=${@dict.getType('goods_service_attitude')}">
+								<option value="">所有</option>
+								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+							</select>
 							</li>
 
-							<li>
-								描述评价：<input type="text" name="describeEvaluation"/>
-							</li>
 
 							<li>
-								物流评价：<input type="text" name="logisticsEvaluation"/>
-							</li>
-
-							<li>
-								服务态度：<input type="text" name="serviceAttitude"/>
-							</li>
-
-							<li>
-								创建者：<input type="text" name="createBy"/>
-							</li>
-
-							<li>
-								创建时间：<input type="text" name="createTime"/>
-							</li>
-
-							<li>
-								更新者：<input type="text" name="updateBy"/>
-							</li>
-
-							<li>
-								更新时间：<input type="text" name="updateTime"/>
-							</li>
-
-							<li>
-								备注：<input type="text" name="remark"/>
+								评价时间：<input type="text" name="createTime"/>
 							</li>
 
 							<li>
@@ -129,16 +114,7 @@
 					title : '订单的id',
 					sortable: true
 				},
-				{
-					field : 'evaluationContent', 
-					title : '评价内容',
-					sortable: true
-				},
-				{
-					field : 'evaluationImage', 
-					title : '评价图片',
-					sortable: true
-				},
+
 				{
 					field : 'describeEvaluation', 
 					title : '描述评价',
@@ -154,31 +130,13 @@
 					title : '服务态度',
 					sortable: true
 				},
-				{
-					field : 'createBy', 
-					title : '创建者',
-					sortable: true
-				},
+
 				{
 					field : 'createTime', 
-					title : '创建时间',
+					title : '评价时间',
 					sortable: true
 				},
-				{
-					field : 'updateBy', 
-					title : '更新者',
-					sortable: true
-				},
-				{
-					field : 'updateTime', 
-					title : '更新时间',
-					sortable: true
-				},
-				{
-					field : 'remark', 
-					title : '备注',
-					sortable: true
-				},
+
 		        {
 		            title: '操作',
 		            align: 'center',

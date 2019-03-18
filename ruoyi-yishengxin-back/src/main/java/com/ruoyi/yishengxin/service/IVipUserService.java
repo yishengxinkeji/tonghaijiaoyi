@@ -2,6 +2,8 @@ package com.ruoyi.yishengxin.service;
 
 import cn.hutool.core.date.DateTime;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Map;
 
@@ -91,4 +93,12 @@ public interface IVipUserService
 	 * @return
 	 */
     int selectCount(VipUser vipUser);
+
+
+	/**
+	 * 根据手机号查询用户
+	 * @param phone
+	 * @return
+	 */
+	public VipUser selectUserByPhone(String phone);
 }

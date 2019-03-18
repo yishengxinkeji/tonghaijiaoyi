@@ -141,9 +141,7 @@ public class GoodsCollectionController extends BaseFrontController {
             }
         }
 
-
         return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-
 
     }
 

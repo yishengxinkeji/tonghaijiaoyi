@@ -54,4 +54,12 @@ public interface IGoodsOrderService
 	public int deleteGoodsOrderByIds(String ids);
 
 	public int selectSoleNumber(String goodsName, Date startTime, Date stopTime);
+
+	/**
+	 * 根据订单号查订单
+	 *
+	 * @param orderNumber 订单号
+	 * @return 结果
+	 */
+	public GoodsOrder selectByOraderNumber(String orderNumber);
 }

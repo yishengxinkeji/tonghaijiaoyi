@@ -157,15 +157,25 @@ public class GoodsOrderController extends BaseFrontController {
         }
 
         goodsOrder.setUid(vipUser.getId());
-        List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
-        if(goodsOrder.getGoodsStatus().equals("退款/售后")){
-            for (int i = 0; i < goodsOrders.size(); i++) {
-                String orderNumber = goodsOrders.get(i).getOrderNumber();
-                GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
-                String refundStatus = goodsSalesreturn.getRefundStatus();
-                goodsOrders.get(i).setGoodsStatus(refundStatus);
-            }
 
+        List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
+        if(goodsOrders.size() > 0){
+
+
+
+            for (int i = 0; i < goodsOrders.size(); i++) {
+                if (goodsOrders.get(i).getGoodsStatus().equals("退款/售后")) {
+
+                    String orderNumber = goodsOrders.get(i).getOrderNumber();
+                    GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+                    String refundStatus = goodsSalesreturn.getRefundStatus();
+
+                    goodsOrders.get(i).setGoodsStatus(refundStatus);
+                }
+
+
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
 

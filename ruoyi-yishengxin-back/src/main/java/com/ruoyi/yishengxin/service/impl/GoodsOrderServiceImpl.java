@@ -19,7 +19,8 @@ import javax.annotation.Resource;
  * @date 2019-03-02
  */
 @Service
-public class GoodsOrderServiceImpl implements IGoodsOrderService 
+public class GoodsOrderServiceImpl implements IGoodsOrderService
+
 {
 	@Resource
 	private GoodsOrderMapper goodsOrderMapper;
@@ -88,6 +89,11 @@ public class GoodsOrderServiceImpl implements IGoodsOrderService
 	@Override
 	public int selectSoleNumber(String goodsName, Date startTime, Date stopTime) {
 		return goodsOrderMapper.selectSoleNumber(goodsName,startTime,stopTime);
+	}
+
+	@Override
+	public GoodsOrder selectByOraderNumber(String orderNumber) {
+		return goodsOrderMapper.selectByOraderNumber(orderNumber);
 	}
 
 }

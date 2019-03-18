@@ -81,4 +81,15 @@ public interface VipUserMapper
 
 
     public int selectCount(VipUser vipUser);
+
+
+	/**
+	 * 根据手机号查询用户
+	 * @param phone
+	 * @return
+	 */
+
+	@Select("select * from ysx_vip_user where phone = #{phone}")
+	public VipUser selectUserByPhone(String phone);
+
 }

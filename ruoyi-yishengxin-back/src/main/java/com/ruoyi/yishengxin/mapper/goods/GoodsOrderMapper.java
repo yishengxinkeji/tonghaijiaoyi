@@ -68,5 +68,13 @@ public interface GoodsOrderMapper
 //
 	@Select("select COUNT(*) from ysx_goods_order where goodsName=#{goodsName} and create_time between #{startTime} and #{stopTime} and   goodsStatus != \"代付款\" and goodsStatus != \"已退款\"")
 	public int selectSoleNumber(@Param("goodsName") String goodsName, @Param("startTime") Date startTime, @Param("stopTime") Date stopTime);
-	
+	/**
+	 * 根据订单号查订单
+	 *
+	 * @param orderNumber 订单号
+	 * @return 结果
+	 */
+	@Select("select * from ysx_goods_order where orderNumber={orderNumber}")
+	public GoodsOrder selectByOraderNumber(String orderNumber);
+
 }

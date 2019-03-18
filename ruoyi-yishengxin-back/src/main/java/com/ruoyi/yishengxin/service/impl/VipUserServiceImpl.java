@@ -267,4 +267,9 @@ public class VipUserServiceImpl implements IVipUserService {
     public int selectCount(VipUser vipUser) {
         return vipUserMapper.selectCount(vipUser);
     }
+
+    @Override
+    public VipUser selectUserByPhone(String phone) {
+        return vipUserMapper.selectUserByPhone(phone);
+    }
 }
