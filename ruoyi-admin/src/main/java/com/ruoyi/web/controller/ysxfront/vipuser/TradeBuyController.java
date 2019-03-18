@@ -70,7 +70,7 @@ public class TradeBuyController extends BaseFrontController {
         }
 
         if((!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,number) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,number))
-                || (!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,price) && ReUtil.isMatch(RegexUtils.INTEGER_REGEX,price))){
+                || (!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,price) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,price))){
 
             //数字格式不正确
             return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
@@ -78,7 +78,6 @@ public class TradeBuyController extends BaseFrontController {
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
             //用户已被冻结
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
-
         }
 
         try{
@@ -100,28 +99,31 @@ public class TradeBuyController extends BaseFrontController {
 
     /**
      * ssl的挂买列表
-     * @param token     如果传说明查的是该用户的,如果不传说明查的是列表
+     * @param token
+     * @param type 传查的是列表,不传查的是个人
      * @return
      */
     @PostMapping("/buySslList")
     public ResponseResult buySslList(@RequestHeader(value = "token") String token,
                                      @RequestParam(value = "type",defaultValue = "") String type){
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-        vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
+
         vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
         List list = new ArrayList();
         List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
         if("".equals(type)){
-            //查的是列表
-            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-
-        }else if(!type.equals("")){
             //查的是个人
+            vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
             vipTradeSslBuy.setVipId(vipUser.getId());
+            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+
+        }else if(!type.equals("")){
+            //查的是列表
+            vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
             vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
         }
 

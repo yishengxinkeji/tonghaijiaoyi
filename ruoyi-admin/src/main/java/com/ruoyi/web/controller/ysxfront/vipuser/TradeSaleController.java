@@ -163,7 +163,7 @@ public class TradeSaleController extends BaseFrontController {
         if(type.equalsIgnoreCase(TradeType.SALE_SSL.getCode())){
             //查的是ssl售卖列表
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-            //交易中
+            //交易成功
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
             vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
@@ -216,7 +216,7 @@ public class TradeSaleController extends BaseFrontController {
             //查询该用户下的挂卖记录
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             //等待交易中
-            vipTradeSslSale.setSaleStatus(TradeStatus.WAITING.getCode());
+            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);

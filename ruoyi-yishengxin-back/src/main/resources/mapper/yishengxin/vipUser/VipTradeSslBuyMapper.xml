@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="salePhone"    column="sale_phone"    />
         <result property="saleNickname"    column="sale_nickname"    />
         <result property="saleAvater"    column="sale_avater"    />
+        <result property="relationOrderno"    column="relation_orderNo"    />
     </resultMap>
 	
 	<sql id="selectVipTradeBuyVo">
-        select id, vip_id, buy_type, buy_status, buy_no, buy_number, unit_price, buy_total, buy_time, sale_id, sale_phone, sale_nickname, sale_avater from ysx_vip_trade_ssl_buy
+        select id, vip_id, buy_type, buy_status,relation_orderNo, buy_no, buy_number, unit_price, buy_total, buy_time, sale_id, sale_phone, sale_nickname, sale_avater from ysx_vip_trade_ssl_buy
     </sql>
 	
     <select id="selectVipTradeBuyList" parameterType="VipTradeSslBuy" resultMap="VipTradeSslBuyResult">
@@ -40,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="salePhone != null  and salePhone != '' "> and sale_phone = #{salePhone}</if>
              <if test="saleNickname != null  and saleNickname != '' "> and sale_nickname = #{saleNickname}</if>
              <if test="saleAvater != null  and saleAvater != '' "> and sale_avater = #{saleAvater}</if>
+             <if test="relationOrderno != null  and relationOrderno != '' "> and relation_orderNo = #{relationOrderno}</if>
          </where>
         ${params.VipTradeSslBuy}
     </select>
@@ -64,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="salePhone != null  and salePhone != ''  ">sale_phone,</if>
 			<if test="saleNickname != null  and saleNickname != ''  ">sale_nickname,</if>
 			<if test="saleAvater != null  and saleAvater != ''  ">sale_avater,</if>
+            <if test="relationOrderno != null  and relationOrderno != ''  ">relation_orderNo,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="vipId != null  ">#{vipId},</if>
@@ -78,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="salePhone != null  and salePhone != ''  ">#{salePhone},</if>
 			<if test="saleNickname != null  and saleNickname != ''  ">#{saleNickname},</if>
 			<if test="saleAvater != null  and saleAvater != ''  ">#{saleAvater},</if>
+            <if test="relationOrderno != null  and relationOrderno != ''  ">#{relationOrderno},</if>
          </trim>
     </insert>
 	 
@@ -96,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="salePhone != null  and salePhone != ''  ">sale_phone = #{salePhone},</if>
             <if test="saleNickname != null  and saleNickname != ''  ">sale_nickname = #{saleNickname},</if>
             <if test="saleAvater != null  and saleAvater != ''  ">sale_avater = #{saleAvater},</if>
+            <if test="relationOrderno != null  and relationOrderno != ''  ">relation_orderNo = #{relationOrderno},</if>
         </trim>
         where id = #{id}
     </update>
