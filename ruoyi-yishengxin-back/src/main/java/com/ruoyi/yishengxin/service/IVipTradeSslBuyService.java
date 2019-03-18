@@ -62,14 +62,6 @@ public interface IVipTradeSslBuyService
 	 * @param price
 	 */
     int buySsl(VipUser vipUser, String number, String price) throws Exception;
-
-    //卖大于买
-	void dealLgOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
-	//卖等于买
-	void dealEqOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
-	//卖小于买
-	void dealltOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
-
 	//取消挂买
     int cancelBuy(VipUser vipUser, String id);
 
@@ -82,4 +74,6 @@ public interface IVipTradeSslBuyService
     int selectSum(DateTime beginOfDay, DateTime endOfDay);
 
     double selectAvgByDay(DateTime beginOfDay, DateTime endOfDay);
+
+    void dealTimer(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
 }

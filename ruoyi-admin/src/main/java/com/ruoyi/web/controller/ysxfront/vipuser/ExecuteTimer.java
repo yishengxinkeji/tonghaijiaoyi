@@ -16,11 +16,11 @@ import com.ruoyi.yishengxin.service.IVipTradeSslSaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import springfox.documentation.schema.Collections;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class ExecuteTimer {
@@ -37,7 +37,7 @@ public class ExecuteTimer {
      */
     //应该每小时执行一次
     //查询所有的
-    //@Scheduled(cron = "0 0 * * * ? ")
+    @Scheduled(cron = "0 0/1 * * * ?  ")
     public void timerCron() {
         //每次任务启动后,需要有个标志,用户暂时不能操作 取消按钮,Y代表任务正在执行中
         RedisUtils.set(CustomerConstants.TASK_STATUS_KEY,"Y");
@@ -52,44 +52,27 @@ public class ExecuteTimer {
 
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
-        List<VipTradeSslSale> vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
+        List<VipTradeSslSale> vipTradeSslSales = new ArrayList<>();
 
         if(vipTradeSslBuys.size() > 0){
-            for(VipTradeSslBuy vipTradeSslBuy1 : vipTradeSslBuys){
-                //得到订单的数量和单价
-                String buyNumber = vipTradeSslBuy1.getBuyNumber();
-                String unitPrice = vipTradeSslBuy1.getUnitPrice();
+            for (int i = 0; i < 5 ; i++) {
+                vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+                for(VipTradeSslBuy vipTradeSslBuy1 : vipTradeSslBuys){
+                        //得到订单的单价
+                        String unitPrice = vipTradeSslBuy1.getUnitPrice();
+                        vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
-                vipTradeSslSales.stream().filter(vipTradeSslSale1 -> {
-                    //卖价需要低于买价
-                    return Double.parseDouble(vipTradeSslSale1.getUnitPrice()) <= Double.parseDouble(unitPrice);
-                }).forEach(vipTradeSslSale1 -> {
-                    String saleNumber = vipTradeSslSale1.getSaleNumber();
-                    String salePrice = vipTradeSslSale1.getUnitPrice();
-                    if(Double.parseDouble(saleNumber) > Double.parseDouble(buyNumber)){
-                        //卖的数量大于买的数量
-                        vipTradeSslBuyService.dealLgOrder(vipTradeSslBuy1,vipTradeSslSale1);
-
-                    }else if(Double.parseDouble(saleNumber) == Double.parseDouble(buyNumber)){
-                        //两个数量相同
-                        vipTradeSslBuyService.dealEqOrder(vipTradeSslBuy1,vipTradeSslSale1);
-
-                    }else if(Double.parseDouble(saleNumber) < Double.parseDouble(buyNumber)){
-                        //卖的数量小于买的数量
-                        vipTradeSslBuyService.dealltOrder(vipTradeSslBuy1,vipTradeSslSale1);
-
-                    }
-                    vipTradeSslSales.remove(vipTradeSslSale1);
-                    return;
-                });
+                        vipTradeSslSales.stream().filter(vipTradeSslSale1 -> {
+                            //卖价需要低于买价
+                            return Double.parseDouble(vipTradeSslSale1.getUnitPrice()) <= Double.parseDouble(unitPrice);
+                        }).forEach(vipTradeSslSale1 -> {
+                            vipTradeSslBuyService.dealTimer(vipTradeSslBuy1,vipTradeSslSale1);
+                            return;
+                        });
+                }
             }
         }
         //更改Redis的标志
         RedisUtils.set(CustomerConstants.TASK_STATUS_KEY,"N");
     }
-
-
-
-
-
 }

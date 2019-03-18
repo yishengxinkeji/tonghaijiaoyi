@@ -66,8 +66,8 @@ public interface VipTradeMapper
 
 	/**
 	 * 今日总共转了多少
-	 * @param vipUser
+	 * @param vipTrade
 	 * @return
 	 */
-	String selectTranByDay(VipTrade vipUser);
+	String selectTranByDay(VipTrade vipTrade);
 }
