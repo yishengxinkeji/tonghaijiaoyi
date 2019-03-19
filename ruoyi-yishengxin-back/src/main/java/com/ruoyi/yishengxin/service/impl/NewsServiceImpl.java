@@ -75,4 +75,8 @@ public class NewsServiceImpl implements INewsService {
         return newsMapper.deleteNewsByIds(Convert.toStrArray(ids));
     }
 
+    @Override
+    public int selectTotal() {
+        return newsMapper.selectTotal();
+    }
 }

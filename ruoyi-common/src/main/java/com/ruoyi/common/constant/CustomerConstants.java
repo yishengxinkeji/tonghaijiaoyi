@@ -67,6 +67,9 @@ public class CustomerConstants {
      */
     public static final int ROUND_NUMBER = 2;
 
+    //首页分页默认显示6条
+    public static final String PAGE_SIZE = "6";
+
 
 
 }

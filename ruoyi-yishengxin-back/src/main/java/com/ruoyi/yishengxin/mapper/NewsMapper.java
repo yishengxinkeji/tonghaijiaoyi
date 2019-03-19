@@ -2,6 +2,8 @@ package com.ruoyi.yishengxin.mapper;
 
 import com.ruoyi.yishengxin.domain.News;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -59,5 +61,7 @@ public interface NewsMapper {
      * @return 结果
      */
 	public int deleteNewsByIds(String[] ids);
-	
+
+	@Select("select ifnull(count(*),0) from ysx_news")
+    int selectTotal();
 }

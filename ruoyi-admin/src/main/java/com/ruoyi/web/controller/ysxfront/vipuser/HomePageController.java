@@ -1,8 +1,11 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.yishengxin.domain.*;
 import com.ruoyi.yishengxin.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +81,29 @@ public class HomePageController {
 
     /**
      * 新闻资讯
+     * @param currentNum  当前页数
+     * @param pageSize      每页显示的记录数
      * @return
      */
-    @GetMapping("/news")
-    public ResponseResult news(){
+    @GetMapping("/news/{currentNum}/{pageSize}")
+    public ResponseResult news(@PathVariable("currentNum") String currentNum,@PathVariable("pageSize") String pageSize){
 
-        List<News> news = newsService.selectNewsList(new News());
+        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
+            //默认初始页为0
+            currentNum = "0";
+        }
 
+        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
+            pageSize = CustomerConstants.PAGE_SIZE;
+        }
+
+        //当前页初始值
+        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+        int endNumber =  beginNumber + Integer.parseInt(pageSize);
+
+        News news2 = new News();
+        news2.getParams().put("News"," order by news_time desc limit "+beginNumber+"," + (endNumber-1) );
+        List<News> news = newsService.selectNewsList(news2);
         List list = new ArrayList();
         if(news.size() > 0){
             news.stream().forEach(news1 -> {
@@ -97,7 +116,13 @@ public class HomePageController {
                 list.add(map);
             });
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+
+        Map map = new HashMap();
+        int total = newsService.selectTotal();  //查询记录数
+        map.put("total",total);
+        map.put("pageSize",pageSize);
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
 
@@ -125,10 +150,12 @@ public class HomePageController {
      * 项目展示
      * @return
      */
-    @GetMapping("/project")
-    public ResponseResult project(){
+    @GetMapping("/project/{number}")
+    public ResponseResult project(@PathVariable("number") String number){
 
-        List<Project> projects = projectService.selectProjectList(new Project());
+        Project project1 = new Project();
+        project1.getParams().put("Project"," order by project_time desc limit 0," + number );
+        List<Project> projects = projectService.selectProjectList(project1);
 
         List list = new ArrayList();
         if(projects.size() > 0){
@@ -166,25 +193,47 @@ public class HomePageController {
 
     /**
      * 公告中心
+     * @param currentNum  当前页数
+     * @param pageSize      每页显示的记录数
      * @return
      */
-    @GetMapping("/notice")
-    public ResponseResult notice(){
+    @GetMapping("/notice/{currentNum}/{pageSize}")
+    public ResponseResult notice(@PathVariable("currentNum") String currentNum,@PathVariable("pageSize") String pageSize){
 
-        List<Notice> notices = noticeService.selectNoticeList(new Notice());
+        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
+            //默认初始页为0
+            currentNum = "0";
+        }
 
+        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
+            pageSize = CustomerConstants.PAGE_SIZE;
+        }
+        //当前页初始值
+        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+        int endNumber =  beginNumber + Integer.parseInt(pageSize);
+
+        Notice notice = new Notice();
+        notice.getParams().put("Notice"," order by notice_time desc limit "+beginNumber+"," + (endNumber-1) );
+
+        List<Notice> notices = noticeService.selectNoticeList(notice);
         List list = new ArrayList();
         if(notices.size() > 0){
-            notices.stream().forEach(notice -> {
+            notices.stream().forEach(notice1 -> {
                 Map map = new HashMap();
-                map.put("id",notice.getId());
-                map.put("introduction",notice.getNoticeIntroduction());
-                map.put("time",notice.getNoticeTime());
-                map.put("title",notice.getNoticeTitle());
+                map.put("id",notice1.getId());
+                map.put("introduction",notice1.getNoticeIntroduction());
+                map.put("time",notice1.getNoticeTime());
+                map.put("title",notice1.getNoticeTitle());
                 list.add(map);
             });
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+
+        Map map = new HashMap();
+        int total = newsService.selectTotal();  //查询记录数
+        map.put("total",total);
+        map.put("pageSize",pageSize);
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
     /**
