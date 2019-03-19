@@ -59,6 +59,7 @@ public class RedisKeyExpirationListener implements  MessageListener {
             }
 
         }else if(expiredKey.startsWith(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY)){
+            //挂卖订单过期
             orderNo = expiredKey.split(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY)[1];
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setSaleNo(orderNo);

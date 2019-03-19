@@ -133,11 +133,6 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             return 100;
         }
 
-        //交易的hkd需要是100的整数倍
-        if(Double.parseDouble(number) % 100 != 0){
-            return 400;
-        }
-
         //查询该用户今日总共交易了多少ssl
         double maxNumber = vipTradeHkdSaleMapper.selectHkdMaxNumberByDay(vipUser.getId());
         if(maxNumber > maxTradeDay) {
@@ -151,7 +146,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         }
 
         //内扣手续费之后,实际卖的HKD是多少
-        double mulCharge = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, hkdCharge));
+        double mul = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, hkdCharge));
+        double mulCharge = NumberUtil.round(mul,CustomerConstants.ROUND_NUMBER).doubleValue();
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
@@ -164,7 +160,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         vipTradeHkdSale.setSaleType(TradeType.SALE_HKD.getCode());
 
         vipTradeHkdSaleMapper.insertVipTradeHkdSale(vipTradeHkdSale);
-        vipUser.setHkdMoney(String.valueOf(NumberUtil.sub(hkd, Double.parseDouble(number))));
+        double sub = NumberUtil.sub(hkd, Double.parseDouble(number));
+        vipUser.setHkdMoney(NumberUtil.roundStr(sub,CustomerConstants.ROUND_NUMBER));
         return vipUserMapper.updateVipUser(vipUser);
     }
 
@@ -199,7 +196,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             String buyId = vipTradeHkdSale.getBuyId();
             VipUser buyUser = vipUserMapper.selectVipUserById(Integer.parseInt(buyId));
             String hkdMoney = buyUser.getHkdMoney();
-            double add = NumberUtil.add(Double.parseDouble(hkdMoney), Double.parseDouble(vipTradeHkdSale.getSaleNumber()));
+            double add1 = NumberUtil.add(Double.parseDouble(hkdMoney), Double.parseDouble(vipTradeHkdSale.getSaleNumber()));
+            double add = NumberUtil.round(add1,CustomerConstants.ROUND_NUMBER).doubleValue();
             buyUser.setHkdMoney(String.valueOf(add));
             //更新买家账户信息
             vipUserMapper.updateVipUser(buyUser);
@@ -225,7 +223,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
         String hkdCharge = trade.getHkdCharge();
         //原订单金额
-        double yNo = NumberUtil.div(Double.parseDouble(vipTradeHkdSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(hkdCharge)),2,RoundingMode.HALF_UP);
+        double yNo = NumberUtil.div(Double.parseDouble(vipTradeHkdSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(hkdCharge)),CustomerConstants.ROUND_NUMBER,RoundingMode.HALF_UP);
 
         vipUser1.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getHkdMoney()),yNo)));
         //更新用户
@@ -262,7 +260,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         VipUser vipUser = vipUserMapper.selectVipUserById(vipTradeHkdSale1.getVipId());
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
         //卖家实际花费的钱,保留两位小数
-        double div = NumberUtil.div(Double.parseDouble(vipTradeHkdSale1.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(trade.getHkdCharge())),2, RoundingMode.HALF_UP);
+        double div = NumberUtil.div(Double.parseDouble(vipTradeHkdSale1.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(trade.getHkdCharge())),CustomerConstants.ROUND_NUMBER, RoundingMode.HALF_UP);
         vipUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser.getHkdMoney()),div)));
         vipUserMapper.updateVipUser(vipUser);   //更新用户hkd金额
 

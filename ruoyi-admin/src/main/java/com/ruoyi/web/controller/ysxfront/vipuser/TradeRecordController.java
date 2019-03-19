@@ -868,12 +868,14 @@ public class TradeRecordController extends BaseFrontController {
                 Map map2 = new HashMap();
                 map2.put("number",vipTradeSslSale1.getSaleNumber());
                 map2.put("price",vipTradeSslSale1.getUnitPrice());
+                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
                 list.add(map2);
             });
             vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
                 Map map2 = new HashMap();
                 map2.put("number",vipTradeSslBuy1.getBuyNumber());
                 map2.put("price",vipTradeSslBuy1.getUnitPrice());
+                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
                 list.add(map2);
             });
 
@@ -885,11 +887,14 @@ public class TradeRecordController extends BaseFrontController {
                 }
             });
 
+            List list1 = new ArrayList();
             if(list.size() > 10){
-                list.subList(0,10);
+                list1 = list.subList(0, 10);
+            }else {
+                list1 = list;
             }
             //将用户最新的信息保存到Redis中
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseResult.error();
@@ -949,11 +954,14 @@ public class TradeRecordController extends BaseFrontController {
             }
         });
 
-        if(list.size() > 15){
-            list.subList(0,10);
+        List list1 = new ArrayList();
+        if(list.size() > 10){
+            list1 = list.subList(0, 10);
+        }else {
+            list1 = list;
         }
         //将用户最新的信息保存到Redis中
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
     /**

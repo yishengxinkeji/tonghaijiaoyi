@@ -122,6 +122,11 @@ public class TradeSaleController extends BaseFrontController {
                 }
 
             }else if(type.equalsIgnoreCase(CustomerConstants.HKD)){
+                //交易的hkd需要是100的整数倍
+                if(Double.parseDouble(number) < 100 || Double.parseDouble(number) % 100 != 0){
+                    return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
+                }
+
                int i = vipTradeHkdSaleService.saleHkd(vipUser,number);
                 if(i == 100){
                     //HKD资产不足
@@ -134,10 +139,6 @@ public class TradeSaleController extends BaseFrontController {
                 if(i == 300){
                     //单次交易量已超上限
                     return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_TIME);
-                }
-                if(i == 400){
-                    //单次交易只能是100的整数倍
-                    return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
                 }
             }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
@@ -254,7 +255,14 @@ public class TradeSaleController extends BaseFrontController {
             });
         }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        List list1 = new ArrayList();
+        if(list.size() > 10){
+            list1 = list.subList(0, 10);
+        }else {
+            list1 = list;
+        }
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
 
@@ -334,11 +342,11 @@ public class TradeSaleController extends BaseFrontController {
 
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
         vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,5");
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,5");
+        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,10");
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
         List list = new ArrayList();
@@ -355,7 +363,13 @@ public class TradeSaleController extends BaseFrontController {
             list.add(map);
         });
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        List list1 = new ArrayList();
+        if(list.size() > 10){
+            list1 = list.subList(0, 10);
+        }else {
+            list1 = list;
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
 
@@ -395,28 +409,28 @@ public class TradeSaleController extends BaseFrontController {
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
         vipTradeSslBuy.setVipId(Integer.parseInt(vipId));
         vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,5");
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
 
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
         vipTradeSslSale.setVipId(Integer.parseInt(vipId));
         vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,5");
+        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,10");
 
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(Integer.parseInt(vipId));
         vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc limit 0,5");
+        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc limit 0,10");
 
         List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
         VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
         vipTradeHkdBuy.setVipId(Integer.parseInt(vipId));
         vipTradeHkdBuy.setBuyTime(TradeStatus.SUCCESS.getCode());
-        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc limit 0,5");
+        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc limit 0,10");
 
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -433,7 +447,7 @@ public class TradeSaleController extends BaseFrontController {
             Map map = new HashMap();
             //6挂卖SSL
             map.put("type",vipTradeSslSale1.getSaleType());
-            map.put("number",vipTradeSslSale1.getSaleTime());
+            map.put("number",vipTradeSslSale1.getSaleNumber());
             map.put("time",vipTradeSslSale1.getSaleTime());
             list.add(map);
         });
@@ -462,7 +476,13 @@ public class TradeSaleController extends BaseFrontController {
             }
         });
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        List list1 = new ArrayList();
+        if(list.size() > 10){
+            list1 = list.subList(0, 10);
+        }else {
+            list1 = list;
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
     /**

@@ -12,6 +12,7 @@ import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.enums.TradeStatus;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.yishengxin.domain.Customer;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
@@ -157,7 +158,8 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         }
 
         //内扣手续费后,实际应得的
-        double mulCharge = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, sslCharge));
+        double mul1 = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, sslCharge));
+        double mulCharge = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
         vipTradeSslSale.setVipId(vipUser.getId());
@@ -166,11 +168,12 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         vipTradeSslSale.setSaleNumber(String.valueOf(mulCharge));   //实际订单金额是扣除了手续费之后的
         vipTradeSslSale.setUnitPrice(price);
         vipTradeSslSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
-        vipTradeSslSale.setSaleTotal(String.valueOf(NumberUtil.mul(mulCharge,Double.parseDouble(price))));
+        double mul = NumberUtil.mul(mulCharge, Double.parseDouble(price));
+        vipTradeSslSale.setSaleTotal(NumberUtil.roundStr(mul,CustomerConstants.ROUND_NUMBER));
         vipTradeSslSale.setSaleType(TradeType.SALE_SSL.getCode());
 
         vipTradeSslSaleMapper.insertVipTradeSale(vipTradeSslSale);
-        vipUser.setSslMoney(String.valueOf(NumberUtil.sub(ssl, Double.parseDouble(number))));
+        vipUser.setSslMoney(NumberUtil.roundStr(NumberUtil.sub(ssl, Double.parseDouble(number)), CustomerConstants.ROUND_NUMBER));
         return vipUserMapper.updateVipUser(vipUser);
     }
 
@@ -188,7 +191,8 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
         String sslCharge = trade.getSslCharge();
         //原订单金额
-        double yNo = NumberUtil.div(Double.parseDouble(vipTradeSslSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(sslCharge)));
+        double div = NumberUtil.div(Double.parseDouble(vipTradeSslSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(sslCharge)));
+        double yNo = NumberUtil.round(div,CustomerConstants.ROUND_NUMBER).doubleValue();
 
         vipUser1.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getSslMoney()),yNo)));
         //更新用户

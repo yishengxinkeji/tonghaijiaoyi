@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.NumberUtil;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
@@ -108,8 +109,8 @@ public class VipExchangeServiceImpl implements IVipExchangeService
 
 		String exchangeAmount = vipExchange.getExchangeAmount();
 		VipUser vipUser = vipUserMapper.selectVipUserById(vipExchange.getVipId());
-
-		double sub = NumberUtil.sub(Double.parseDouble(vipUser.getHkdMoney()), Double.parseDouble(exchangeAmount));
+		double sub1 = NumberUtil.sub(Double.parseDouble(vipUser.getHkdMoney()), Double.parseDouble(exchangeAmount));
+		double sub = NumberUtil.round(sub1, CustomerConstants.ROUND_NUMBER).doubleValue();
 		vipUser.setHkdMoney(String.valueOf(sub));
 
 		VipTrade trade = new VipTrade();

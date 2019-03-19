@@ -1,5 +1,6 @@
 package com.ruoyi.yishengxin.service.impl;
 
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
@@ -124,8 +125,9 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
         double hkdMoney = Double.parseDouble(vipUser1.getHkdMoney());
-
-        double mul = NumberUtil.mul(Double.parseDouble(number), Double.parseDouble(price));
+        //保存两位小数
+        double mul1 = NumberUtil.mul(Double.parseDouble(number), Double.parseDouble(price));
+        double mul = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
         if (mul > hkdMoney) {
             //HDK余额不足
             return 0;
@@ -143,10 +145,16 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy.setBuyType(TradeType.BUY_SSL.getCode());
 
         vipTradeSslBuyMapper.insertVipTradeBuy(vipTradeSslBuy);
-        vipUser.setHkdMoney(String.valueOf(NumberUtil.sub(hkdMoney, mul)));
+        double sub = NumberUtil.sub(hkdMoney, mul);
+        vipUser.setHkdMoney(NumberUtil.roundStr(sub,CustomerConstants.ROUND_NUMBER));
         return vipUserMapper.updateVipUser(vipUser);
     }
 
+    /**
+     * 处理ssl的定时匹配任务
+     * @param vipTradeSslBuy1
+     * @param vipTradeSslSale1
+     */
     @Override
     public void dealTimer(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
 
@@ -174,7 +182,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
      * @param vipTradeSslSale1 卖订单
      */
     //更新卖的该订单数量,买和卖分别创建一条交易成功订单,更新用户
-    private void dealLgOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
+    //卖的订单大于买的订单
+    private synchronized void dealLgOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
         //买和卖的用户信息
         VipUser saleUser = vipUserMapper.selectVipUserById(vipTradeSslSale1.getVipId());
         VipUser buyUser = vipUserMapper.selectVipUserById(vipTradeSslBuy1.getVipId());
@@ -225,9 +234,10 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //卖家扣除的手续费比例
         String sslCharge = trade.getSslCharge();
         //卖家本来卖的量
-        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),2,RoundingMode.HALF_UP);
+        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),CustomerConstants.ROUND_NUMBER,RoundingMode.HALF_UP);
         //卖家实际扣除的手续费
-        double chanrgeNumber = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double mul = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double chanrgeNumber = NumberUtil.round(mul,CustomerConstants.ROUND_NUMBER).doubleValue();  //保留两位小数
 
         //买的数量
         String buyNumber = vipTradeSslBuy1.getBuyNumber();
@@ -240,7 +250,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslSale.setSaleNo(simpleUuid);
         vipTradeSslSale.setSaleNumber(buyNumber);
         vipTradeSslSale.setUnitPrice(vipTradeSslSale1.getUnitPrice());
-        vipTradeSslSale.setSaleTotal(String.valueOf(NumberUtil.mul(Double.parseDouble(buyNumber),Double.parseDouble(vipTradeSslSale1.getUnitPrice()))));
+        double mul1 = NumberUtil.mul(Double.parseDouble(buyNumber), Double.parseDouble(vipTradeSslSale1.getUnitPrice()));
+        vipTradeSslSale.setSaleTotal(NumberUtil.roundStr(mul1,CustomerConstants.ROUND_NUMBER));
         vipTradeSslSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeSslSale.setBuyId(String.valueOf(buyUser.getId()));
         vipTradeSslSale.setBuyPhone(buyUser.getPhone());
@@ -262,20 +273,25 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         updateVipTradeBuy(vipTradeSslBuy1);
 
         //更新卖的订单状态
-        String update_saleNumber = String.valueOf(NumberUtil.sub(Double.parseDouble(saleNumber), Double.parseDouble(buyNumber)));
+        double sub = NumberUtil.sub(Double.parseDouble(saleNumber), Double.parseDouble(buyNumber));
+        String update_saleNumber = NumberUtil.roundStr(sub,CustomerConstants.ROUND_NUMBER);
         vipTradeSslSale1.setSaleNumber(update_saleNumber);
-        vipTradeSslSale1.setSaleTotal(String.valueOf(NumberUtil.mul(Double.parseDouble(update_saleNumber),Double.parseDouble(vipTradeSslSale1.getUnitPrice()))));
+        double mul2 = NumberUtil.mul(Double.parseDouble(update_saleNumber), Double.parseDouble(vipTradeSslSale1.getUnitPrice()));
+        vipTradeSslSale1.setSaleTotal(NumberUtil.roundStr(mul2,CustomerConstants.ROUND_NUMBER));
         vipTradeSslSaleMapper.updateVipTradeSale(vipTradeSslSale1);
 
         //更新两位用户的账户信息
         //卖家更新hkd余额 += number*unitprice
         //买家更新SSL余额 += number
         //卖的单价 * 买的数量 = 总价
-        double total = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(buyNumber));
+        double mul3 = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(buyNumber));
+        double total = NumberUtil.round(mul3,CustomerConstants.ROUND_NUMBER).doubleValue();
         //卖家更新hkd+卖出的总价
-        saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(hkdMoney), total)));
+        double add = NumberUtil.add(Double.parseDouble(hkdMoney), total);
+        saleUser.setHkdMoney(NumberUtil.roundStr(add,CustomerConstants.ROUND_NUMBER));
         //买家更新ssl += 买的数量
-        buyUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(buyNumber))));
+        double add1 = NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(buyNumber));
+        buyUser.setSslMoney(NumberUtil.roundStr(add1,CustomerConstants.ROUND_NUMBER));
 
         vipUserMapper.updateVipUser(saleUser);
         vipUserMapper.updateVipUser(buyUser);
@@ -288,12 +304,15 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 String grandparentCharge = distribution.getGrandparentCharge();
 
                 //上级收益
-                double parent_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double mul4 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double parent_mul = NumberUtil.round(mul4,CustomerConstants.ROUND_NUMBER).doubleValue();
                 //上上级收益
-                double grand_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double mul5 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double grand_mul = NumberUtil.round(mul5,CustomerConstants.ROUND_NUMBER).doubleValue();
 
                 //更新上级和上上级余额
-                parentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul)));
+                double add2 = NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul);
+                parentUser.setSslMoney(NumberUtil.roundStr(add2,CustomerConstants.ROUND_NUMBER));
                 vipUserMapper.updateVipUser(parentUser);
                 //添加收益表,1级和二级
                 VipProfitDetail vipProfitDetail = new VipProfitDetail();
@@ -307,7 +326,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 vipProfitDetailMapper.insertVipProfitDetail(vipProfitDetail);
 
                 if (pparentUser != null) {
-                    pparentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul)));
+                    double add3 = NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul);
+                    pparentUser.setSslMoney(NumberUtil.roundStr(add3,CustomerConstants.ROUND_NUMBER));
                     vipUserMapper.updateVipUser(pparentUser);
 
                     VipProfitDetail vipProfitDetai2 = new VipProfitDetail();
@@ -335,7 +355,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
     //更新用户的余额信息
     //手续费奖励上级和上上级
     //更新收益明细
-    private void dealEqOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
+    private synchronized void dealEqOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
         //买和卖的用户信息
         VipUser saleUser = vipUserMapper.selectVipUserById(vipTradeSslSale1.getVipId());
         VipUser buyUser = vipUserMapper.selectVipUserById(vipTradeSslBuy1.getVipId());
@@ -387,9 +407,10 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //卖家扣除的手续费比例
         String sslCharge = trade.getSslCharge();
         //卖家本来卖的量
-        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),2,RoundingMode.HALF_UP);
+        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),CustomerConstants.ROUND_NUMBER,RoundingMode.HALF_UP);
         //卖家实际扣除的手续费
-        double chanrgeNumber = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double mul = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double chanrgeNumber = NumberUtil.round(mul,CustomerConstants.ROUND_NUMBER).doubleValue();
         //买的数量
         String buyNumber = vipTradeSslBuy1.getBuyNumber();
 
@@ -417,11 +438,14 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //卖家更新hkd余额 += number*unitprice
         //买家更新SSL余额 += number
         //卖的单价 * 买的数量 = 总价
-        double total = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(buyNumber));
+        double mul1 = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(buyNumber));
+        double total = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
         //卖家更新hkd+卖出的总价
-        saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(hkdMoney), total)));
+        double add = NumberUtil.add(Double.parseDouble(hkdMoney), total);
+        saleUser.setHkdMoney(NumberUtil.roundStr(add,CustomerConstants.ROUND_NUMBER));
         //买家更新ssl += 买的数量
-        buyUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(buyNumber))));
+        double add1 = NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(buyNumber));
+        buyUser.setSslMoney(NumberUtil.roundStr(add1,CustomerConstants.ROUND_NUMBER));
 
         vipUserMapper.updateVipUser(saleUser);
         vipUserMapper.updateVipUser(buyUser);
@@ -434,12 +458,15 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 String grandparentCharge = distribution.getGrandparentCharge();
 
                 //上级收益
-                double parent_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double mul2 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double parent_mul = NumberUtil.round(mul2,CustomerConstants.ROUND_NUMBER).doubleValue();
                 //上上级收益
-                double grand_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double mul3 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double grand_mul = NumberUtil.round(mul3,CustomerConstants.ROUND_NUMBER).doubleValue();
 
                 //更新上级和上上级余额
-                parentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul)));
+                double add2 = NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul);
+                parentUser.setSslMoney(NumberUtil.roundStr(add2,CustomerConstants.ROUND_NUMBER));
                 vipUserMapper.updateVipUser(parentUser);
                 //添加收益表,1级和二级
                 VipProfitDetail vipProfitDetail = new VipProfitDetail();
@@ -453,7 +480,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 vipProfitDetailMapper.insertVipProfitDetail(vipProfitDetail);
 
                 if (pparentUser != null) {
-                    pparentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul)));
+                    double add3 = NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul);
+                    pparentUser.setSslMoney(NumberUtil.roundStr(add3,CustomerConstants.ROUND_NUMBER));
                     vipUserMapper.updateVipUser(pparentUser);
 
                     VipProfitDetail vipProfitDetai2 = new VipProfitDetail();
@@ -482,7 +510,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
     //更新用户的余额信息
     //手续费奖励上级和上上级
     //更新收益明细
-    private void dealltOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
+    private synchronized void dealltOrder(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
         //买和卖的用户信息
         VipUser saleUser = vipUserMapper.selectVipUserById(vipTradeSslSale1.getVipId());
         VipUser buyUser = vipUserMapper.selectVipUserById(vipTradeSslBuy1.getVipId());
@@ -532,14 +560,16 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //卖家扣除的手续费比例
         String sslCharge = trade.getSslCharge();
         //卖家本来卖的量,四舍五入,保留2位
-        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),2, RoundingMode.HALF_UP);
+        double div = NumberUtil.div(Double.parseDouble(saleNumber), NumberUtil.sub(1, Double.parseDouble(sslCharge)),CustomerConstants.ROUND_NUMBER, RoundingMode.HALF_UP);
         //卖家实际扣除的手续费
-        double chanrgeNumber = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double mul = NumberUtil.mul(div, Double.parseDouble(sslCharge));
+        double chanrgeNumber = NumberUtil.round(mul,CustomerConstants.ROUND_NUMBER).doubleValue();
         //买的数量
         String buyNumber = vipTradeSslBuy1.getBuyNumber();
 
         //剩余需要买的数量
-        double buy_num = NumberUtil.sub(Double.parseDouble(buyNumber), Double.parseDouble(saleNumber));
+        double sub = NumberUtil.sub(Double.parseDouble(buyNumber), Double.parseDouble(saleNumber));
+        double buy_num = NumberUtil.round(sub,CustomerConstants.ROUND_NUMBER).doubleValue();
 
         String simpleUuid = IdUtil.simpleUUID();
         //创建新的买订单信息
@@ -549,7 +579,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy.setBuyNo(simpleUuid);
         vipTradeSslBuy.setUnitPrice(vipTradeSslBuy1.getUnitPrice());
         vipTradeSslBuy.setBuyNumber(saleNumber);
-        vipTradeSslBuy.setBuyTotal(String.valueOf(NumberUtil.mul(Double.parseDouble(saleNumber), Double.parseDouble(vipTradeSslBuy1.getUnitPrice()))));
+        double mul1 = NumberUtil.mul(Double.parseDouble(saleNumber), Double.parseDouble(vipTradeSslBuy1.getUnitPrice()));
+        vipTradeSslBuy.setBuyTotal(NumberUtil.roundStr(mul1,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuy.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeSslBuy.setSaleId(String.valueOf(vipTradeSslSale1.getVipId()));
         vipTradeSslBuy.setSalePhone(saleUser.getPhone());
@@ -562,7 +593,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         //更新买的订单状态
         vipTradeSslBuy1.setBuyNumber(String.valueOf(buy_num));
-        vipTradeSslBuy1.setBuyTotal(String.valueOf(NumberUtil.mul(buy_num,Double.parseDouble(vipTradeSslBuy1.getUnitPrice()))));
+        double mul2 = NumberUtil.mul(buy_num, Double.parseDouble(vipTradeSslBuy1.getUnitPrice()));
+        vipTradeSslBuy1.setBuyTotal(NumberUtil.roundStr(mul2,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuyMapper.updateVipTradeBuy(vipTradeSslBuy1);
 
         //更新卖的订单状态
@@ -579,12 +611,15 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //卖家更新hkd余额 += number*unitprice
         //买家更新SSL余额 += number
         //卖的单价 * 卖的数量 = 总价
-        double total = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(saleNumber));
+        double mul3 = NumberUtil.mul(Double.parseDouble(vipTradeSslSale1.getUnitPrice()), Double.parseDouble(saleNumber));
+        double total = NumberUtil.round(mul3,CustomerConstants.ROUND_NUMBER).doubleValue();
         //卖家更新hkd+卖出的总价
-        saleUser.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(hkdMoney), total)));
+        double add = NumberUtil.add(Double.parseDouble(hkdMoney), total);
+        saleUser.setHkdMoney(NumberUtil.roundStr(add,CustomerConstants.ROUND_NUMBER));
         vipUserMapper.updateVipUser(saleUser);
         //买家更新ssl += 买的数量
-        buyUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(saleNumber))));
+        double add1 = NumberUtil.add(Double.parseDouble(sslMoney), Double.parseDouble(saleNumber));
+        buyUser.setSslMoney(NumberUtil.roundStr(add1,CustomerConstants.ROUND_NUMBER));
         vipUserMapper.updateVipUser(buyUser);
 
         if (parentUser != null) {
@@ -595,12 +630,15 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 String grandparentCharge = distribution.getGrandparentCharge();
 
                 //上级收益
-                double parent_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double mul4 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(parentCharge));
+                double parent_mul = NumberUtil.round(mul4,CustomerConstants.ROUND_NUMBER).doubleValue();
                 //上上级收益
-                double grand_mul = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double mul5 = NumberUtil.mul(chanrgeNumber, Double.parseDouble(grandparentCharge));
+                double grand_mul = NumberUtil.round(mul5,CustomerConstants.ROUND_NUMBER).doubleValue();
 
                 //更新上级和上上级余额
-                parentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul)));
+                double add2 = NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()), parent_mul);
+                parentUser.setSslMoney(NumberUtil.roundStr(add2,CustomerConstants.ROUND_NUMBER));
                 vipUserMapper.updateVipUser(parentUser);
                 //添加收益表,1级和二级
                 VipProfitDetail vipProfitDetail = new VipProfitDetail();
@@ -614,7 +652,8 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
                 vipProfitDetailMapper.insertVipProfitDetail(vipProfitDetail);
 
                 if (pparentUser != null) {
-                    pparentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul)));
+                    double add3 = NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()), grand_mul);
+                    pparentUser.setSslMoney(NumberUtil.roundStr(add3,CustomerConstants.ROUND_NUMBER));
                     vipUserMapper.updateVipUser(pparentUser);
 
                     VipProfitDetail vipProfitDetai2 = new VipProfitDetail();
@@ -637,9 +676,11 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         VipTradeSslBuy vipTradeSslBuy = vipTradeSslBuyMapper.selectVipTradeBuyById(Integer.parseInt(id));
 
         //原订单金额
-        double yNo = NumberUtil.mul(Double.parseDouble(vipTradeSslBuy.getBuyNumber()), Double.parseDouble(vipTradeSslBuy.getUnitPrice()));
+        double mul = NumberUtil.mul(Double.parseDouble(vipTradeSslBuy.getBuyNumber()), Double.parseDouble(vipTradeSslBuy.getUnitPrice()));
+        double yNo = NumberUtil.round(mul,CustomerConstants.ROUND_NUMBER).doubleValue();
 
-        vipUser1.setHkdMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getHkdMoney()),yNo)));
+        double add = NumberUtil.add(Double.parseDouble(vipUser1.getHkdMoney()), yNo);
+        vipUser1.setHkdMoney(NumberUtil.roundStr(add,CustomerConstants.ROUND_NUMBER));
         //更新用户
         vipUserMapper.updateVipUser(vipUser1);
         //更新订单状态
