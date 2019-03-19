@@ -11,103 +11,17 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								用户id：<input type="text" name="uid"/>
+								商品的名称：<input type="text" name="goodsName"/>
 							</li>
-
 							<li>
 								订单编号：<input type="text" name="orderNumber"/>
 							</li>
-
-							<li>
-								订单时间：<input type="text" name="orderTime"/>
-							</li>
-
-							<li>
-								商品的名称：<input type="text" name="goodsName"/>
-							</li>
-
-							<li>
-								商品的图片：<input type="text" name="goodsImages"/>
-							</li>
-
-							<li>
-								商品介绍：<input type="text" name="goodsIntroduce"/>
-							</li>
-
-							<li>
-								商品单价：<input type="text" name="goodsUnitPrice"/>
-							</li>
-
-							<li>
-								购买数量：<input type="text" name="buyNumber"/>
-							</li>
-
 							<li>
 								退款方式：<input type="text" name="refundWay"/>
 							</li>
 
 							<li>
-								退款原因：<input type="text" name="refundReason"/>
-							</li>
-
-							<li>
-								退款失败原因：<input type="text" name="reasonFailure"/>
-							</li>
-
-							<li>
-								退款说明：<input type="text" name="efundInstructions"/>
-							</li>
-
-							<li>
-								上传凭证：<input type="text" name="ploadDocuments"/>
-							</li>
-
-							<li>
-								退款金额：<input type="text" name="refundAmount"/>
-							</li>
-
-							<li>
-								退货数量：<input type="text" name="refundNumber"/>
-							</li>
-
-							<li>
-								申请退款时间：<input type="text" name="refundTime"/>
-							</li>
-
-							<li>
-								退款编号：<input type="text" name="refundSerialNumber"/>
-							</li>
-
-							<li>
-								退货物流公司：<input type="text" name="refundCompany"/>
-							</li>
-
-							<li>
-								退货物流号：<input type="text" name="refundLogistics"/>
-							</li>
-
-							<li>
 								退货状态：<input type="text" name="refundStatus"/>
-							</li>
-
-							<li>
-								创建者：<input type="text" name="createBy"/>
-							</li>
-
-							<li>
-								创建时间：<input type="text" name="createTime"/>
-							</li>
-
-							<li>
-								更新者：<input type="text" name="updateBy"/>
-							</li>
-
-							<li>
-								更新时间：<input type="text" name="updateTime"/>
-							</li>
-
-							<li>
-								备注：<input type="text" name="remark"/>
 							</li>
 
 							<li>
@@ -162,11 +76,7 @@
 					title : '退货id',
 					visible: false
 				},
-				{
-					field : 'uid', 
-					title : '用户id',
-					sortable: true
-				},
+
 				{
 					field : 'orderNumber', 
 					title : '订单编号',
@@ -182,16 +92,8 @@
 					title : '商品的名称',
 					sortable: true
 				},
-				{
-					field : 'goodsImages', 
-					title : '商品的图片',
-					sortable: true
-				},
-				{
-					field : 'goodsIntroduce', 
-					title : '商品介绍',
-					sortable: true
-				},
+
+
 				{
 					field : 'goodsUnitPrice', 
 					title : '商品单价',
@@ -223,14 +125,13 @@
 					sortable: true
 				},
 				{
-					field : 'ploadDocuments', 
-					title : '上传凭证',
-					sortable: true
-				},
-				{
 					field : 'refundAmount', 
 					title : '退款金额',
-					sortable: true
+					sortable: true,
+					align: 'center',
+					formatter: function (value, row, index) {
+						return row.id
+					}
 				},
 				{
 					field : 'refundNumber', 
@@ -262,31 +163,19 @@
 					title : '退货状态',
 					sortable: true
 				},
-				{
-					field : 'createBy', 
-					title : '创建者',
-					sortable: true
-				},
+
 				{
 					field : 'createTime', 
 					title : '创建时间',
 					sortable: true
 				},
-				{
-					field : 'updateBy', 
-					title : '更新者',
-					sortable: true
-				},
+
 				{
 					field : 'updateTime', 
 					title : '更新时间',
 					sortable: true
 				},
-				{
-					field : 'remark', 
-					title : '备注',
-					sortable: true
-				},
+				
 		        {
 		            title: '操作',
 		            align: 'center',

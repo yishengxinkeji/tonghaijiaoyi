@@ -95,7 +95,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         } catch (Exception e) {
             Map<String, Object> map = new HashMap();
 
-            map.put("code", 1);
+            map.put("code", 500);
             map.put("msg", "上传失败");
 
             return map;
@@ -123,16 +123,20 @@ public class GoodsSalesreturnController extends BaseFrontController {
      *
      * @param token
      * @param orderId
-     * @param goodsSalesreturn
      * @param
-     * @return
+     * @param
+     * @return  @RequestParam("phone")
      * @throws IOException
      */
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(@RequestHeader("token") String token, int orderId, GoodsSalesreturn goodsSalesreturn) throws IOException {
+    public ResponseResult addSave(@RequestHeader("token") String token, int orderId, @RequestParam("ploadDocuments")String ploadDocuments,@RequestParam("refundWay")String refundWay,@RequestParam("refundReason")String refundReason,@RequestParam("efundInstructions")String efundInstructions) throws IOException {
         // 校验登录状态
-
+        GoodsSalesreturn goodsSalesreturn = new GoodsSalesreturn();
+        goodsSalesreturn.setPloadDocuments(ploadDocuments);
+        goodsSalesreturn.setRefundWay(refundWay);
+        goodsSalesreturn.setRefundReason(refundReason);
+        goodsSalesreturn.setEfundInstructions(efundInstructions);
         VipUser vipUser = userExist(token);
 
         if (vipUser == null) {
@@ -149,6 +153,11 @@ public class GoodsSalesreturnController extends BaseFrontController {
         String orderNumber = goodsOrder.getOrderNumber();
         goodsSalesreturn.setOrderNumber(orderNumber);
 
+        Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
+        goodsSalesreturn.setRefundNumber(goodsSoldNumber);
+        String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
+        goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount+"");
+
         String goodsName = goodsOrder.getGoodsName();
         goodsSalesreturn.setGoodsName(goodsName);
 
@@ -161,8 +170,8 @@ public class GoodsSalesreturnController extends BaseFrontController {
         String goodsPicture = goodsOrder.getGoodsPicture();
         goodsSalesreturn.setGoodsImages(goodsPicture);
 
-        Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
-        goodsSalesreturn.setBuyNumber(goodsSoldNumber);
+        Integer goodsSoldNumber1 = goodsOrder.getGoodsSoldNumber();
+        goodsSalesreturn.setBuyNumber(goodsSoldNumber1);
 
         goodsSalesreturn.setRefundTime(new Date());
 
@@ -172,6 +181,10 @@ public class GoodsSalesreturnController extends BaseFrontController {
         //生成退单号
         String orderIdByTime = Order.getOrderIdByTime();
         goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
+
+
+
+
 
         if ( goodsSalesreturn.getRefundWay().equals("1") ){
             goodsSalesreturn.setRefundStatus("1");

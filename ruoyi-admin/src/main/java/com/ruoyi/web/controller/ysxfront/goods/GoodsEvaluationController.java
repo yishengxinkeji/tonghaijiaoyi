@@ -95,7 +95,7 @@ public class GoodsEvaluationController extends BaseFrontController {
         } catch (Exception e) {
             Map<String, Object> map = new HashMap();
 
-            map.put("code", 1);
+            map.put("code", 500);
             map.put("msg", "上传失败");
 
             return map;
@@ -171,7 +171,7 @@ public class GoodsEvaluationController extends BaseFrontController {
         int i = goodsEvaluationService.insertGoodsEvaluation(goodsEvaluation);
         if (i > 0) {
             GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(goodsEvaluation.getOid());
-            goodsOrder.setGoodsStatus("已评价");
+            goodsOrder.setGoodsStatus("交易完成");
             goodsOrderService.updateGoodsOrder(goodsOrder);
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
         }

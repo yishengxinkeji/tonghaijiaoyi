@@ -10,17 +10,10 @@
 				<form id="formId">
 					<div class="select-list">
 						<ul>
-
 							<li>
-								商品名称：<input type="text" name="goodsName"/>
+								退货原因：<input type="text" name="refundReason"/>
 							</li>
 
-							<li>
-								商品上下架：<select name="status" th:with="type=${@dict.getType('goods_standUp_down')}">
-								<option value="">所有</option>
-								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
-							</select>
-							</li>
 
 
 							<li>
@@ -33,16 +26,16 @@
 			</div>
 			
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:goods:add">
+				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:goodsRefundreason:add">
 					<i class="fa fa-plus"></i> 添加
 				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:goods:edit">
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:goodsRefundreason:edit">
 					<i class="fa fa-edit"></i> 修改
 				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goods:remove">
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goodsRefundreason:remove">
 					<i class="fa fa-remove"></i> 删除
 				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goods:export">
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goodsRefundreason:export">
 						<i class="fa fa-download"></i> 导出
 				 </a>
 			</div>
@@ -53,9 +46,9 @@
 	</div>
     <div th:include="include :: footer"></div>
     <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('yishengxin:goods:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('yishengxin:goods:remove')}]];
-        var prefix = ctx + "yishengxin/goods";
+        var editFlag = [[${@permission.hasPermi('yishengxin:goodsRefundreason:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('yishengxin:goodsRefundreason:remove')}]];
+        var prefix = ctx + "yishengxin/goodsRefundreason";
 
         $(function() {
             var options = {
@@ -64,7 +57,7 @@
                 updateUrl: prefix + "/edit/{id}",
                 removeUrl: prefix + "/remove",
 				exportUrl: prefix + "/export",
-                modalName: "商品",
+                modalName: "退款原因",
 				search: false,
 		        showExport: true,
                 columns: [{
@@ -72,41 +65,27 @@
 		        },
 				{
 					field : 'id', 
-					title : '商品id',
+					title : '',
 					visible: false
 				},
-
 				{
-					field : 'goodsName', 
-					title : '商品名称',
-					sortable: false
-				},
-				{
-					field : 'goodsPrice', 
-					title : '商品价格',
-					sortable: false
+					field : 'refundReason', 
+					title : '退货原因',
+					sortable: true
 				},
 
 				{
-					field : 'goodsInventory', 
-					title : '商品库存',
-					sortable: false
+					field : 'createTime', 
+					title : '创建时间',
+					sortable: true
 				},
+
 				{
-					field : 'goodsSoldNumber', 
-					title : '商品售出量',
-					sortable: false
+					field : 'updateTime', 
+					title : '更新时间',
+					sortable: true
 				},
-				{
-					field : 'standUpAndDown', 
-					title : '商品上下架',
-					sortable: false
-				},
-				{
-					field : 'serviceTel', 
-					title : '客服电话',
-					sortable: false
-				},
+
 		        {
 		            title: '操作',
 		            align: 'center',

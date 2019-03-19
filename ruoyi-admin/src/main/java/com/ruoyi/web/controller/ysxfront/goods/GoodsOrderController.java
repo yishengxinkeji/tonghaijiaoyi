@@ -62,7 +62,7 @@ public class GoodsOrderController extends BaseFrontController {
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
-        if (vipUser == null) {
+        if (null==vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
         }

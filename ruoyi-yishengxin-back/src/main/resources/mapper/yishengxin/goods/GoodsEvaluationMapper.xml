@@ -6,6 +6,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="GoodsEvaluation" id="GoodsEvaluationResult">
         <result property="id"    column="id"    />
+        <result property="phone"    column="phone"    />
+        <result property="oraderNumber"    column="oraderNumber"    />
+        <result property="goodsName"    column="goodsName"    />
         <result property="uid"    column="uid"    />
         <result property="gid"    column="gid"    />
         <result property="oid"    column="oid"    />
@@ -22,13 +25,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectGoodsEvaluationVo">
-        select id, uid, gid, oid, evaluationContent, evaluationImage, describeEvaluation, logisticsEvaluation, serviceAttitude, create_by, create_time, update_by, update_time, remark from ysx_goods_evaluation
+        select id, phone, oraderNumber, goodsName, uid, gid, oid, evaluationContent, evaluationImage, describeEvaluation, logisticsEvaluation, serviceAttitude, create_by, create_time, update_by, update_time, remark from ysx_goods_evaluation
     </sql>
 	
     <select id="selectGoodsEvaluationList" parameterType="GoodsEvaluation" resultMap="GoodsEvaluationResult">
         <include refid="selectGoodsEvaluationVo"/>
         <where>  
             <if test="id != null "> and id = #{id}</if>
+             <if test="phone != null  and phone != '' "> and phone = #{phone}</if>
+             <if test="oraderNumber != null  and oraderNumber != '' "> and oraderNumber = #{oraderNumber}</if>
+             <if test="goodsName != null  and goodsName != '' "> and goodsName = #{goodsName}</if>
              <if test="uid != null "> and uid = #{uid}</if>
              <if test="gid != null "> and gid = #{gid}</if>
              <if test="oid != null "> and oid = #{oid}</if>
@@ -53,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertGoodsEvaluation" parameterType="GoodsEvaluation" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_goods_evaluation
 		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="phone != null  and phone != ''  ">phone,</if>
+			<if test="oraderNumber != null  and oraderNumber != ''  ">oraderNumber,</if>
+			<if test="goodsName != null  and goodsName != ''  ">goodsName,</if>
 			<if test="uid != null  ">uid,</if>
 			<if test="gid != null  ">gid,</if>
 			<if test="oid != null  ">oid,</if>
@@ -68,6 +77,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="remark != null  and remark != ''  ">remark,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="phone != null  and phone != ''  ">#{phone},</if>
+			<if test="oraderNumber != null  and oraderNumber != ''  ">#{oraderNumber},</if>
+			<if test="goodsName != null  and goodsName != ''  ">#{goodsName},</if>
 			<if test="uid != null  ">#{uid},</if>
 			<if test="gid != null  ">#{gid},</if>
 			<if test="oid != null  ">#{oid},</if>
@@ -87,6 +99,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateGoodsEvaluation" parameterType="GoodsEvaluation">
         update ysx_goods_evaluation
         <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null  and phone != ''  ">phone = #{phone},</if>
+            <if test="oraderNumber != null  and oraderNumber != ''  ">oraderNumber = #{oraderNumber},</if>
+            <if test="goodsName != null  and goodsName != ''  ">goodsName = #{goodsName},</if>
             <if test="uid != null  ">uid = #{uid},</if>
             <if test="gid != null  ">gid = #{gid},</if>
             <if test="oid != null  ">oid = #{oid},</if>

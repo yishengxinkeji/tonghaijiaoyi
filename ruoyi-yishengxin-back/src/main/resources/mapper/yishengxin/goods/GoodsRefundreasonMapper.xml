@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.goods.GoodsRefundreasonMapper">
+    
+    <resultMap type="GoodsRefundreason" id="GoodsRefundreasonResult">
+        <result property="id"    column="id"    />
+        <result property="refundReason"    column="refundReason"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+	
+	<sql id="selectGoodsRefundreasonVo">
+        select id, refundReason, create_by, create_time, update_by, update_time, remark from ysx_goods_refundReason
+    </sql>
+	
+    <select id="selectGoodsRefundreasonList" parameterType="GoodsRefundreason" resultMap="GoodsRefundreasonResult">
+        <include refid="selectGoodsRefundreasonVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="refundReason != null  and refundReason != '' "> and refundReason = #{refundReason}</if>
+             <if test="createBy != null  and createBy != '' "> and create_by = #{createBy}</if>
+             <if test="createTime != null "> and create_time = #{createTime}</if>
+             <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
+             <if test="updateTime != null "> and update_time = #{updateTime}</if>
+             <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+         </where>
+    </select>
+    
+    <select id="selectGoodsRefundreasonById" parameterType="Integer" resultMap="GoodsRefundreasonResult">
+        <include refid="selectGoodsRefundreasonVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertGoodsRefundreason" parameterType="GoodsRefundreason" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_goods_refundReason
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="refundReason != null  and refundReason != ''  ">refundReason,</if>
+			<if test="createBy != null  and createBy != ''  ">create_by,</if>
+			<if test="createTime != null  ">create_time,</if>
+			<if test="updateBy != null  and updateBy != ''  ">update_by,</if>
+			<if test="updateTime != null  ">update_time,</if>
+			<if test="remark != null  and remark != ''  ">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="refundReason != null  and refundReason != ''  ">#{refundReason},</if>
+			<if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+			<if test="createTime != null  ">#{createTime},</if>
+			<if test="updateBy != null  and updateBy != ''  ">#{updateBy},</if>
+			<if test="updateTime != null  ">#{updateTime},</if>
+			<if test="remark != null  and remark != ''  ">#{remark},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateGoodsRefundreason" parameterType="GoodsRefundreason">
+        update ysx_goods_refundReason
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="refundReason != null  and refundReason != ''  ">refundReason = #{refundReason},</if>
+            <if test="createBy != null  and createBy != ''  ">create_by = #{createBy},</if>
+            <if test="createTime != null  ">create_time = #{createTime},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            <if test="updateTime != null  ">update_time = #{updateTime},</if>
+            <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteGoodsRefundreasonById" parameterType="Integer">
+        delete from ysx_goods_refundReason where id = #{id}
+    </delete>
+	
+    <delete id="deleteGoodsRefundreasonByIds" parameterType="String">
+        delete from ysx_goods_refundReason where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

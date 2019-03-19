@@ -11,15 +11,19 @@
 					<div class="select-list">
 						<ul>
 							<li>
-								用户的手机号：<input type="text" name="phone"/>
+								用户手机号：<input type="text" name="phone"/>
 							</li>
 
 							<li>
-								商品的名称：<input type="text" name="goodsName"/>
+								订单号：<input type="text" name="oraderNumber"/>
 							</li>
 
 							<li>
-								订单号：<input type="text" name=""/>
+								商品名：<input type="text" name="goodsName"/>
+							</li>
+
+							<li>
+								评价时间：<input type="text" name="createTime"/>
 							</li>
 
 
@@ -41,12 +45,6 @@
 								<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
 							</select>
 							</li>
-
-
-							<li>
-								评价时间：<input type="text" name="createTime"/>
-							</li>
-
 							<li>
 								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
 								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
@@ -79,6 +77,15 @@
     <script th:inline="javascript">
         var editFlag = [[${@permission.hasPermi('yishengxin:goodsEvaluation:edit')}]];
         var removeFlag = [[${@permission.hasPermi('yishengxin:goodsEvaluation:remove')}]];
+		var types = [[${@dict.getType('goods_describe_evaluation')}]];
+		var datas = [[${@dict.getType('goods_describe_evaluation')}]];
+
+		var types1 = [[${@dict.getType('goods_logistics_evaluation')}]];
+		var datas1 = [[${@dict.getType('goods_logistics_evaluation')}]];
+
+		var types2 = [[${@dict.getType('goods_service_attitude')}]];
+		var datas2 = [[${@dict.getType('goods_service_attitude')}]];
+
         var prefix = ctx + "yishengxin/goodsEvaluation";
 
         $(function() {
@@ -100,41 +107,55 @@
 					visible: false
 				},
 				{
-					field : 'uid', 
-					title : '用户的id',
+					field : 'phone', 
+					title : '用户手机号',
 					sortable: true
 				},
 				{
-					field : 'gid', 
-					title : '商品的id',
+					field : 'oraderNumber', 
+					title : '订单号',
 					sortable: true
 				},
 				{
-					field : 'oid', 
-					title : '订单的id',
-					sortable: true
-				},
-
-				{
-					field : 'describeEvaluation', 
-					title : '描述评价',
-					sortable: true
-				},
-				{
-					field : 'logisticsEvaluation', 
-					title : '物流评价',
-					sortable: true
-				},
-				{
-					field : 'serviceAttitude', 
-					title : '服务态度',
+					field : 'goodsName', 
+					title : '商品名',
 					sortable: true
 				},
 
 				{
-					field : 'createTime', 
-					title : '评价时间',
+					field : 'evaluationContent', 
+					title : '评价内容',
 					sortable: true
+				},
+				{
+					field : 'evaluationImage', 
+					title : '评价图片',
+					sortable: true
+				},
+				{
+					field: 'describeEvaluation',
+					title: '描述评价',
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types, value);
+					}
+				},
+				{
+					field: 'logisticsEvaluation',
+					title: '物流评价',
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types1, value);
+					}
+				},
+				{
+					field: 'serviceAttitude',
+					title: '服务态度',
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types1, value);
+					}
+
 				},
 
 		        {
