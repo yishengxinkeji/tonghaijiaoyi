@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="newsIntroduction != null  and newsIntroduction != '' "> and news_introduction = #{newsIntroduction}</if>
              <if test="newsContent != null  and newsContent != '' "> and news_content = #{newsContent}</if>
          </where>
+        ${params.News}
     </select>
     
     <select id="selectNewsById" parameterType="Integer" resultMap="NewsResult">

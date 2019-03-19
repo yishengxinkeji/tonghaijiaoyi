@@ -50,5 +50,6 @@ public interface INewsService
      * @return 结果
      */
 	public int deleteNewsByIds(String ids);
-	
+
+	int selectTotal();
 }
