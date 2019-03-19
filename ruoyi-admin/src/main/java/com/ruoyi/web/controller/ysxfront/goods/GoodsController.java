@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.util.*;
 
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
+import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.Uuid;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.goods.Goods;
@@ -39,30 +42,31 @@ public class GoodsController extends BaseFrontController {
 
     @PostMapping("/upload")
     @ResponseBody
-    public Map<String, Object> fileUpload(MultipartFile file)throws Exception{
+    public ResponseResult avaterUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
 
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        try {
+            if (!file.isEmpty()) {
+                //图片地址
+                String path = uploadFile(file);
+                vipUser.setAvater(Global.getFrontPath()+path);
+                if(true){
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,Global.getFrontPath()+path);
+                }
+            }
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER);
+        } catch(FileSizeLimitExceededException e){
 
+            return ResponseResult.responseResult(ResponseEnum.FILE_TOO_MAX);
+        }catch (FileNameLengthLimitExceededException e2){
 
-
-        // 获取input标签name的属性值
-        String name = UUID.randomUUID().toString().replace("-", "");
-
-        String originalFilename = file.getOriginalFilename();
-        int index = originalFilename.lastIndexOf(".");
-
-        String suffix = originalFilename.substring(index);
-        // 通过transferTo保存到服务器本地
-        String s =  "e:\\1\\" + name + suffix;
-
-       String s1= "http://localhost:8080/1/" + name + suffix;
-        file.transferTo(new File(s));
-
-        Map<String, Object> map = new HashMap();
-        Map<String, Object> map1 = new HashMap();
-        map.put("code", 0);
-        map.put("msg", s1);
-
-        return map;
+            return ResponseResult.responseResult(ResponseEnum.FILE_NAME_LENGTH);
+        }catch (IOException e3){
+            return ResponseResult.error();
+        }
     }
 
 

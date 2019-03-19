@@ -4,6 +4,8 @@ import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
+import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.order.Order;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
@@ -57,55 +59,52 @@ public class GoodsSalesreturnController extends BaseFrontController {
      */
     @PostMapping("/upload")
     @ResponseBody
-    public Map<String, Object> fileUpload(@RequestHeader("token") String token, MultipartFile file) throws Exception {
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
+    public ResponseResult avaterUpload(@RequestHeader("token") String token, @RequestParam("file") MultipartFile file) {
 
-        if (null == vipUser) {
+        VipUser vipUser = userExist(token);
+        if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        //校验传参
-        if (null == token || "".equals(token)) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
         try {
+            if (!file.isEmpty()) {
+                //图片地址
+                String path = uploadFile(file);
+                vipUser.setAvater(Global.getFrontPath() + path);
+                if (true) {
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS, Global.getFrontPath() + path);
+                }
+            }
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER);
+        } catch (FileSizeLimitExceededException e) {
 
-            // 获取input标签name的属性值
-            String name = UUID.randomUUID().toString().replace("-", "");
+            return ResponseResult.responseResult(ResponseEnum.FILE_TOO_MAX);
+        } catch (FileNameLengthLimitExceededException e2) {
 
-            String originalFilename = file.getOriginalFilename();
-            int index = originalFilename.lastIndexOf(".");
-
-            String suffix = originalFilename.substring(index);
-            // 通过transferTo保存到服务器本地
-            String s = "\\home\\" + name + suffix;
-
-            String s1 = "/home/" + name + suffix;
-            file.transferTo(new File(s));
-
-            Map<String, Object> map = new HashMap();
-            Map<String, Object> map1 = new HashMap();
-
-            map1.put("picName",s1);
-            map1.put("serverPath",s1);
-            map.put("code", "1000");
-            map.put("msg", "成功");
-            map.put("data",map1);
-            return map;
-        } catch (Exception e) {
-            Map<String, Object> map = new HashMap();
-
-            map.put("code", 500);
-            map.put("msg", "上传失败");
-
-            return map;
+            return ResponseResult.responseResult(ResponseEnum.FILE_NAME_LENGTH);
+        } catch (IOException e3) {
+            return ResponseResult.error();
         }
     }
 
 
     /**
-     * 查询商品退货列表
+     * 添加退货物流信息
      */
+
+    @PostMapping("/addRefundLogistics")
+    @ResponseBody
+    public ResponseResult addRefundLogistics(@RequestParam("orderNumber") String orderNumber, @RequestParam("refundCompany") String refundCompany, @RequestParam("refundLogistics") String refundLogistics) {
+
+        GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+        goodsSalesreturn1.setRefundCompany(refundCompany);
+        goodsSalesreturn1.setRefundLogistics(refundLogistics);
+        int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn1);
+        if (i > 0) {
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }
+        return ResponseResult.responseResult(ResponseEnum.FAIL);
+
+    }
 
     @PostMapping("/list")
     @ResponseBody
@@ -117,7 +116,6 @@ public class GoodsSalesreturnController extends BaseFrontController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsSalesreturns);
     }
 
-
     /**
      * 订单退款
      *
@@ -125,17 +123,16 @@ public class GoodsSalesreturnController extends BaseFrontController {
      * @param orderId
      * @param
      * @param
-     * @return  @RequestParam("phone")
+     * @return @RequestParam("phone")
      * @throws IOException
      */
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(@RequestHeader("token") String token, int orderId, @RequestParam("ploadDocuments")String ploadDocuments,@RequestParam("refundWay")String refundWay,@RequestParam("refundReason")String refundReason,@RequestParam("efundInstructions")String efundInstructions) throws IOException {
+    public ResponseResult addSave(@RequestHeader("token") String token, int orderId, @RequestParam("ploadDocuments") String ploadDocuments, @RequestParam("refundWay") String refundWay, @RequestParam("refundReason") String refundReason, @RequestParam("efundInstructions") String efundInstructions) throws IOException {
         // 校验登录状态
         GoodsSalesreturn goodsSalesreturn = new GoodsSalesreturn();
         goodsSalesreturn.setPloadDocuments(ploadDocuments);
         goodsSalesreturn.setRefundWay(refundWay);
-        goodsSalesreturn.setRefundReason(refundReason);
         goodsSalesreturn.setEfundInstructions(efundInstructions);
         VipUser vipUser = userExist(token);
 
@@ -156,7 +153,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
         goodsSalesreturn.setRefundNumber(goodsSoldNumber);
         String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
-        goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount+"");
+        goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount + "");
 
         String goodsName = goodsOrder.getGoodsName();
         goodsSalesreturn.setGoodsName(goodsName);
@@ -183,12 +180,9 @@ public class GoodsSalesreturnController extends BaseFrontController {
         goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
 
 
-
-
-
-        if ( goodsSalesreturn.getRefundWay().equals("1") ){
+        if (goodsSalesreturn.getRefundWay().equals("1")) {
             goodsSalesreturn.setRefundStatus("1");
-        }else {
+        } else {
             goodsSalesreturn.setRefundStatus("2");
         }
 
@@ -237,7 +231,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
     /**
      * 1仅退款
      * 1退款成功
-     *
+     * <p>
      * 审批保存商品退货
      */
     @PostMapping("/edit")
@@ -248,17 +242,17 @@ public class GoodsSalesreturnController extends BaseFrontController {
         GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
 
 
-        if (goodsSalesreturn1.getRefundStatus().equals("3") || goodsSalesreturn1.getRefundStatus().equals("4") ||goodsSalesreturn1.getRefundStatus().equals("5") || goodsSalesreturn1.getRefundStatus().equals("6")) {
+        if (goodsSalesreturn1.getRefundStatus().equals("3") || goodsSalesreturn1.getRefundStatus().equals("4") || goodsSalesreturn1.getRefundStatus().equals("5") || goodsSalesreturn1.getRefundStatus().equals("6")) {
             ResponseResult.responseResult(ResponseEnum.GOODS__OPERARETURNMANY_ERROR);
 
         }
-        if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("1")){
+        if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("1")) {
             goodsSalesreturn.setRefundStatus("3");
-        } else  if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("2")){
+        } else if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("2")) {
             goodsSalesreturn.setRefundStatus("4");
-        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("1")){
+        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("1")) {
             goodsSalesreturn.setRefundStatus("5");
-        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("2")){
+        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("2")) {
             goodsSalesreturn.setRefundStatus("6");
         }
         int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn);

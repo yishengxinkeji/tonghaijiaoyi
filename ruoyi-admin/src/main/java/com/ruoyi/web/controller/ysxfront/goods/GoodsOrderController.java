@@ -168,6 +168,8 @@ public class GoodsOrderController extends BaseFrontController {
 
                     String orderNumber = goodsOrders.get(i).getOrderNumber();
                     GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+
+
                     String refundStatus = goodsSalesreturn.getRefundStatus();
 
                     goodsOrders.get(i).setGoodsStatus(refundStatus);
