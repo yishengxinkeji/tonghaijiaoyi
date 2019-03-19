@@ -88,7 +88,7 @@ public class TradeBuyController extends BaseFrontController {
             }
 
             Map map = new HashMap();
-            map.put("hdk",NumberUtil.mul(Double.parseDouble(number),Double.parseDouble(price)));
+            map.put("hdk",NumberUtil.roundStr(NumberUtil.mul(Double.parseDouble(number),Double.parseDouble(price)),2)); //保留两位小数
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }catch (Exception e){
             e.printStackTrace();

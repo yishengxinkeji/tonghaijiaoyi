@@ -168,8 +168,8 @@ public class VipUserServiceImpl implements IVipUserService {
                     //收益类型: 一级
                     detail1.setProfitType(ProfitType.ONE.getCode());
 
-
-                    double mul = NumberUtil.mul(Double.parseDouble(giftNumber), parentCharge);
+                    double mul1 = NumberUtil.mul(Double.parseDouble(giftNumber), parentCharge);
+                    double mul = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
                     parentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()),mul)));
                     vipUserMapper.updateVipUser(parentUser);
                     vipProfitDetailMapper.insertVipProfitDetail(detail1);
@@ -183,7 +183,8 @@ public class VipUserServiceImpl implements IVipUserService {
                     //收益类型: 一级
                     detail2.setProfitType(ProfitType.TWO.getCode());
 
-                    double mul = NumberUtil.mul(Double.parseDouble(giftNumber), grandparentCharge);
+                    double mul1 = NumberUtil.mul(Double.parseDouble(giftNumber), grandparentCharge);
+                    double mul = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
                     pparentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()),mul)));
                     vipUserMapper.updateVipUser(pparentUser);
                     vipProfitDetailMapper.insertVipProfitDetail(detail2);

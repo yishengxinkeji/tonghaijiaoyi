@@ -62,7 +62,10 @@ public class CustomerConstants {
      */
     public static final String LISTEN_TRADE_SALE_PREFIX_KEY = "TRADE_SALE_";
 
-
+    /**
+     * 金额运算时保留的小数位
+     */
+    public static final int ROUND_NUMBER = 2;
 
 
 
