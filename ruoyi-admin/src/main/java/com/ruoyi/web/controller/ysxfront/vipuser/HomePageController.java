@@ -85,8 +85,8 @@ public class HomePageController {
      * @param pageSize      每页显示的记录数
      * @return
      */
-    @GetMapping("/news/{currentNum}/{pageSize}")
-    public ResponseResult news(@PathVariable("currentNum") String currentNum,@PathVariable("pageSize") String pageSize){
+    @GetMapping("/news")
+    public ResponseResult news(@RequestParam("currentNum") String currentNum,@RequestParam(value = "pageSize",required = false) String pageSize){
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
             //默认初始页为0
@@ -197,8 +197,8 @@ public class HomePageController {
      * @param pageSize      每页显示的记录数
      * @return
      */
-    @GetMapping("/notice/{currentNum}/{pageSize}")
-    public ResponseResult notice(@PathVariable("currentNum") String currentNum,@PathVariable("pageSize") String pageSize){
+    @GetMapping("/notice")
+    public ResponseResult notice(@RequestParam("currentNum") String currentNum,@RequestParam(value = "pageSize",required = false) String pageSize){
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
             //默认初始页为0

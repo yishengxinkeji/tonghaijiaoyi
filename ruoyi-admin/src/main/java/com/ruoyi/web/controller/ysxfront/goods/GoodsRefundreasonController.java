@@ -26,7 +26,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
  * @date 2019-03-19
  */
 @Controller
-@RequestMapping("/yishengxin/goodsRefundreason")
+@RequestMapping("/front/goodsRefundreason")
 public class GoodsRefundreasonController
 {
 

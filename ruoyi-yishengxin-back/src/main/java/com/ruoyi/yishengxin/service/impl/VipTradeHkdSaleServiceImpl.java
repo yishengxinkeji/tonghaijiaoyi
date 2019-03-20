@@ -251,7 +251,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      * @return
      */
     @Override
-    public int updateOrderByNo(String orderNo) throws Exception{
+    public int updateOrderByNo(String orderNo,String type) throws Exception{
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setSaleNo(orderNo);
@@ -267,9 +267,25 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
         vipTradeHkdBuy.setBuyNo(orderNo);
         vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-        vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
+
 
         vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
+
+        if(type.equals(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY)){
+            //买家的问题
+            vipTradeHkdBuy.setFailReason(CustomerConstants.TRADE_FAIL_BUY);
+            vipTradeHkdSale.setFailReason(CustomerConstants.TRADE_FAIL_BUY);
+            vipTradeHkdBuy.setTradeFailStatus(TradeStatus.WAIT_BUY_SEND.getCode());
+            vipTradeHkdSale.setTradeFailStatus(TradeStatus.WAIT_BUY_SEND.getCode());
+        }else if(type.equals(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY)){
+            //卖家的问题
+            vipTradeHkdBuy.setFailReason(CustomerConstants.TRADE_FAIL_SALE);
+            vipTradeHkdSale.setFailReason(CustomerConstants.TRADE_FAIL_SALE);
+            vipTradeHkdBuy.setTradeFailStatus(TradeStatus.WAIT_SALE_CONFIRM.getCode());
+            vipTradeHkdSale.setTradeFailStatus(TradeStatus.WAIT_SALE_CONFIRM.getCode());
+        }
+
+        vipTradeHkdBuyMapper.updateVipTradeHkdBuy(vipTradeHkdBuy);  //更新买订单
         return vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);    //更新卖订单
     }
 }

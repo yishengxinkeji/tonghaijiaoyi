@@ -138,6 +138,7 @@ public class VipAppealServiceImpl implements IVipAppealService {
             vipAppeal.setBuyPhone(vipUser.getPhone());   //买家手机号
         }
 
+        vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
         vipAppeal.setAppealStatus(AppealType.APPEALING.getCode());
         vipAppeal.setAppealTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD));
 

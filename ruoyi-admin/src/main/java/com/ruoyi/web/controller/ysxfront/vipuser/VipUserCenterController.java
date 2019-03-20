@@ -4,10 +4,7 @@ import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
-import com.ruoyi.common.enums.ProfitType;
-import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.enums.TradeStatus;
-import com.ruoyi.common.enums.TradeType;
+import com.ruoyi.common.enums.*;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.DateUtils;
@@ -56,7 +53,6 @@ public class VipUserCenterController extends BaseFrontController {
     private IVipBuyService buyService;
     @Autowired
     private ITradeService tradeService;
-
     @Autowired
     private IPlatDataService platDataService;
     @Autowired
@@ -71,6 +67,8 @@ public class VipUserCenterController extends BaseFrontController {
     private IVipTradeSslSaleService vipTradeSslSaleService;
     @Autowired
     private IVipAccountService accountService;
+    @Autowired
+    private IVipAppealService appealService;
 
 
     /**
@@ -809,18 +807,44 @@ public class VipUserCenterController extends BaseFrontController {
      * 关于我们
      * @return
      */
-    @PostMapping("/aboutUs")
+    @GetMapping("/aboutUs")
     public ResponseResult aboutUs(){
         List<VipAboutus> vipAboutuses = aboutusService.selectVipAboutusList(new VipAboutus());
+        List list = new ArrayList();
         if(vipAboutuses.size() > 0){
             Map map = new HashMap();
             map.put("title",vipAboutuses.get(0).getTitle());
             map.put("content",vipAboutuses.get(0).getContent());
             map.put("id",vipAboutuses.get(0).getId());
+            list.add(map);
 
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,null);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+    }
+
+    /**
+     * 我的申诉
+     * @return
+     */
+    @PostMapping("/myAppeal")
+    public ResponseResult myAppeal(@RequestHeader("token")String token){
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        VipAppeal vipAppeal = new VipAppeal();
+        vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
+        vipAppeal.getParams().put("VipAppeal"," order by id asc");
+        List<VipAppeal> vipAppeals = appealService.selectVipAppealList(vipAppeal);
+        List list = new ArrayList();
+        vipAppeals.stream().forEach(vipAppeal1 -> {
+            Map map = new HashMap();
+            map.put("time",vipAppeal1.getAppealTime());
+            map.put("status",vipAppeal1.getAppealStatus());
+            map.put("content",vipAppeal1.getContent());
+            list.add(map);
+        });
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
     /**

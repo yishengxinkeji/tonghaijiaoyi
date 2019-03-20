@@ -121,6 +121,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
             map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
             list.add(map);
         });
 
@@ -133,6 +134,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
             map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
             list.add(map);
         });
 
@@ -824,8 +826,6 @@ public class TradeRecordController extends BaseFrontController {
     @PostMapping("/vipAppeal")
     public ResponseResult appeal(@RequestHeader("token") String token,
                                  VipAppeal vipAppeal){
-
-
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);

@@ -47,7 +47,7 @@ public class RedisKeyExpirationListener implements  MessageListener {
             if(!vipTradeHkdBuy1.getBuyStatus().equals(TradeStatus.WAIT_SALE_CONFIRM.getCode())){
                 //更新买/卖订单,并将钱退给卖家
                 try {
-                    int i = vipTradeHkdSaleService.updateOrderByNo(orderNo);
+                    int i = vipTradeHkdSaleService.updateOrderByNo(orderNo,CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY);
                     if(i > 0){
                         logger.info("过期订单更新成功 : "+orderNo);
                     }
@@ -67,7 +67,7 @@ public class RedisKeyExpirationListener implements  MessageListener {
             if(!vipTradeHkdSale1.getSaleStatus().equals(TradeStatus.SUCCESS.getCode())){
                 //更新买/卖订单,并将钱退给卖家
                 try {
-                    int i = vipTradeHkdSaleService.updateOrderByNo(orderNo);
+                    int i = vipTradeHkdSaleService.updateOrderByNo(orderNo,CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY);
                     if(i > 0){
                         logger.info("过期订单更新成功 : "+orderNo);
                     }

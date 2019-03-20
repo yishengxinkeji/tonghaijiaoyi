@@ -70,6 +70,10 @@ public class CustomerConstants {
     //首页分页默认显示6条
     public static final String PAGE_SIZE = "6";
 
+    //HKD交易失败可能的原因
+    public static final String TRADE_FAIL_BUY = "未上传打款凭证";
+    public static final String TRADE_FAIL_SALE = "卖家未确认!";
+
 
 
 }

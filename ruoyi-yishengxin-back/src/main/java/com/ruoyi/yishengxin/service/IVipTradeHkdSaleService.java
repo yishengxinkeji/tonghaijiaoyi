@@ -82,5 +82,5 @@ public interface IVipTradeHkdSaleService
 	 * @param orderNo
 	 * @return
 	 */
-	int updateOrderByNo(String orderNo) throws Exception;
+	int updateOrderByNo(String orderNo,String type) throws Exception;
 }

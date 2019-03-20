@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderNo"    column="order_no"    />
         <result property="buyPhone"    column="buy_phone"    />
         <result property="buyId"    column="buy_id"    />
+        <result property="appealVipId"    column="appeal_vip_id"    />
     </resultMap>
 	
 	<sql id="selectVipAppealVo">
-        select id, sale_id, content, appeal_time, appeal_status, order_type, order_id, duty_for, appeal_reason, sale_phone, order_no, buy_phone, buy_id from ysx_vip_appeal
+        select id, sale_id, content,appeal_vip_id, appeal_time, appeal_status, order_type, order_id, duty_for, appeal_reason, sale_phone, order_no, buy_phone, buy_id from ysx_vip_appeal
     </sql>
 	
     <select id="selectVipAppealList" parameterType="VipAppeal" resultMap="VipAppealResult">
@@ -40,6 +41,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="orderNo != null  and orderNo != '' "> and order_no = #{orderNo}</if>
              <if test="buyPhone != null  and buyPhone != '' "> and buy_phone = #{buyPhone}</if>
              <if test="buyId != null "> and buy_id = #{buyId}</if>
+            <if test="appealVipId != null "> and appeal_vip_id = #{appealVipId}</if>
          </where>
     </select>
     
@@ -63,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderNo != null  and orderNo != ''  ">order_no,</if>
 			<if test="buyPhone != null  and buyPhone != ''  ">buy_phone,</if>
 			<if test="buyId != null  ">buy_id,</if>
+            <if test="appealVipId != null  ">appeal_vip_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="saleId != null  ">#{saleId},</if>
@@ -77,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="orderNo != null  and orderNo != ''  ">#{orderNo},</if>
 			<if test="buyPhone != null  and buyPhone != ''  ">#{buyPhone},</if>
 			<if test="buyId != null  ">#{buyId},</if>
+            <if test="appealVipId != null  ">#{appealVipId},</if>
          </trim>
     </insert>
 	 
@@ -95,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderNo != null  and orderNo != ''  ">order_no = #{orderNo},</if>
             <if test="buyPhone != null  and buyPhone != ''  ">buy_phone = #{buyPhone},</if>
             <if test="buyId != null  ">buy_id = #{buyId},</if>
+            <if test="appealVipId != null  ">appeal_vip_id = #{appealVipId},</if>
         </trim>
         where id = #{id}
     </update>
