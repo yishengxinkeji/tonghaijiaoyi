@@ -123,6 +123,7 @@ public class LockController extends BaseFrontController {
                 }else {
                     map.put("profit",String.valueOf(NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber()))));
                 }
+                map.put("status",vipLock1.getLockStatus());
                 list.add(map);
             });
         }
@@ -205,7 +206,7 @@ public class LockController extends BaseFrontController {
                 //12个月
                 String twelveRate = trade.getTwelveRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(twelveRate)));
-                vipLock.setLockType(LockType.SIX.getCode());
+                vipLock.setLockType(LockType.TWELVE.getCode());
                 vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offset(new Date(), DateField.MONTH,12)));//12个月
                 vipLock.setLockProfit(String.valueOf(mul));
             }

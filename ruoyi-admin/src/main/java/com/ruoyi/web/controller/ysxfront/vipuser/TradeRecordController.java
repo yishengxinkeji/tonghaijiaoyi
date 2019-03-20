@@ -163,15 +163,14 @@ public class TradeRecordController extends BaseFrontController {
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
-        vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
-        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_status = 1 or sale_status=5 or sale_status=6 order by sale_time desc");
 
         List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
+
         VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
         vipTradeHkdBuy.setVipId(vipUser.getId());
-        vipTradeHkdBuy.setBuyStatus(TradeStatus.TRADING.getCode());
-        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_status=1 or buy_status=5 or buy_status=6 order by buy_time desc ");
 
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 

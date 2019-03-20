@@ -1,9 +1,12 @@
 package com.ruoyi.yishengxin.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.enums.LockStatus;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
@@ -126,7 +129,7 @@ public class VipLockServiceImpl implements IVipLockService {
         //扣除的钱
         double mul = NumberUtil.mul(Double.parseDouble(vipLock.getLockNumber()), Double.parseDouble(lockBreakCharge));
         //给用户返的钱
-        double backMoney = NumberUtil.mul(Double.parseDouble(vipLock.getLockNumber()), 1 - Double.parseDouble(lockBreakCharge));
+        double backMoney = NumberUtil.sub(Double.parseDouble(vipLock.getLockNumber()), mul);
 
         vipUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser.getSslMoney()),backMoney)));
         vipLock.setLockStatus(LockStatus.INTERUPT.getCode());
@@ -134,5 +137,27 @@ public class VipLockServiceImpl implements IVipLockService {
 
         vipUserMapper.updateVipUser(vipUser);
         return vipLockMapper.updateVipLock(vipLock);
+    }
+
+    /**
+     * 每天早上0点更新今日到期的锁仓数据
+     */
+    @Override
+    public void updateTimerLock() {
+        VipLock vipLock = new VipLock();
+        vipLock.setLockExpire(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD));
+        List<VipLock> vipLocks = vipLockMapper.selectVipLockList(vipLock);
+        if(vipLocks.size() > 0){
+            //查找今日锁仓到期的数据,更新状态,并更新用户余额
+            vipLocks.stream().forEach(vipLock1 -> {
+                Integer vipId = vipLock1.getVipId();
+                VipUser vipUser = vipUserMapper.selectVipUserById(vipId);
+                String lockProfit = vipLock1.getLockProfit();
+                vipUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser.getSslMoney()),Double.parseDouble(lockProfit))));
+                vipLock1.setLockStatus(LockStatus.FINISH.getCode());
+                vipUserMapper.updateVipUser(vipUser);
+                vipLockMapper.updateVipLock(vipLock1);
+            });
+        }
     }
 }

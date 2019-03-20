@@ -110,7 +110,7 @@ public class VipAppealServiceImpl implements IVipAppealService {
     public int appeal(VipUser vipUser, VipAppeal vipAppeal) throws Exception{
         String orderId = vipAppeal.getOrderId();
         String orderType = vipAppeal.getOrderType();
-        if(orderType.equals(TradeType.SALE_HKD)){   //卖hkd
+        if(orderType.equals(TradeType.SALE_HKD.getCode())){   //卖hkd
 
             VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleMapper.selectVipTradeHkdSaleById(Integer.parseInt(orderId));
             vipTradeHkdSale.setIsAppeal(CustomerConstants.YES);
@@ -124,7 +124,7 @@ public class VipAppealServiceImpl implements IVipAppealService {
             vipAppeal.setSalePhone(vipUser.getPhone()); //卖家手机号
             vipAppeal.setBuyPhone(vipTradeHkdSale.getBuyPhone());   //买家手机号
 
-        }else if(orderType.equals(TradeType.BUY_HKD)){  //买HKD
+        }else if(orderType.equals(TradeType.BUY_HKD.getCode())){  //买HKD
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyMapper.selectVipTradeHkdBuyById(Integer.parseInt(orderId));
             vipTradeHkdBuy.setIsAppeal(CustomerConstants.YES);
             vipTradeHkdBuy.setAppealStatus(AppealType.APPEALING.getCode());

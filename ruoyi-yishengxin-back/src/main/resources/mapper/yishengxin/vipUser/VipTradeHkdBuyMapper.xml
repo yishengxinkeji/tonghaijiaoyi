@@ -30,7 +30,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectVipTradeHkdBuyList" parameterType="VipTradeHkdBuy" resultMap="VipTradeHkdBuyResult">
         <include refid="selectVipTradeHkdBuyVo"/>
-        <where>  
+        <where>
+              1=1
             <if test="id != null "> and id = #{id}</if>
              <if test="vipId != null "> and vip_id = #{vipId}</if>
              <if test="buyType != null  and buyType != '' "> and buy_type = #{buyType}</if>

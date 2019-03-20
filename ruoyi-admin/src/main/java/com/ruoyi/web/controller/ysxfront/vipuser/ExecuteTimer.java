@@ -6,11 +6,14 @@ import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.enums.TradeStatus;
 import com.ruoyi.common.enums.TradeType;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.RedisConfig;
 import com.ruoyi.framework.util.RedisUtils;
+import com.ruoyi.yishengxin.domain.vipUser.VipLock;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
 import com.ruoyi.yishengxin.mapper.vipUser.VipTradeSslSaleMapper;
+import com.ruoyi.yishengxin.service.IVipLockService;
 import com.ruoyi.yishengxin.service.IVipTradeSslBuyService;
 import com.ruoyi.yishengxin.service.IVipTradeSslSaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,8 @@ public class ExecuteTimer {
 
     @Autowired
     private IVipTradeSslBuyService vipTradeSslBuyService;
+    @Autowired
+    private IVipLockService vipLockService;
 
 
     /**
@@ -74,5 +79,14 @@ public class ExecuteTimer {
         }
         //更改Redis的标志
         RedisUtils.set(CustomerConstants.TASK_STATUS_KEY,"N");
+    }
+
+
+    /**
+     * 锁仓定时, 每天早上00点查询到期的锁仓数据
+     */
+   @Scheduled(cron = "0 0 0 * * ? ")
+    public void timerLock() {
+        vipLockService.updateTimerLock();
     }
 }

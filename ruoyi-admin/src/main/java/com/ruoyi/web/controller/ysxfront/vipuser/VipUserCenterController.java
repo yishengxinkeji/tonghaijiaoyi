@@ -102,6 +102,31 @@ public class VipUserCenterController extends BaseFrontController {
     }
 
     /**
+     * 修改昵称
+     * @param token
+     * @return
+     */
+    @PostMapping("/nickname")
+    public ResponseResult nickname(@RequestHeader("token") String token,@RequestParam("nickname") String nickname){
+        try {
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            vipUser.setNickname(nickname);
+            int i = vipUserService.updateVipUser(vipUser);
+            if(i > 0){
+                return ResponseResult.success();
+            }
+            return ResponseResult.error();
+        } catch (Exception e) {
+            log.error("个人信息接口出错");
+            return ResponseResult.error();
+        }
+    }
+
+    /**
      * 用户头像上传
      * @param token
      * @param file

@@ -56,4 +56,7 @@ public interface IVipLockService
     int vipLock(VipUser vipUser, VipLock vipLock) throws Exception;
 
 	int interuptLock(VipUser vipUser, VipLock vipLock);
+
+	//每天的锁仓到期信息
+    void updateTimerLock();
 }
