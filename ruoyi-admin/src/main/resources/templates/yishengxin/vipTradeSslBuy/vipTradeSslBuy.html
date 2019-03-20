@@ -1,0 +1,213 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	.jiaoyi{
+		margin-right: 10px;
+		color: #1ab394;
+		font-size: 20px;
+	}
+	.numb {
+		font-size: 50px;
+		color: #1ab394;
+		margin-right: 10px;
+	}
+
+</style>
+<body class="gray-bg">
+    
+     <div class="container-div">
+		<div class="row">
+			<div class="col-sm-12 search-collapse" style="display: flex;flex-direction: column;align-items: center;">
+				<div class="select-list">
+					<ul>
+						<li>
+							年：<input type="text" id="year"/>
+						</li>
+						<li>
+							月：<input type="text" id="month"/>
+						</li>
+						<li>
+							日：<input type="text" id="day"/>
+						</li>
+						<li>
+							<!--onclick="$.table.search()"-->
+							<a class="btn btn-primary btn-rounded btn-sm"  onclick="timeSearch()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+						</li>
+					</ul>
+				</div>
+
+				<div style="display: flex;align-items: center;margin-top: 20px;">
+					<div><span class="jiaoyi">SSL购买量:</span><h1 class="numb"  id="sslBuy">0</h1></div>
+					<div><span class="jiaoyi">SSL卖出量:</span><h1 class="numb"  id="sslSale">0</h1></div>
+					<div><span class="jiaoyi">HKD购买量:</span><h1 class="numb" id="hkdBuy">0</h1></div>
+					<div><span class="jiaoyi">HKD卖出量:</span><h1 class="numb"  id="hkdSale">0</h1></div>
+					<div><span class="jiaoyi">今日SSL交易均值:</span><h1 class="numb" id="avg">0</h1></div>
+				</div>
+			</div>
+			
+	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+				<!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:vipTradeSslBuy:add">
+					<i class="fa fa-plus"></i> 添加
+				</a>
+				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:vipTradeSslBuy:edit">
+					<i class="fa fa-edit"></i> 修改
+				</a>
+				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:vipTradeSslBuy:remove">
+					<i class="fa fa-remove"></i> 删除
+				</a>
+				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:vipTradeSslBuy:export">
+						<i class="fa fa-download"></i> 导出
+				 </a>-->
+			</div>
+			<div class="col-sm-12 select-table table-striped">
+				<table id="bootstrap-table" data-mobile-responsive="true"></table>
+			</div>
+		</div>
+	</div>
+    <div th:include="include :: footer"></div>
+	 <script>
+		 layui.use('laydate', function(){
+			 var laydate = layui.laydate;
+
+			 laydate.render({
+				 elem: '#year'
+				 ,type: 'year'
+			 });
+			 laydate.render({
+				 elem: '#month'
+				 ,type: 'month'
+			 });
+			 laydate.render({
+				 elem: '#day'
+			 });
+
+		 });
+	 </script>
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('yishengxin:vipTradeSslBuy:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('yishengxin:vipTradeSslBuy:remove')}]];
+        var prefix = ctx + "yishengxin/vipTradeSslBuy";
+		var datas = [[${@dict.getType('ssl_hkd_trade_status')}]];
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+				exportUrl: prefix + "/export",
+                modalName: "挂买SSL",
+				search: false,
+		        showExport: true,
+                columns: [{
+		            checkbox: true
+		        },
+				{
+					field : 'id', 
+					title : '',
+					visible: false
+				},
+				{
+					field : 'vipId', 
+					title : ' 用户id ',
+					sortable: true
+				},
+				{
+					field : 'buyStatus', 
+					title : ' 交易状态',
+					align : 'center',
+					formatter: function (value, row, index) {
+						return $.table.selectDictLabel(datas, value);
+					}
+				},
+				{
+					field : 'buyNo', 
+					title : ' 订单编号 ',
+					sortable: true
+				},
+				{
+					field : 'relationOrderno',
+					title : '关联订单',
+					sortable: true
+				},
+				{
+					field : 'buyNumber', 
+					title : ' 订单数量 ',
+					sortable: true
+				},
+				{
+					field : 'unitPrice', 
+					title : ' 单价 ',
+					sortable: true
+				},
+				{
+					field : 'buyTotal', 
+					title : ' 总金额 ',
+					sortable: true
+				},
+				{
+					field : 'buyTime', 
+					title : ' 时间 ',
+					sortable: true
+				},
+				{
+					field : 'saleId', 
+					title : ' 卖方ID ',
+					sortable: true
+				},
+				{
+					field : 'salePhone', 
+					title : ' 卖方手机号 ',
+					sortable: true
+				},
+				{
+					field : 'saleNickname', 
+					title : ' 卖方名称 ',
+					sortable: true
+				},
+				{
+					field : 'saleAvater', 
+					title : ' 卖方头像 ',
+					sortable: true
+				},
+		        {
+		            title: '操作',
+		            align: 'center',
+		            formatter: function(value, row, index) {
+		            	var actions = [];
+		            	//actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        //actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+						return actions.join('');
+		            }
+		        }]
+            };
+            $.table.init(options);
+        });
+
+		function timeSearch(){
+			var day = $("#day").val();
+			var month = $("#month").val();
+			var year = $("#year").val();
+
+			$.ajax({
+				url: ctx + "yishengxin/vipTradeSslSale/timeSearch",
+				type: "post",
+				data : {
+					day: day,
+					month: month,
+					year: year
+				},
+				success: function(res){
+					$("#sslBuy").text(res.sslBuy);
+					$("#sslSale").text(res.sslSale)
+					$("#hkdBuy").text(res.hkdBuy)
+					$("#hkdSale").text(res.sslBuy)
+					$("#avg").text(res.avg)
+				}
+			});
+		}
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-vipTradeSslBuy-edit" th:object="${vipTradeSslBuy}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 用户id ：</label>
+				<div class="col-sm-8">
+					<input id="vipId" name="vipId" th:field="*{vipId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 交易类型(挂买SSL为7)：</label>
+				<div class="col-sm-8">
+					<input id="buyType" name="buyType" th:field="*{buyType}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 交易状态(Y.成功,N.失败)：</label>
+				<div class="col-sm-8">
+					<input id="buyStatus" name="buyStatus" th:field="*{buyStatus}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 订单编号 ：</label>
+				<div class="col-sm-8">
+					<input id="buyNo" name="buyNo" th:field="*{buyNo}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 订单数量 ：</label>
+				<div class="col-sm-8">
+					<input id="buyNumber" name="buyNumber" th:field="*{buyNumber}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 单价 ：</label>
+				<div class="col-sm-8">
+					<input id="unitPrice" name="unitPrice" th:field="*{unitPrice}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 总金额 ：</label>
+				<div class="col-sm-8">
+					<input id="buyTotal" name="buyTotal" th:field="*{buyTotal}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 时间 ：</label>
+				<div class="col-sm-8">
+					<input id="buyTime" name="buyTime" th:field="*{buyTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 卖方ID ：</label>
+				<div class="col-sm-8">
+					<input id="saleId" name="saleId" th:field="*{saleId}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 卖方手机号 ：</label>
+				<div class="col-sm-8">
+					<input id="salePhone" name="salePhone" th:field="*{salePhone}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 卖方名称 ：</label>
+				<div class="col-sm-8">
+					<input id="saleNickname" name="saleNickname" th:field="*{saleNickname}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label"> 卖方头像 ：</label>
+				<div class="col-sm-8">
+					<input id="saleAvater" name="saleAvater" th:field="*{saleAvater}" class="form-control" type="text">
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "yishengxin/vipTradeSslBuy";
+		$("#form-vipTradeSslBuy-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-vipTradeSslBuy-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>
