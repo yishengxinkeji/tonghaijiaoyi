@@ -110,6 +110,7 @@ public class LockController extends BaseFrontController {
         if(type != null && !type.equals("")){
             vipLock.setLockType(type);
         }
+        vipLock.setLockStatus(LockStatus.FINISH.getCode());
         List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
         List list = new ArrayList();
 
