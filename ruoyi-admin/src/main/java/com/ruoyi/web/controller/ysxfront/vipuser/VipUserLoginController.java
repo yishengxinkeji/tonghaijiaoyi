@@ -70,6 +70,7 @@ public class VipUserLoginController extends BaseFrontController {
         }
 
         VipUser vipUser = new VipUser();
+
         vipUser.setPhone(phone);
         List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser);
         if(vipUsers.size() > 0){
@@ -81,6 +82,8 @@ public class VipUserLoginController extends BaseFrontController {
         new_User.setPhone(phone);
         String salt = ShiroUtils.randomSalt();
         new_User.setSalt(salt);
+        new_User.setAvater("/img/default_avater.jpg");
+        new_User.setNickname("新用户");
         String loginPassword= DigestUtils.md5Hex(password + salt);
         new_User.setLoginPassword(loginPassword);
         //推荐码

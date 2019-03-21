@@ -899,12 +899,13 @@ public class VipUserCenterController extends BaseFrontController {
             map.put("exchangeStatus",vipExchange.getExchangeStatus());
             map.put("exchangeTime",vipExchange.getCreateTime());
             if(vipExchange.getExchangeStatus().equals(CustomerConstants.EXCHANGE_BUY_STATUS_DEAL)){
-                map.put("exchangeDetail",Global.getFrontPath()+vipExchange.getExchangeDetail());
+                map.put("exchangeDetail",vipExchange.getExchangeDetail());
             }
             list.add(map);
         });
         Map map = new HashMap();
         List<Trade> trades = tradeService.selectTradeList(new Trade());
+
         if(trades.size() > 0){
             map.put("charge",trades.get(0).getHkdCharge());
         }
@@ -986,7 +987,7 @@ public class VipUserCenterController extends BaseFrontController {
 
         VipBuy vipBuy = new VipBuy();
         vipBuy.setVipId(vipUser.getId());
-        vipBuy.getParams().put("buy","order by create_time desc");
+        vipBuy.getParams().put("buy"," order by create_time desc");
 
         List<VipBuy> vipBuys = buyService.selectVipBuyList(vipBuy);
         List list = new ArrayList();
@@ -995,7 +996,7 @@ public class VipUserCenterController extends BaseFrontController {
             Map map = new HashMap();
             map.put("buyAmount",vipBuy1.getBuyAmount());
             map.put("buyMoney",vipBuy1.getBuyMoney());
-            map.put("buyDetail",Global.getFrontPath()+vipBuy1.getBuyDetail());
+            map.put("buyDetail",vipBuy1.getBuyDetail());
             map.put("buyStatus",vipBuy1.getBuyStatus());
             map.put("createTime",DateUtils.parseDateToStr("yyyy-MM-dd",vipBuy1.getCreateTime()));
             list.add(map);
@@ -1029,7 +1030,7 @@ public class VipUserCenterController extends BaseFrontController {
                 String path = uploadFile(file);
                 Map map = new HashMap();
                 map.put("serverPath",Global.getFrontPath()+path);
-                map.put("path",path);
+                map.put("path",Global.getFrontPath()+path);
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
             }
             return ResponseResult.error();

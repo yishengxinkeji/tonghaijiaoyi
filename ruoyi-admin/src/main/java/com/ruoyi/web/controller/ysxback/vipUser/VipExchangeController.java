@@ -146,7 +146,7 @@ public class VipExchangeController extends BaseController {
     public AjaxResult updateAvatar(@RequestParam("file") MultipartFile file) {
         try {
             if (!file.isEmpty()) {
-                String avatar = FileUploadUtils.upload(Global.getAvatarPath(), file);
+                String avatar = FileUploadUtils.upload(Global.getFrontPath(), file);
                 return AjaxResult.success(Global.getAvatarPath() + avatar);
             }
             return error();
