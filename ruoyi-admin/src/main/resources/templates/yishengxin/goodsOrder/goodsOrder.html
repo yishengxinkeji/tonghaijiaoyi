@@ -5,151 +5,147 @@
 
 
 <body class="gray-bg">
-    
-     <div class="container-div">
-		<div class="row">
-			<div class="col-sm-12 search-collapse">
-				<form id="formId">
-					<div class="select-list">
-						<ul>
-							<li>
-								商品名称：<input type="text" name="goodsName"/>
-							</li>
 
-							<li>
-								商品状态：<input type="text" name="goodsStatus"/>
-							</li>
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            商品名称：<input type="text" name="goodsName"/>
+                        </li>
 
-							<li>
-								订单号：<input type="text" name="orderNumber"/>
-							</li>
-							<!--<li class="select-time">-->
-								<!--<label>下单时间： </label>-->
-								<!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="createTime"/>-->
-							<!--</li>-->
-							<li>
-								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-							</li>
-						</ul>
-					</div>
-				</form>
-			</div>
-			
-	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:goodsOrder:add">
-					<i class="fa fa-plus"></i> 添加
-				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:goodsOrder:edit">
-					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goodsOrder:remove">
-					<i class="fa fa-remove"></i> 删除
-				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goodsOrder:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
-			</div>
-			<div class="col-sm-12 select-table table-striped">
-				<table id="bootstrap-table" data-mobile-responsive="true"></table>
-			</div>
-		</div>
-	</div>
-    <div th:include="include :: footer"></div>
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('yishengxin:goodsOrder:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('yishengxin:goodsOrder:remove')}]];
-        var prefix = ctx + "yishengxin/goodsOrder";
+                        <li>
+                            商品状态：<select name="goodsStatus" th:with="type=${@dict.getType('goods_order_status')}">
+                            <option value="">所有</option>
+                            <option th:each="dict : ${type}" th:text="${dict.dictLabel}"
+                                    th:value="${dict.dictValue}"></option>
+                        </select>
+                        <li>
+                            订单号：<input type="text" name="orderNumber"/>
+                        </li>
+                        <!--<li class="select-time">-->
+                        <!--<label>下单时间： </label>-->
+                        <!--<input type="text" class="time-input" id="startTime" placeholder="开始时间" name="createTime"/>-->
+                        <!--</li>-->
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i
+                                    class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-				exportUrl: prefix + "/export",
-                modalName: "商品订单",
-				search: false,
-		        showExport: true,
-                columns: [{
-		            checkbox: true
-		        },
-				{
-					field : 'id', 
-					title : '商品订单id',
-					visible: false
-				},
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
 
-				{
-					field : 'goodsName', 
-					title : '商品名称',
-					sortable: true
-				},
-				{
-					field : 'goodsDetails', 
-					title : '商品详情',
-					sortable: true
-				},
-				{
-					field : 'goodsPrice', 
-					title : '商品价格',
-					sortable: true
-				},
-				{
-					field : 'goodsSoldNumber', 
-					title : '商品购买数量',
-					sortable: true
-				},
-				{
-					field : 'goodsOrderTotalAmount', 
-					title : '商品订单总额',
-					sortable: true
-				},
+            <a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()"
+               shiro:hasPermission="yishengxin:goodsOrder:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()"
+               shiro:hasPermission="yishengxin:goodsOrder:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('yishengxin:goodsOrder:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('yishengxin:goodsOrder:remove')}]];
+    var prefix = ctx + "yishengxin/goodsOrder";
 
-				{
-					field : 'goodsStatus', 
-					title : '商品状态',
-					sortable: true
-				},
-				{
-					field : 'shippingAddress', 
-					title : '收货地址id',
-					sortable: true
-				},
-				{
-					field : 'courierNumber', 
-					title : '快递单号',
-					sortable: true
-				},
-				{
-					field : 'courierCompany', 
-					title : '快递公司',
-					sortable: true
-				},
-				{
-					field : 'orderNumber', 
-					title : '订单号',
-					sortable: true
-				},
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportUrl: prefix + "/export",
+            modalName: "商品订单",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'id',
+                    title: '商品订单id',
+                    visible: false
+                },
 
-				{
-					field : 'createTime', 
-					title : '下单时间',
-					sortable: true
-				},
-		        {
-		            title: '操作',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                {
+                    field: 'goodsName',
+                    title: '商品名称',
+                    sortable: false
+                },
+
+                {
+                    field: 'goodsPrice',
+                    title: '商品价格',
+                    sortable: false
+                },
+                {
+                    field: 'goodsSoldNumber',
+                    title: '商品购买数量',
+                    sortable: false
+                },
+                {
+                    field: 'goodsOrderTotalAmount',
+                    title: '商品订单总额',
+                    sortable: false
+                },
+
+                {
+                    field: 'goodsStatus',
+                    title: '商品状态',
+                    sortable: false
+                },
+                {
+                    field: 'remark',
+                    title: '收货地址',
+                    sortable: false
+                },
+                {
+                    field: 'courierNumber',
+                    title: '快递单号',
+                    sortable: false
+                },
+                {
+                    field: 'courierCompany',
+                    title: '快递公司',
+                    sortable: false
+                },
+                {
+                    field: 'orderNumber',
+                    title: '订单号',
+                    sortable: false
+                },
+
+                {
+                    field: 'createTime',
+                    title: '下单时间',
+                    sortable: false
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
                         actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
-						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
-    </script>
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
 </body>
 </html>

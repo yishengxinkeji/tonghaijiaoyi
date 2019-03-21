@@ -48,7 +48,7 @@ public enum ResponseEnum {
 
 
     GOODS_NULL("2001","数据为空"),
-    COODS_COLLECTION_PARAMETER("2002","传参有误"),
+    COODS_COLLECTION_PARAMETER("2002","未登录"),
     COODS_COLLECTION_ADD("2003","收藏添加失败"),
     COODS_COLLECTION_DELECT("2004","收藏删除失败"),
     GOODS_ORDER_ADDERROR("2005","商品添加失败"),

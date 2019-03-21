@@ -3,129 +3,117 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-    
-     <div class="container-div">
-		<div class="row">
-			<div class="col-sm-12 search-collapse">
-				<form id="formId">
-					<div class="select-list">
-						<ul>
-							<li>
-								商品的名称：<input type="text" name="goodsName"/>
-							</li>
-							<li>
-								订单编号：<input type="text" name="orderNumber"/>
-							</li>
-							<li>
-								退款方式：<input type="text" name="refundWay"/>
-							</li>
 
-							<li>
-								退货状态：<input type="text" name="refundStatus"/>
-							</li>
+<div class="container-div">
+	<div class="row">
+		<div class="col-sm-12 search-collapse">
+			<form id="formId">
+				<div class="select-list">
+					<ul>
+						<li>
+							商品的名称：<input type="text" name="goodsName"/>
+						</li>
+						<li>
+							订单编号：<input type="text" name="orderNumber"/>
+						</li>
+						<li>
+							退款方式：<input type="text" name="refundWay"/>
+						</li>
 
-							<li>
-								<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
-								<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
-							</li>
-						</ul>
-					</div>
-				</form>
-			</div>
-			
-	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:goodsSalesreturn:add">
-					<i class="fa fa-plus"></i> 添加
-				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:goodsSalesreturn:edit">
-					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goodsSalesreturn:remove">
-					<i class="fa fa-remove"></i> 删除
-				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goodsSalesreturn:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
-			</div>
-			<div class="col-sm-12 select-table table-striped">
-				<table id="bootstrap-table" data-mobile-responsive="true"></table>
-			</div>
+						<li>
+							退货状态：<input type="text" name="refundStatus"/>
+						</li>
+
+						<li>
+							<a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+							<a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+						</li>
+					</ul>
+				</div>
+			</form>
+		</div>
+
+		<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+
+			<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:goodsSalesreturn:remove">
+				<i class="fa fa-remove"></i> 删除
+			</a>
+			<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:goodsSalesreturn:export">
+				<i class="fa fa-download"></i> 导出
+			</a>
+		</div>
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
 		</div>
 	</div>
-    <div th:include="include :: footer"></div>
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:remove')}]];
-        var prefix = ctx + "yishengxin/goodsSalesreturn";
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+	var editFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:edit')}]];
+	var removeFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:remove')}]];
+	var types = [[${@dict.getType('goods_salesreturn_status')}]];
+	var types1 = [[${@dict.getType('goods_salesreturn_way')}]];
+	var prefix = ctx + "yishengxin/goodsSalesreturn";
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-				exportUrl: prefix + "/export",
-                modalName: "商品退货",
-				search: false,
-		        showExport: true,
-                columns: [{
-		            checkbox: true
-		        },
+	$(function() {
+		var options = {
+			url: prefix + "/list",
+			createUrl: prefix + "/add",
+			updateUrl: prefix + "/edit/{id}",
+			removeUrl: prefix + "/remove",
+			exportUrl: prefix + "/export",
+			modalName: "商品退货",
+			search: false,
+			showExport: true,
+			columns: [{
+				checkbox: true
+			},
 				{
-					field : 'id', 
+					field : 'id',
 					title : '退货id',
 					visible: false
 				},
 
 				{
-					field : 'orderNumber', 
+					field : 'orderNumber',
 					title : '订单编号',
 					sortable: false
 				},
 				{
-					field : 'orderTime', 
+					field : 'orderTime',
 					title : '订单时间',
 					sortable: false
 				},
 				{
-					field : 'goodsName', 
+					field : 'goodsName',
 					title : '商品的名称',
 					sortable: false
 				},
 
 
 				{
-					field : 'goodsUnitPrice', 
+					field : 'goodsUnitPrice',
 					title : '商品单价',
 					sortable: false
 				},
+
 				{
-					field : 'buyNumber', 
-					title : '购买数量',
-					sortable: false
-				},
-				{
-					field : 'refundWay', 
-					title : '退款方式',
-					sortable: false
-				},
-				{
-					field : 'refundReason', 
+					field : 'refundReason',
 					title : '退款原因',
 					sortable: false
 				},
 				{
-					field : 'reasonFailure', 
+					field : 'reasonFailure',
 					title : '退款失败原因',
 					sortable: false
 				},
 				{
-					field : 'efundInstructions', 
+					field : 'efundInstructions',
 					title : '退款说明',
 					sortable: false
 				},
 				{
-					field : 'refundAmount', 
+					field : 'refundAmount',
 					title : '退款金额',
 					sortable: false,
 					align: 'center',
@@ -134,61 +122,59 @@
 					}
 				},
 				{
-					field : 'refundNumber', 
+					field : 'refundNumber',
 					title : '退货数量',
 					sortable: false
 				},
 				{
-					field : 'refundTime', 
+					field : 'refundTime',
 					title : '申请退款时间',
 					sortable: false
 				},
 				{
-					field : 'refundSerialNumber', 
+					field : 'refundSerialNumber',
 					title : '退款编号',
 					sortable: false
 				},
 				{
-					field : 'refundCompany', 
+					field : 'refundCompany',
 					title : '退货物流公司',
 					sortable: false
 				},
 				{
-					field : 'refundLogistics', 
+					field : 'refundLogistics',
 					title : '退货物流号',
 					sortable: false
 				},
 				{
-					field : 'refundStatus', 
+					field : 'refundWay',
+					title : '退款方式',
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types1, value);
+					}
+				},
+				{
+					field : 'refundStatus',
 					title : '退货状态',
-					sortable: false
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types, value);
+					}
 				},
-
 				{
-					field : 'createTime', 
-					title : '创建时间',
-					sortable: false
-				},
-
-				{
-					field : 'updateTime', 
-					title : '更新时间',
-					sortable: false
-				},
-				
-		        {
-		            title: '操作',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+					title: '操作',
+					align: 'center',
+					formatter: function(value, row, index) {
+						var actions = [];
+						actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+						actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
-    </script>
+					}
+				}]
+		};
+		$.table.init(options);
+	});
+</script>
 </body>
 </html>

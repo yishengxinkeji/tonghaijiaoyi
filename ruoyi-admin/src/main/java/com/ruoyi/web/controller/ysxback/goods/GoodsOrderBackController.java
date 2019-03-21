@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.ysxback.goods;
 import java.util.List;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
+import com.ruoyi.yishengxin.domain.vipUser.VipAddress;
+import com.ruoyi.yishengxin.service.IVipAddressService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,6 +36,9 @@ public class GoodsOrderBackController extends BaseController
 	
 	@Autowired
 	private IGoodsOrderService goodsOrderService;
+
+	@Autowired
+	private IVipAddressService vipAddressService;
 	
 	@RequiresPermissions("yishengxin:goodsOrder:view")
 	@GetMapping()
@@ -87,7 +92,7 @@ public class GoodsOrderBackController extends BaseController
 	}
 
 	/**
-	 * 修改商品订单
+	 * 去发货
 	 */
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, ModelMap mmap){
@@ -97,13 +102,14 @@ public class GoodsOrderBackController extends BaseController
 	}
 	
 	/**
-	 * 修改保存商品订单
+	 * 去发货
 	 */
 	@RequiresPermissions("yishengxin:goodsOrder:edit")
 	@Log(title = "商品订单", businessType = BusinessType.UPDATE)
 	@PostMapping("/edit")
 	@ResponseBody
 	public AjaxResult editSave(GoodsOrder goodsOrder){
+		goodsOrder.setGoodsStatus("待收货");
 	    goodsOrder.setUpdateBy(ShiroUtils.getLoginName());
 		return toAjax(goodsOrderService.updateGoodsOrder(goodsOrder));
 	}

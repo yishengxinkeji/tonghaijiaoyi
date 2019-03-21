@@ -127,7 +127,15 @@ public class GoodsEvaluationController extends BaseFrontController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(@RequestHeader("token") String token, GoodsEvaluation goodsEvaluation) throws IOException {
+    public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
+
+        GoodsEvaluation goodsEvaluation = new GoodsEvaluation();
+        goodsEvaluation.setOid(oid);
+        goodsEvaluation.setEvaluationContent(evaluationContent);
+        goodsEvaluation.setDescribeEvaluation(describeEvaluation);
+        goodsEvaluation.setLogisticsEvaluation(logisticsEvaluation);
+        goodsEvaluation.setServiceAttitude(serviceAttitude);
+        goodsEvaluation.setEvaluationImage(evaluationImage);
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
@@ -139,8 +147,12 @@ public class GoodsEvaluationController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
 
-        goodsEvaluation.setUid(vipUser.getId());
-        List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
+        GoodsEvaluation goodsEvaluation1 = new GoodsEvaluation();
+
+        goodsEvaluation1.setUid(vipUser.getId());
+        goodsEvaluation1.setOid(goodsEvaluation.getOid());
+
+        List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation1);
 
         if (goodsEvaluations.size() > 0) {
             return ResponseResult.responseResult(ResponseEnum.SUCCESS, "已评价");

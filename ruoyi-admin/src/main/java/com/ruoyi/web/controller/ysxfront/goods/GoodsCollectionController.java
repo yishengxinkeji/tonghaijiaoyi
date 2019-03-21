@@ -83,20 +83,26 @@ public class GoodsCollectionController extends BaseFrontController {
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token")String token, int gid) {
         // 校验登录状态
-        VipUser vipUser = userExist(token);
 
-        if (null == vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-
-        }
 
         //校验传参
         if (null == token || "".equals(token) || gid < 0) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
+        VipUser vipUser = userExist(token);
 
+        if (null == vipUser) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
         GoodsCollection goodsCollection = new GoodsCollection();
 
+            GoodsCollection goodsCollection1 = new GoodsCollection();
+            goodsCollection1.setUid(vipUser.getId());
+            goodsCollection1.setGid(gid);
+            List<GoodsCollection> goodsCollections1 = goodsCollectionService.selectGoodsCollectionList(goodsCollection1);
+            if (goodsCollections1.size() >0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
         goodsCollection.setGid(gid);
         goodsCollection.setUid(vipUser.getId());
         List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);

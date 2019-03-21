@@ -3,19 +3,19 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.domain.Gift;
 import com.ruoyi.yishengxin.domain.goods.GoodsShare;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IGiftService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.yishengxin.service.IGoodsShareService;
 
 /**
@@ -34,6 +34,9 @@ public class GoodsShareController extends BaseFrontController
 
 	@Autowired
 	private IVipUserService iVipUserService ;
+
+    @Autowired
+    private IGiftService giftService;
 
     /**
      * 分享商品转赏金
@@ -56,6 +59,11 @@ public class GoodsShareController extends BaseFrontController
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        List<Gift> gifts = giftService.selectGiftList(null);
+        Gift gift = gifts.get(0);
+        String dayGift = gift.getDayGift();
+
+
         VipUser vipUser = userExist(token);
         //校验传参
         Integer id = vipUser.getId();
@@ -65,7 +73,7 @@ public class GoodsShareController extends BaseFrontController
             VipUser vipUser1 = iVipUserService.selectVipUserById(id);
             String sslMoney = vipUser1.getSslMoney();
 
-            String ssl = goodsShare1.getBounty();
+            String ssl = dayGift;
 
             BigDecimal bigDecimal = new BigDecimal(sslMoney);
             BigDecimal bigDecimal1 = new BigDecimal(ssl);
@@ -100,7 +108,7 @@ public class GoodsShareController extends BaseFrontController
                 VipUser vipUser1 = iVipUserService.selectVipUserById(id);
                 String sslMoney = vipUser1.getSslMoney();
 
-                String ssl = goodsShare1.getBounty();
+                String ssl = dayGift;
 
                 BigDecimal bigDecimal = new BigDecimal(sslMoney);
                 BigDecimal bigDecimal1 = new BigDecimal(ssl);

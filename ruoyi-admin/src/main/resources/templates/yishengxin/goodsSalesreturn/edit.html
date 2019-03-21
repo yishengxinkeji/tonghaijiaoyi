@@ -2,68 +2,50 @@
 <html  lang="zh" xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
 <body class="white-bg">
     <div class="wrapper wrapper-content animated fadeInRight ibox-content">
         <form class="form-horizontal m" id="form-goodsSalesreturn-edit" th:object="${goodsSalesreturn}">
             <input id="id" name="id" th:field="*{id}"  type="hidden">
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">用户id：</label>
-				<div class="col-sm-8">
-					<input id="uid" name="uid" th:field="*{uid}" class="form-control" type="text">
-				</div>
-			</div>
+
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">订单编号：</label>
 				<div class="col-sm-8">
-					<input id="orderNumber" name="orderNumber" th:field="*{orderNumber}" class="form-control" type="text">
+					<input id="orderNumber" name="orderNumber" th:field="*{orderNumber}" class="form-control" type="text" disabled>
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">订单时间：</label>
-				<div class="col-sm-8">
-					<input id="orderTime" name="orderTime" th:field="*{orderTime}" class="form-control" type="text">
-				</div>
-			</div>
+
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">商品的名称：</label>
 				<div class="col-sm-8">
-					<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text">
+					<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text" disabled>
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品的图片：</label>
-				<div class="col-sm-8">
-					<input id="goodsImages" name="goodsImages" th:field="*{goodsImages}" class="form-control" type="text">
-				</div>
-			</div>
+
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">商品介绍：</label>
 				<div class="col-sm-8">
-					<input id="goodsIntroduce" name="goodsIntroduce" th:field="*{goodsIntroduce}" class="form-control" type="text">
+					<input id="goodsIntroduce" name="goodsIntroduce" th:field="*{goodsIntroduce}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">商品单价：</label>
 				<div class="col-sm-8">
-					<input id="goodsUnitPrice" name="goodsUnitPrice" th:field="*{goodsUnitPrice}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">购买数量：</label>
-				<div class="col-sm-8">
-					<input id="buyNumber" name="buyNumber" th:field="*{buyNumber}" class="form-control" type="text">
+					<input id="goodsUnitPrice" name="goodsUnitPrice" th:field="*{goodsUnitPrice}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退款方式：</label>
 				<div class="col-sm-8">
-					<input id="refundWay" name="refundWay" th:field="*{refundWay}" class="form-control" type="text">
+					<input id="refundWay" name="refundWay" th:field="*{refundWay}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退款原因：</label>
 				<div class="col-sm-8">
-					<input id="refundReason" name="refundReason" th:field="*{refundReason}" class="form-control" type="text">
+					<input id="refundReason" name="refundReason" th:field="*{refundReason}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -79,45 +61,40 @@
 				</div>
 			</div>
 			<div class="form-group">	
-				<label class="col-sm-3 control-label">上传凭证：</label>
+				<label class="col-sm-3 control-label">凭证：</label>
 				<div class="col-sm-8">
-					<input id="ploadDocuments" name="ploadDocuments" th:field="*{ploadDocuments}" class="form-control" type="text">
+					<input id="ploadDocuments" name="ploadDocuments" th:field="*{ploadDocuments}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退款金额：</label>
 				<div class="col-sm-8">
-					<input id="refundAmount" name="refundAmount" th:field="*{refundAmount}" class="form-control" type="text">
+					<input id="refundAmount" name="refundAmount" th:field="*{refundAmount}" class="form-control" type="text" >
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退货数量：</label>
 				<div class="col-sm-8">
-					<input id="refundNumber" name="refundNumber" th:field="*{refundNumber}" class="form-control" type="text">
+					<input id="refundNumber" name="refundNumber" th:field="*{refundNumber}" class="form-control" type="text" disabled>
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">申请退款时间：</label>
-				<div class="col-sm-8">
-					<input id="refundTime" name="refundTime" th:field="*{refundTime}" class="form-control" type="text">
-				</div>
-			</div>
+
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退款编号：</label>
 				<div class="col-sm-8">
-					<input id="refundSerialNumber" name="refundSerialNumber" th:field="*{refundSerialNumber}" class="form-control" type="text">
+					<input id="refundSerialNumber" name="refundSerialNumber" th:field="*{refundSerialNumber}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退货物流公司：</label>
 				<div class="col-sm-8">
-					<input id="refundCompany" name="refundCompany" th:field="*{refundCompany}" class="form-control" type="text">
+					<input id="refundCompany" name="refundCompany" th:field="*{refundCompany}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
 				<label class="col-sm-3 control-label">退货物流号：</label>
 				<div class="col-sm-8">
-					<input id="refundLogistics" name="refundLogistics" th:field="*{refundLogistics}" class="form-control" type="text">
+					<input id="refundLogistics" name="refundLogistics" th:field="*{refundLogistics}" class="form-control" type="text" disabled>
 				</div>
 			</div>
 			<div class="form-group">	
@@ -126,34 +103,14 @@
 					<input id="refundStatus" name="refundStatus" th:field="*{refundStatus}" class="form-control" type="text">
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">创建者：</label>
+
+			<div class="form-group">
+				<label class="col-sm-3 control-label">退货状态：</label>
 				<div class="col-sm-8">
-					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">创建时间：</label>
-				<div class="col-sm-8">
-					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">更新者：</label>
-				<div class="col-sm-8">
-					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">更新时间：</label>
-				<div class="col-sm-8">
-					<input id="updateTime" name="updateTime" th:field="*{updateTime}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">备注：</label>
-				<div class="col-sm-8">
-					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+					<div class="radio-box" th:each="dict : ${@dict.getType('goods_salesreturn_way2')}">
+						<input type="radio" th:id="${dict.dictCode}" name="refundStatus" th:value="${dict.dictValue}" th:field="*{refundStatus}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
 				</div>
 			</div>
 		</form>
