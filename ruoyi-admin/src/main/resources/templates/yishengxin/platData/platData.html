@@ -53,18 +53,23 @@
 				},
 				{
 					field : 'platAccount', 
-					title : '平台收款账号',
-					sortable: true
+					title : '平台收款账号'
 				},
 				{
 					field : 'newsBigPic', 
 					title : '新闻资讯大图片',
-					sortable: true
+					align : 'center',
+					formatter: function(value, row, index) {
+						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+					}
 				},
 				{
 					field : 'noticeBigPic', 
 					title : '公告中心大图片',
-					sortable: true
+					align : 'center',
+					formatter: function(value, row, index) {
+						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+					}
 				},
 		        {
 		            title: '操作',

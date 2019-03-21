@@ -144,8 +144,8 @@ public class VipBuyController extends BaseController
 	public AjaxResult updateDetail(@RequestParam("file") MultipartFile file) {
 		try {
 			if (!file.isEmpty()) {
-				String avatar = FileUploadUtils.upload(Global.getAvatarPath(), file);
-				return AjaxResult.success(Global.getAvatarPath() + avatar);
+				String avatar = FileUploadUtils.upload(Global.getFrontPath(), file);
+				return AjaxResult.success(avatar);
 			}
 			return error();
 		} catch (Exception e) {

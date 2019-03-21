@@ -972,7 +972,7 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult kline(@RequestParam(value = "type",defaultValue = "day") String type){
 
         List n_list = new LinkedList();
-        if(type.equalsIgnoreCase("day") || type.equalsIgnoreCase("week")){
+        if(type.equalsIgnoreCase("day")){
 
             String now = DateUtil.format(DateUtil.offsetDay(new Date(),1), DateUtils.YYYY_MM_DD); //明天
 
@@ -1046,6 +1046,47 @@ public class TradeRecordController extends BaseFrontController {
 
         }
         return ResponseResult.success();
+    }
+
+
+    /**
+     * k线每次请求
+     * @return
+     */
+    @GetMapping("/ktime")
+    public ResponseResult ktime(){
+        String now = DateUtil.format(DateUtil.offsetMinute(new Date(),1), DateUtils.YYYY_MM_DD_HH_MM_SS); //1分钟后
+
+        String begin = DateUtil.format(DateUtil.offsetMinute(new Date(), -10),DateUtils.YYYY_MM_DD_HH_MM_SS); //10分钟前
+
+        List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.parse(begin),DateUtil.parse(now));
+
+        List n_list = new LinkedList();
+        list.stream().forEach(map -> {
+            List<String> list1 = new ArrayList();
+            Map map1 = new HashMap();
+            map1.put("name",map.get("time"));
+            list1.add(0,map.get("time"));
+            list1.add(1,map.get("number"));
+            map1.put("value",list1);
+            n_list.add(map1);
+        });
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
+    }
+
+    /**
+     * 交易说明
+     * @param id
+     * @return
+     */
+    @GetMapping("/explain")
+    public ResponseResult explain(@RequestParam("id") String id){
+        TradeExplain tradeExplain = tradeExplainService.selectTradeExplainById(Integer.parseInt(id));
+        Map map = new HashMap();
+        map.put("id",tradeExplain.getId());
+        map.put("title",tradeExplain.getTitle());
+        map.put("content",tradeExplain.getContent());
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
 

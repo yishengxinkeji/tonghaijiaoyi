@@ -75,7 +75,10 @@
 				{
 					field : 'newsPic', 
 					title : '新闻图片',
-					sortable: true
+					align : 'center',
+					formatter: function(value, row, index) {
+						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+					}
 				},
 				{
 					field : 'newsIntroduction', 

@@ -34,16 +34,10 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">打款凭证：</label>
 			<div class="col-sm-8">
-				<button type="button" class="layui-btn" id="test1">
-					上传图片
-				</button>
+				<div class="col-sm-8">
+					<img style="width: 200px;height: 200px;" id="pic" th:src="*{buyDetail}">
+				</div>
 				<input id="buyDetail" name="buyDetail" th:field="*{buyDetail}" class="form-control" type="hidden">
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="col-sm-3 control-label"></label>
-			<div class="col-sm-8">
-				<img style="width: 200px;height: 200px;" id="pic">
 			</div>
 		</div>
 	</form>
@@ -51,25 +45,6 @@
 <div th:include="include::footer"></div>
 <script type="text/javascript">
 	var prefix = ctx + "yishengxin/vipBuy";
-	layui.use('upload', function(){
-		var upload = layui.upload;
-
-		//执行实例
-		var uploadInst = upload.render({
-			elem: '#test1' //绑定元素
-			,url: prefix+'/upload/' //上传接口
-			,done: function(res){
-				//上传完毕回调
-				if(res.code == "0"){
-					$("#pic").attr("src",res.msg);
-					$("#buyDetail").val(res.msg);
-				}
-			}
-			,error: function(){
-				//请求异常回调
-			}
-		});
-	});
 	$("#form-vipExchange-edit").validate({
 		rules:{
 			xxxx:{
