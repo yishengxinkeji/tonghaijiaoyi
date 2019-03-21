@@ -74,6 +74,9 @@ public enum ResponseEnum {
     GOODS__OPERARETURNMANY_ERROR("2024","商品退货已完成，请不要重复操作"),
     GOODS_COOLECTION_ERROR("2025","已添加收藏"),
     GIIDS_PLPADDOCMENTS_ERROR("2026","退货没上传凭证"),
+    GIIDS_TRADING_ERROR("2027","请添加支付密码"),
+
+
     FAIL("500","失败"),
     VIP_TOKEN_FAIL("9999","需重新登陆");
 

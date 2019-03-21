@@ -124,29 +124,20 @@ public class GoodsSalesreturnBackController extends BaseController
 	@ResponseBody
 	public AjaxResult editSave(GoodsSalesreturn goodsSalesreturn){
 	    goodsSalesreturn.setUpdateBy(ShiroUtils.getLoginName());
-		String orderNumber = goodsSalesreturn.getOrderNumber();
-		GoodsOrder goodsOrder1 = goodsOrderService.selectByOraderNumber(orderNumber);
+		GoodsSalesreturn goodsSalesreturn2 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
+		String orderNumber1 = goodsSalesreturn2.getOrderNumber();
+
+		GoodsOrder goodsOrder1 = goodsOrderService.selectByOraderNumber(orderNumber1);
 		Integer orderID = goodsOrder1.getId();
 
-		GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
 
-		if (goodsSalesreturn1.getRefundStatus().equals("3") || goodsSalesreturn1.getRefundStatus().equals("4") || goodsSalesreturn1.getRefundStatus().equals("5") || goodsSalesreturn1.getRefundStatus().equals("6")) {
-			ResponseResult.responseResult(ResponseEnum.GOODS__OPERARETURNMANY_ERROR);
-
-		}
-		if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("1")) {
-			goodsSalesreturn.setRefundStatus("3");
-		} else if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("2")) {
-			goodsSalesreturn.setRefundStatus("4");
-		} else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("1")) {
-			goodsSalesreturn.setRefundStatus("5");
-		} else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("2")) {
-			goodsSalesreturn.setRefundStatus("6");
+		if(goodsSalesreturn2.getRefundStatus().equals("3") || goodsSalesreturn2.getRefundStatus().equals("5")){
+			return toAjax(goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn2));
 		}
 		int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn);
 
 		if (i > 0) {
-			if (goodsSalesreturn.getRefundStatus().equals("1")) {
+			if (goodsSalesreturn.getRefundStatus().equals("3") || goodsSalesreturn.getRefundStatus().equals("5") ) {
 
 				GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderID);
 

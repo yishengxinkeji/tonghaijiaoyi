@@ -53,7 +53,7 @@ public class GoodsOrderController extends BaseFrontController {
     public ResponseResult addSave(@RequestHeader("token")String token, GoodsOrder goodsOrder) {
 
         //校验传参
-        if (null == token || "".equals(token) || goodsOrder == null) {
+        if (null == token || "".equals(token) || null == goodsOrder) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
         // 校验登录状态
