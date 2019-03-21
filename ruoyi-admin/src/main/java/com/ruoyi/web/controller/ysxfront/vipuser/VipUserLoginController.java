@@ -105,7 +105,7 @@ public class VipUserLoginController extends BaseFrontController {
         //未领取新人礼包
         new_User.setNewReceive(CustomerConstants.NO);
 
-        if(inviCode != null || !"".equals(inviCode)) {
+        if(inviCode != null && !inviCode.isEmpty()) {
             vipUser.setPhone("");
             vipUser.setRecommendCode(inviCode);
             List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
