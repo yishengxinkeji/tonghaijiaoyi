@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
+import cn.hutool.http.useragent.UserAgentUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -99,13 +100,12 @@ public class VipUserLoginController extends BaseFrontController {
        // new_User.setInviteLink(Base64Encoder.encode(CustomerConstants.PRE_INVI_LINK+exten));
         new_User.setInviteLink(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten);
 
-
         new_User.setHkdMoney("0");
         new_User.setSslMoney("0");
         //未领取新人礼包
         new_User.setNewReceive(CustomerConstants.NO);
 
-        if(inviCode != null) {
+        if(inviCode != null && !inviCode.isEmpty()) {
             vipUser.setPhone("");
             vipUser.setRecommendCode(inviCode);
             List<VipUser> userList = vipUserService.selectVipUserList(vipUser);

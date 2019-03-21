@@ -148,13 +148,19 @@ public class HomePageController {
 
     /**
      * 项目展示
+     * @param currentNum  当前页数
+     * @param pageSize      每页显示的记录数
      * @return
      */
-    @GetMapping("/project/{number}")
-    public ResponseResult project(@PathVariable("number") String number){
+    @GetMapping("/project")
+    public ResponseResult project(@RequestParam(value = "currentNum",defaultValue = "1") String currentNum,@RequestParam(value = "pageSize",required = false,defaultValue = CustomerConstants.PAGE_SIZE) String pageSize){
+
+        //当前页初始值
+        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+        int endNumber =  beginNumber + Integer.parseInt(pageSize);
 
         Project project1 = new Project();
-        project1.getParams().put("Project"," order by project_time desc limit 0," + number );
+        project1.getParams().put("Project"," order by project_time desc limit "+beginNumber+"," + (endNumber-1)  );
         List<Project> projects = projectService.selectProjectList(project1);
 
         List list = new ArrayList();

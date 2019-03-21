@@ -152,4 +152,4 @@ gen:
 
 #通海交易前端注册链接,用于邀请二维码,跳转注册页面
 tonghaijiaoyi:
-  link: 192.168.1.111:80/login
+  link: 122.114.239.176:8081/dist/index.html
