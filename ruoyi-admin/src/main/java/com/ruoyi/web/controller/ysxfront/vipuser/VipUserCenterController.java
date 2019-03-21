@@ -211,6 +211,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(toId.equals(String.valueOf(vipUser.getId())) || toMoneyCode.equals(vipUser.getMoneyCode()) ){
+            return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
+        }
+
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
             //用户已被冻结
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
@@ -235,17 +239,17 @@ public class VipUserCenterController extends BaseFrontController {
         //ssl每笔最低互转量
         double minSslDeliverTime = 0.00;
         //hkd每天最大互转量
-        double maxHdkDeliverDay = 0.00;
-        //hkd每笔最大互转量
-        double maxHdkTradeTime = 0.00;
+        double maxHkdDeliverDay = 0.00;
+        //hkd每笔最小互转量
+        double minHkdDeliverTime = 0.00;
 
         List<Trade> trades = tradeService.selectTradeList(new Trade());
         if(trades.size() > 0){
 
             maxSslDeliverDay  =Double.parseDouble(trades.get(0).getMaxSslDeliverDay());
             minSslDeliverTime =Double.parseDouble(trades.get(0).getMinSslDeliverTime());
-            maxHdkDeliverDay =Double.parseDouble(trades.get(0).getMaxHdkDeliverDay());
-            maxHdkTradeTime =Double.parseDouble(trades.get(0).getMaxHdkTradeTime());
+            maxHkdDeliverDay =Double.parseDouble(trades.get(0).getMaxHdkDeliverDay());
+            minHkdDeliverTime =Double.parseDouble(trades.get(0).getMinHdkDeliverTime());
 
         }
 
@@ -283,18 +287,14 @@ public class VipUserCenterController extends BaseFrontController {
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
                 }
 
-                if(Double.parseDouble(number) > maxHdkTradeTime){
+                if(Double.parseDouble(number) > maxHkdDeliverDay){
                     //单次交易已达上限
                     return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_TIME);
                 }
-
-                vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
-                String tranDay = vipTradeService.selectTranByDay(vipTrade);
-                if(Double.parseDouble(tranDay) > maxHdkDeliverDay){
-                    //今日交易已达上限
-                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                if(Double.parseDouble(number) < minHkdDeliverTime){
+                    //单次转出少于最小转出
+                    return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
                 }
-
                 int i = vipUserService.tranSport(myVip,vipUsers.get(0),type,number,tranMoney);
                 if(i > 0){
                     return ResponseResult.success();
