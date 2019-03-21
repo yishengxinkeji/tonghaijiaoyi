@@ -74,7 +74,7 @@ public interface GoodsOrderMapper
 	 * @param orderNumber 订单号
 	 * @return 结果
 	 */
-	@Select("select * from ysx_goods_order where orderNumber={orderNumber}")
+	@Select("select * from ysx_goods_order where orderNumber=#{orderNumber}")
 	public GoodsOrder selectByOraderNumber(String orderNumber);
 
 }

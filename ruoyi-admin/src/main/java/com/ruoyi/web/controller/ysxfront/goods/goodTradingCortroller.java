@@ -27,6 +27,13 @@ public class goodTradingCortroller extends BaseFrontController{
     @Autowired
     IGoodsOrderService iGoodsOrderService;
 
+//    public static void main(String[] args) {
+//        BigDecimal bigDecimal = new BigDecimal("0.12");
+//        BigDecimal bigDecimal1 = new BigDecimal("1");
+//        BigDecimal subtract = bigDecimal.subtract(bigDecimal1);
+//        int i = subtract.compareTo(new BigDecimal(0));
+//        System.out.println(i == -1);
+//    }
     /**
      *
      * @param token 令牌
@@ -54,20 +61,25 @@ public class goodTradingCortroller extends BaseFrontController{
         Integer id = vipUser.getId();
 
         VipUser vipUser1 = iVipUserService.selectVipUserById(id);
-        if (vipUser1 == null){
+        if (null == vipUser1){
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_NULL);
         }
         String tradePassword1 = vipUser1.getTradePassword();
+        if(null == tradePassword1 || "".equals(tradePassword)){
+            return ResponseResult.responseResult(ResponseEnum.GIIDS_TRADING_ERROR);
+        }
+
         tradePassword = DigestUtils.md5Hex(tradePassword + vipUser1.getSalt());
         if (tradePassword1.equals(tradePassword)){
             String sslMoney = vipUser1.getSslMoney();
 
             BigDecimal bigDecimal = new BigDecimal(sslMoney);
             BigDecimal bigDecimal1 = new BigDecimal(orderTotalAmount);
+
             BigDecimal subtract = bigDecimal.subtract(bigDecimal1);
             int i = subtract.compareTo(new BigDecimal(0));
             if (i < 0){
-                ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
+             return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
             }
             String ssh = subtract.toString();
             vipUser1.setSslMoney(ssh);

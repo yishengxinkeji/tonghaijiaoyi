@@ -122,6 +122,56 @@ public class GoodsEvaluationController extends BaseFrontController {
 
 
     /**
+     * 用户查询商品评价列表
+     */
+    @PostMapping("/personalList")
+    @ResponseBody
+    public ResponseResult userlist(@RequestHeader("token") String token,GoodsEvaluation goodsEvaluation) {
+        //传商品id gid
+        // 校验登录状态
+        VipUser vipUser1 = userExist(token);
+
+        if (null == vipUser1) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        //校验传参
+        if (null == token || "".equals(token)) {
+            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+        }
+        Integer id = vipUser1.getId();
+        goodsEvaluation.setUid(id);
+        List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
+        List<VipUserEvaluation> vipUserEvaluations = new ArrayList<>();
+
+        for (int i = 0; i < goodsEvaluations.size(); i++) {
+
+            VipUserEvaluation vipUserEvaluation = new VipUserEvaluation();
+
+            GoodsEvaluation goodsEvaluation1 = goodsEvaluations.get(i);
+            GoodsEvalutionVo goodsEvalutionVo = new GoodsEvalutionVo();
+            String evaluationImage = goodsEvaluation1.getEvaluationImage();
+            if (null != evaluationImage || "".equals(evaluationImage)) {
+                String[] split = evaluationImage.split(",");
+                goodsEvalutionVo.setEvaluationImage(split);
+            }
+
+            goodsEvalutionVo.setDescribeEvaluation(goodsEvaluation1.getDescribeEvaluation());
+            goodsEvalutionVo.setEvaluationContent(goodsEvaluation1.getEvaluationContent());
+
+            Integer uid = goodsEvaluation1.getUid();
+            VipUser vipUser = iVipUserService.selectVipUserById(uid);
+            vipUserEvaluation.setVipUser(vipUser);
+            vipUserEvaluation.setGoodsEvalutionVo(goodsEvalutionVo);
+            vipUserEvaluations.add(vipUserEvaluation);
+
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, vipUserEvaluations);
+    }
+
+
+
+
+    /**
      * 新增保存商品评价
      */
 
