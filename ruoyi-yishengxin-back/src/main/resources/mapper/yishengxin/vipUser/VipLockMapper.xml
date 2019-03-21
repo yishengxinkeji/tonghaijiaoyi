@@ -21,7 +21,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
     <select id="selectVipLockList" parameterType="VipLock" resultMap="VipLockResult">
         <include refid="selectVipLockVo"/>
-        <where>  
+        <where>
+            1=1
             <if test="id != null "> and id = #{id}</if>
              <if test="vipId != null "> and vip_id = #{vipId}</if>
              <if test="lockTime != null  and lockTime != '' "> and lock_time = #{lockTime}</if>
@@ -31,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="lockStatus != null  and lockStatus != '' "> and lock_status = #{lockStatus}</if>
              <if test="lockExpire != null  and lockExpire != '' "> and lock_expire = #{lockExpire}</if>
          </where>
+        ${params.VipLock}
     </select>
     
     <select id="selectVipLockById" parameterType="Integer" resultMap="VipLockResult">
