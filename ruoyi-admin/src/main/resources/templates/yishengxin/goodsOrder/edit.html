@@ -6,126 +6,95 @@
 <link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
 <link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-goodsOrder-edit" th:object="${goodsOrder}">
-            <input id="id" name="id" th:field="*{id}"  type="hidden">
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">用户的id：</label>
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+	<form class="form-horizontal m" id="form-goodsOrder-edit" th:object="${goodsOrder}">
+		<input id="id" name="id" th:field="*{id}"  type="hidden">
+		<div class="form-group">
+			<label class="col-sm-3 control-label">用户的id：</label>
+			<div class="col-sm-8">
+				<input id="uid" name="uid" th:field="*{uid}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品名称：</label>
+			<div class="col-sm-8">
+				<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品介绍：</label>
+			<div class="col-sm-8">
+				<input id="goodsDetails" name="goodsDetails" th:field="*{goodsDetails}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品价格：</label>
+			<div class="col-sm-8">
+				<input id="goodsPrice" name="goodsPrice" th:field="*{goodsPrice}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品购买数量：</label>
+			<div class="col-sm-8">
+				<input id="goodsSoldNumber" name="goodsSoldNumber" th:field="*{goodsSoldNumber}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">商品订单总额：</label>
+			<div class="col-sm-8">
+				<input id="goodsOrderTotalAmount" name="goodsOrderTotalAmount" th:field="*{goodsOrderTotalAmount}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">快递单号：</label>
+			<div class="col-sm-8">
+				<input id="courierNumber" name="courierNumber" th:field="*{courierNumber}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">快递公司：</label>
+			<div class="col-sm-8">
+				<input id="courierCompany" name="courierCompany" th:field="*{courierCompany}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">订单号：</label>
+			<div class="col-sm-8">
+				<input id="orderNumber" name="orderNumber" th:field="*{orderNumber}" class="form-control" type="text" disabled>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label">收货地址：</label>
+			<div class="col-sm-8">
+				<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-3 control-label"></label>
+			<div class="col-sm-8">
 				<div class="col-sm-8">
-					<input id="uid" name="uid" th:field="*{uid}" class="form-control" type="text">
+					<input id="goodsStatus" name="goodsStatus" th:field="*{goodsStatus}" class="form-control" type="hidden">
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品名称：</label>
-				<div class="col-sm-8">
-					<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品详情：</label>
-				<div class="col-sm-8">
-					<input id="goodsDetails" name="goodsDetails" th:field="*{goodsDetails}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品价格：</label>
-				<div class="col-sm-8">
-					<input id="goodsPrice" name="goodsPrice" th:field="*{goodsPrice}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品购买数量：</label>
-				<div class="col-sm-8">
-					<input id="goodsSoldNumber" name="goodsSoldNumber" th:field="*{goodsSoldNumber}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品订单总额：</label>
-				<div class="col-sm-8">
-					<input id="goodsOrderTotalAmount" name="goodsOrderTotalAmount" th:field="*{goodsOrderTotalAmount}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label">商品(主图)：</label>
-				<div class="col-sm-8">
-					<button type="button" class="layui-btn" id="test5">
-						上传图片
-					</button>
-					<input id="newsPic5" name="goodsPicture" th:field="*{goodsPicture}" class="form-control" type="hidden">
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-3 control-label"></label>
-				<div class="col-sm-8">
-					<img style="width: 200px;height: 200px;" id="pic5">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品状态：</label>
-				<div class="col-sm-8">
-					<input id="goodsStatus" name="goodsStatus" th:field="*{goodsStatus}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">收货地址id：</label>
-				<div class="col-sm-8">
-					<input id="shippingAddress" name="shippingAddress" th:field="*{shippingAddress}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">快递单号：</label>
-				<div class="col-sm-8">
-					<input id="courierNumber" name="courierNumber" th:field="*{courierNumber}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">快递公司：</label>
-				<div class="col-sm-8">
-					<input id="courierCompany" name="courierCompany" th:field="*{courierCompany}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">订单号：</label>
-				<div class="col-sm-8">
-					<input id="orderNumber" name="orderNumber" th:field="*{orderNumber}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">创建者：</label>
-				<div class="col-sm-8">
-					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text">
-				</div>
-			</div>
+		</div>
+	</form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+	var prefix = ctx + "yishengxin/goodsOrder";
+	$("#form-goodsOrder-edit").validate({
+		rules:{
+			xxxx:{
+				required:true,
+			},
+		}
+	});
 
-		</form>
-    </div>
-    <div th:include="include::footer"></div>
-    <script type="text/javascript">
-
-		layui.use(['upload','laydate'], function(){
-			var upload = layui.upload;
-			var laydate = layui.laydate;
-
-			//执行实例
-			var uploadInst = upload.render({
-				elem: '#test5' //绑定元素
-				,url: prefix+'/upload/' //上传接口
-				,done: function(res){
-					//上传完毕回调
-					if(res.code == "0"){
-						$("#pic5").attr("src",res.msg);
-						$("#newsPic5").val(res.msg);
-					}
-				}
-				,error: function(){
-					//请求异常回调
-				}
-			});
-			laydate.render({
-				elem: '#newsTime' //指定元素
-			});
-		});
-
-	</script>
+	function submitHandler() {
+		if ($.validate.form()) {
+			$.operate.save(prefix + "/edit", $('#form-goodsOrder-edit').serialize());
+		}
+	}
+</script>
 </body>
 </html>

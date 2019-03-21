@@ -134,6 +134,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         goodsSalesreturn.setPloadDocuments(ploadDocuments);
         goodsSalesreturn.setRefundWay(refundWay);
         goodsSalesreturn.setEfundInstructions(efundInstructions);
+        goodsSalesreturn.setRefundReason(refundReason);
         VipUser vipUser = userExist(token);
 
         if (vipUser == null) {

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            商品名：<input type="text" name="goodsName"/>
+                        </li>
+
+
+                        <li class="select-time">
+                            <label>开始时间： </label>
+                            <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="startTime"/>
+                            <span>-</span>
+                            <input type="text" class="time-input" id="stopTime" placeholder="结束时间" name="stopTime"/>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i
+                                    class="fa fa-search"></i>&nbsp;查询</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+        </div>
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('yishengxin:goodsStatistics:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('yishengxin:goodsStatistics:remove')}]];
+    var prefix = ctx + "yishengxin/goodsStatistics";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            modalName: "售量统计",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+
+                {
+                    field: 'startTime',
+                    title: '开始时间',
+
+                },
+                {
+                    field: 'goodsName',
+                    title: '商品名',
+
+                },
+                {
+                    field: 'stopTime',
+                    title: '结束时间',
+
+                },
+                {
+                    field: 'sales',
+                    title: '售量',
+
+
+
+
+
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>
