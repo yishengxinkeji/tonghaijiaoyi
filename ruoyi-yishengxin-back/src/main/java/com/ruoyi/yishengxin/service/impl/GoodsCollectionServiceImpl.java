@@ -68,5 +68,10 @@ public class GoodsCollectionServiceImpl implements IGoodsCollectionService
 	{
 		return goodsCollectionMapper.deleteGoodsCollectionByIds(Convert.toStrArray(ids));
 	}
-	
+
+	@Override
+	public int deleteGoodsCollectionByGid(Integer uid, Integer gid) {
+		return goodsCollectionMapper.deleteGoodsCollectionByGid(uid,gid);
+	}
+
 }

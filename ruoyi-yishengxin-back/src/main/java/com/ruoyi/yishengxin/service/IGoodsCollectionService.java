@@ -2,6 +2,8 @@ package com.ruoyi.yishengxin.service;
 
 
 import com.ruoyi.yishengxin.domain.goods.GoodsCollection;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -44,5 +46,14 @@ public interface IGoodsCollectionService
      * @return 结果
      */
 	public int deleteGoodsCollectionByIds(String ids);
+
+	/**
+	 * 用户删除特定商品收藏
+	 *
+	 * @param
+	 * @return 结果
+	 */
+
+	public int deleteGoodsCollectionByGid(Integer uid, Integer gid);
 	
 }
