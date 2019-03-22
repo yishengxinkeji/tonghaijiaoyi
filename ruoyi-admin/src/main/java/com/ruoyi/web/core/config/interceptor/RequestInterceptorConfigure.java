@@ -7,8 +7,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class RequestInterceptorConfigure implements WebMvcConfigurer {
 
-    @Override
+  /*  @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new OneInterceptor()).addPathPatterns("/front/**");
-    }
+    }*/
 }
