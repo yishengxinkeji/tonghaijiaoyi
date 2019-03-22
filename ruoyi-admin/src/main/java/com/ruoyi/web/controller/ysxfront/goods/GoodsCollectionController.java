@@ -47,20 +47,18 @@ public class GoodsCollectionController extends BaseFrontController {
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
-
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-
         }
         GoodsCollection goodsCollection = new GoodsCollection();
         goodsCollection.setUid(vipUser.getId());
         //查询列表
         List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
         if (goodsCollections.size() == 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS, "数据为空");
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsCollections);
         }
         List<GoodsCollectionVo> goodsCollectionVos = new ArrayList<>();
         for (int i = 0; i < goodsCollections.size(); i++) {
@@ -71,7 +69,6 @@ public class GoodsCollectionController extends BaseFrontController {
             goodsCollectionVo.setGoodsCollectionId(id);
             goodsCollectionVo.setGoods(goods);
             goodsCollectionVos.add(goodsCollectionVo);
-
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsCollectionVos);
     }
@@ -83,7 +80,6 @@ public class GoodsCollectionController extends BaseFrontController {
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token")String token, int gid) {
         // 校验登录状态
-
 
         //校验传参
         if (null == token || "".equals(token) || gid < 0) {
