@@ -93,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isAppeal != null  and isAppeal != ''  ">#{isAppeal},</if>
             <if test="appealStatus != null  and appealStatus != ''  ">#{appealStatus},</if>
             <if test="proof != null  and proof != ''  ">#{proof},</if>
-            <if test="tradeFailStatus != null and tradeFailStatus proof != ''  ">#{tradeFailStatus},</if>
+            <if test="tradeFailStatus != null and tradeFailStatus != ''  ">#{tradeFailStatus},</if>
          </trim>
     </insert>
 	 
