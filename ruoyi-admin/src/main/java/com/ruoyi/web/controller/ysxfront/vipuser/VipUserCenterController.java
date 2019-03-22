@@ -139,15 +139,12 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        long expireTime = RedisUtils.getExpireTime(token);
-        System.out.println(expireTime);
         try {
             if (!file.isEmpty()) {
                 //图片地址
                 String path = uploadFile(file);
                 vipUser.setAvater(Global.getFrontPath()+path);
                 if(vipUserService.updateVipUser(vipUser) > 0){
-
                     RedisUtils.setJson(token,vipUser, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
                     return ResponseResult.responseResult(ResponseEnum.SUCCESS,Global.getFrontPath()+path);
                 }
