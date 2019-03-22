@@ -297,6 +297,14 @@ public class GoodsOrderController extends BaseFrontController {
                     goodsOrders.get(i).setGoodsStatus(refundStatus);
                 }
             }
+            if (goodsOrders.size()  > 0) {
+                for (int i = 0; i < goodsOrders.size(); i++) {
+                    if (goodsOrders.get(i).getGoodsStatus().equals("删除交易")){
+                        goodsOrders.remove(goodsOrders.get(i));
+                    }
+                }
+            }
+
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
