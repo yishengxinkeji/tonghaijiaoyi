@@ -52,4 +52,8 @@ public class VipTradeHkdBuy extends BaseEntity
 	private String proof;
 	//订单失败前状态
 	private String tradeFailStatus;
+	/** 卖方账户号 */
+	private String saleAccount;
+	/** 卖方账号图片 */
+	private String saleAccountProof;
 }

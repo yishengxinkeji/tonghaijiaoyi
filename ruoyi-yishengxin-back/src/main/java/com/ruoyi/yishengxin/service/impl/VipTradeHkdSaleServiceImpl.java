@@ -7,12 +7,10 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.constant.CustomerConstants;
-import com.ruoyi.common.enums.ProfitType;
 import com.ruoyi.common.enums.TradeStatus;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.exception.frontException.VipUserException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.yishengxin.domain.Distribution;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.mapper.DistributionMapper;
@@ -110,10 +108,11 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      * 挂卖HKD
      * @param vipUser
      * @param number
+     * @param vipAccount
      * @return
      */
     @Override
-    public int saleHkd(VipUser vipUser, String number) {
+    public int saleHkd(VipUser vipUser, String number, VipAccount vipAccount) {
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
         double hkd = Double.parseDouble(vipUser1.getHkdMoney());
@@ -158,6 +157,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
         vipTradeHkdSale.setSaleTotal(String.valueOf(mulCharge));    //实际订单数量,是扣除手续费之后的数量
         vipTradeHkdSale.setSaleType(TradeType.SALE_HKD.getCode());
+        vipTradeHkdSale.setSaleAccount(vipAccount.getAccountNumber());
+        vipTradeHkdSale.setSaleAccountProof(vipAccount.getAccountImg());
 
         vipTradeHkdSaleMapper.insertVipTradeHkdSale(vipTradeHkdSale);
         double sub = NumberUtil.sub(hkd, Double.parseDouble(number));

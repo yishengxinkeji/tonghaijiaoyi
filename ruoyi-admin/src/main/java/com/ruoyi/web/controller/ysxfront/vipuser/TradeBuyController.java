@@ -247,15 +247,6 @@ public class TradeBuyController extends BaseFrontController {
             //订单
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
 
-            VipAccount vipAccount = new VipAccount();
-            vipAccount.setIsDefault(CustomerConstants.YES);
-            vipAccount.setVipId(vipUser.getId());
-            List<VipAccount> vipAccounts = accountService.selectVipAccountList(vipAccount);
-            if(vipAccounts.size() == 0){
-                //缺少默认收款账户
-                return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
-            }
-
             Map map = new HashMap();
             map.put("orderNo",vipTradeHkdBuy.getBuyNo());
             map.put("time",vipTradeHkdBuy.getBuyTime());
@@ -263,8 +254,8 @@ public class TradeBuyController extends BaseFrontController {
             map.put("total",vipTradeHkdBuy.getBuyTotal());
             map.put("saleId",vipTradeHkdBuy.getSaleId());
             map.put("salePhone",vipTradeHkdBuy.getSalePhone());
-            map.put("saleAccount",vipAccounts.get(0).getAccountNumber());
-            map.put("accountImg",vipAccounts.get(0).getAccountImg());
+            map.put("saleAccount",vipTradeHkdBuy.getSaleAccount());
+            map.put("accountImg",vipTradeHkdBuy.getSaleAccountProof());
             map.put("id",id);
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);

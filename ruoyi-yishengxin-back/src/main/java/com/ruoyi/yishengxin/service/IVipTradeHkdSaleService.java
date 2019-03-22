@@ -1,6 +1,7 @@
 package com.ruoyi.yishengxin.service;
 
 import cn.hutool.core.date.DateTime;
+import com.ruoyi.yishengxin.domain.vipUser.VipAccount;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
@@ -58,9 +59,10 @@ public interface IVipTradeHkdSaleService
 	 * 挂卖HKD
 	 * @param vipUser
 	 * @param number
+	 * @param vipAccount
 	 * @return
 	 */
-    int saleHkd(VipUser vipUser, String number);
+    int saleHkd(VipUser vipUser, String number, VipAccount vipAccount);
 
 	/**
 	 * 确认收款

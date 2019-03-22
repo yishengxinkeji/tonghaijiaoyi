@@ -137,6 +137,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
             vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
 
+
             vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
@@ -152,6 +153,8 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdBuy.setSalePhone(saleUser.getPhone());
             vipTradeHkdBuy.setIsAppeal(CustomerConstants.NO);
             vipTradeHkdBuy.setBuyType(TradeType.BUY_HKD.getCode());
+            vipTradeHkdBuy.setSaleAccount(vipTradeHkdSale.getSaleAccount());
+            vipTradeHkdBuy.setSaleAccountProof(vipTradeHkdSale.getSaleAccountProof());
 
             vipTradeHkdBuyMapper.insertVipTradeHkdBuy(vipTradeHkdBuy);
 
@@ -172,6 +175,8 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdBuy.setSalePhone(saleUser.getPhone());
             vipTradeHkdBuy.setIsAppeal(CustomerConstants.NO);
             vipTradeHkdBuy.setBuyType(TradeType.BUY_HKD.getCode());
+            vipTradeHkdBuy.setSaleAccount(vipTradeHkdSale.getSaleAccount());
+            vipTradeHkdBuy.setSaleAccountProof(vipTradeHkdSale.getSaleAccountProof());
 
             vipTradeHkdBuyMapper.insertVipTradeHkdBuy(vipTradeHkdBuy);
 
