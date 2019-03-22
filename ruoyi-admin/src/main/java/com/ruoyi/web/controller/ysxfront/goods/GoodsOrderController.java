@@ -195,9 +195,9 @@ public class GoodsOrderController extends BaseFrontController {
 
     @PostMapping("/remove")
     @ResponseBody
-    public ResponseResult remove(@RequestHeader("token")String token, String ids,@RequestParam("oid")int oid) {
+    public ResponseResult remove(@RequestHeader("token")String token,@RequestParam("oid")int oid) {
         //校验传参
-        if (null == token || "".equals(token) || ids.length() == 0 || null == token) {
+        if (null == token || "".equals(token) || null == token) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
 
@@ -217,6 +217,12 @@ public class GoodsOrderController extends BaseFrontController {
 
         return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_REMOVEERROR);
     }
+
+
+
+
+
+
 
     /**
      * 客户端查询各种订单状态接口
@@ -243,9 +249,17 @@ public class GoodsOrderController extends BaseFrontController {
         if(null != goodsOrder.getId()){
             goodsOrder.setUid(vipUser.getId());
             GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(goodsOrder.getId());
-            Integer shippingAddress = goodsOrder1.getShippingAddress();
+            String remark = goodsOrder1.getRemark();
+            String[] split = remark.split(" - ");
+            VipAddress vipAddress = new VipAddress ();
 
-            VipAddress vipAddress = vipAddressService.selectVipAddressById(shippingAddress);
+            vipAddress.setReceivUser(split[0]);
+            vipAddress.setPhone(split[1]);
+            vipAddress.setProvince(split[2]);
+            vipAddress.setCity(split[3]);
+            vipAddress.setDistrict(split[4]);
+            vipAddress.setAddressDetail(split[5]);
+
             OraderVo oraderVo = new OraderVo();
             oraderVo.setGoodsOrder(goodsOrder1);
             oraderVo.setVipAddress(vipAddress);
