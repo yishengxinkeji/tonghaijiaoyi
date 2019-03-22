@@ -195,9 +195,9 @@ public class GoodsOrderController extends BaseFrontController {
 
     @PostMapping("/remove")
     @ResponseBody
-    public ResponseResult remove(@RequestHeader("token")String token, String ids,@RequestParam("oid")int oid) {
+    public ResponseResult remove(@RequestHeader("token")String token,@RequestParam("oid")int oid) {
         //校验传参
-        if (null == token || "".equals(token) || ids.length() == 0 || null == token) {
+        if (null == token || "".equals(token) || null == token) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
 

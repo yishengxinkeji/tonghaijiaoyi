@@ -98,6 +98,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
         goodsSalesreturn1.setRefundCompany(refundCompany);
         goodsSalesreturn1.setRefundLogistics(refundLogistics);
+        goodsSalesreturn1.setRefundStatus("8");
         int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn1);
         if (i > 0) {
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
