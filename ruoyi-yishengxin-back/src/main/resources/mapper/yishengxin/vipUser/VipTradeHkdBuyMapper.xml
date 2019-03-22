@@ -22,10 +22,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="appealStatus"    column="appeal_status"    />
         <result property="proof"    column="proof"    />
         <result property="tradeFailStatus"    column="trade_fail_status"    />
+        <result property="saleAccount"    column="sale_account"    />
+        <result property="saleAccountProof"    column="sale_account_proof"    />
     </resultMap>
 	
 	<sql id="selectVipTradeHkdBuyVo">
-        select id, vip_id, buy_type, trade_fail_status,proof,buy_status, buy_no, buy_number, buy_total, buy_time, sale_id, sale_phone, sale_nickname, sale_avater, fail_reason,is_appeal,appeal_status from ysx_vip_trade_hkd_buy
+        select id, vip_id, buy_type,sale_account,sale_account_proof, trade_fail_status,proof,buy_status, buy_no, buy_number, buy_total, buy_time, sale_id, sale_phone, sale_nickname, sale_avater, fail_reason,is_appeal,appeal_status from ysx_vip_trade_hkd_buy
     </sql>
 	
     <select id="selectVipTradeHkdBuyList" parameterType="VipTradeHkdBuy" resultMap="VipTradeHkdBuyResult">
@@ -48,7 +50,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="isAppeal != null  and isAppeal != '' "> and is_appeal = #{isAppeal}</if>
              <if test="appealStatus != null  and appealStatus != '' "> and appeal_status = #{appealStatus}</if>
             <if test="tradeFailStatus != null  and tradeFailStatus != '' "> and trade_fail_status = #{tradeFailStatus}</if>
-         </where>
+            <if test="saleAccount != null  and saleAccount != '' "> and sale_account = #{saleAccount}</if>
+            <if test="saleAccountProof != null  and saleAccountProof != '' "> and sale_account_proof = #{saleAccountProof}</if>
+        </where>
         ${params.VipTradeHkdBuy}
     </select>
     
@@ -75,6 +79,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isAppeal != null  and isAppeal != ''  ">is_appeal,</if>
             <if test="appealStatus != null  and appealStatus != ''  ">appeal_status,</if>
             <if test="proof != null  and proof != ''  ">proof,</if>
+            <if test="saleAccount != null  and saleAccount != ''  ">sale_account,</if>
+            <if test="saleAccountProof != null  and saleAccountProof != ''  ">sale_account_proof,</if>
             <if test="tradeFailStatus != null  and tradeFailStatus != ''  ">trade_fail_status,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -94,6 +100,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="appealStatus != null  and appealStatus != ''  ">#{appealStatus},</if>
             <if test="proof != null  and proof != ''  ">#{proof},</if>
             <if test="tradeFailStatus != null  and tradeFailStatus != ''  ">#{tradeFailStatus},</if>
+            <if test="saleAccount != null  and saleAccount != ''  ">#{saleAccount},</if>
+            <if test="saleAccountProof != null  and saleAccountProof != ''  ">#{saleAccountProof},</if>
          </trim>
     </insert>
 	 
@@ -115,6 +123,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="isAppeal != null  and isAppeal != ''  ">is_appeal = #{isAppeal},</if>
             <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus}></if>
             <if test="proof != null  and proof != ''  ">proof = #{proof},</if>
+            <if test="saleAccount != null  and saleAccount != ''  ">sale_account = #{saleAccount},</if>
+            <if test="saleAccountProof != null  and saleAccountProof != ''  ">sale_account_proof = #{saleAccountProof},</if>
             <if test="tradeFailStatus != null  and tradeFailStatus != ''  ">trade_fail_status = #{tradeFailStatus},</if>
         </trim>
         <where>

@@ -71,14 +71,6 @@ public class TradeSaleController extends BaseFrontController {
             //用户已被冻结
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
         }
-        VipAccount vipAccount = new VipAccount();
-        vipAccount.setVipId(vipUser.getId());
-        vipAccount.setIsDefault(CustomerConstants.YES);
-        List<VipAccount> vipAccounts = accountService.selectVipAccountList(vipAccount);
-        if(vipAccounts.size() == 0){
-            //缺少默认账户
-            return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
-        }
 
         if(!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,number) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,number)) {
             //数字格式不正确
@@ -122,12 +114,22 @@ public class TradeSaleController extends BaseFrontController {
                 }
 
             }else if(type.equalsIgnoreCase(CustomerConstants.HKD)){
+
+                VipAccount vipAccount = new VipAccount();
+                vipAccount.setVipId(vipUser.getId());
+                vipAccount.setIsDefault(CustomerConstants.YES);
+                List<VipAccount> vipAccounts = accountService.selectVipAccountList(vipAccount);
+                if(vipAccounts.size() == 0){
+                    //缺少默认账户
+                    return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
+                }
+
                 //交易的hkd需要是100的整数倍
                 if(Double.parseDouble(number) < 100 || Double.parseDouble(number) % 100 != 0){
                     return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
                 }
 
-               int i = vipTradeHkdSaleService.saleHkd(vipUser,number);
+               int i = vipTradeHkdSaleService.saleHkd(vipUser,number,vipAccount);
                 if(i == 100){
                     //HKD资产不足
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
