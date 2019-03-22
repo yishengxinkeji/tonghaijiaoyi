@@ -2,6 +2,9 @@ package com.ruoyi.web.controller.ysxfront.vipuser;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -910,13 +913,13 @@ public class TradeRecordController extends BaseFrontController {
         List list = new ArrayList();
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-        vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
+        vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
         vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,30");
 
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
-        vipTradeHkdSale.setSaleStatus(TradeStatus.TRADING.getCode());
+        vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
         vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
 
         List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
@@ -964,36 +967,20 @@ public class TradeRecordController extends BaseFrontController {
     }
 
     /**
-     * k线 查询7天内所有的交易订单
+     * k线 按类型查询所有的交易订单
      * @param type  类型(日 day,周 week,月 month),如果不传,默认按日
      * @return
      */
     @PostMapping("/kline")
     public ResponseResult kline(@RequestParam(value = "type",defaultValue = "day") String type){
 
-        List n_list = new LinkedList();
+        List<Map<String,String>> list = new ArrayList<>();
+        List<Map<String,String>> n_list = new LinkedList();
         if(type.equalsIgnoreCase("day")){
-
             String now = DateUtil.format(DateUtil.offsetDay(new Date(),1), DateUtils.YYYY_MM_DD); //明天
-
             String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -1),DateUtils.YYYY_MM_DD); //昨天
 
-            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
-
-            if(list.size() > 1000){
-                list = list.subList(list.size()-1001,list.size()-1);
-            }
-            list.stream().forEach(map -> {
-                List<String> list1 = new ArrayList();
-                Map map1 = new HashMap();
-                map1.put("name",map.get("time"));
-                list1.add(0,map.get("time"));
-                list1.add(1,map.get("number"));
-                map1.put("value",list1);
-                n_list.add(map1);
-            });
-
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
+             list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
         }
 
         if(type.equalsIgnoreCase("week")){
@@ -1002,23 +989,7 @@ public class TradeRecordController extends BaseFrontController {
 
             String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -6),DateUtils.YYYY_MM_DD); //6天以前
 
-            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
-
-            if(list.size() > 1000){
-                list = list.subList(list.size()-1001,list.size()-1);
-            }
-            list.stream().forEach(map -> {
-                List<String> list1 = new ArrayList();
-                Map map1 = new HashMap();
-                map1.put("name",map.get("time"));
-                list1.add(0,map.get("time"));
-                list1.add(1,map.get("number"));
-                map1.put("value",list1);
-                n_list.add(map1);
-            });
-
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
-
+           list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
         }
 
         if(type.equalsIgnoreCase("month")){
@@ -1027,25 +998,22 @@ public class TradeRecordController extends BaseFrontController {
 
             String begin = DateUtil.format(DateUtil.offsetDay(new Date(), -30),DateUtils.YYYY_MM_DD); //30天以前
 
-            List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
-
-            if(list.size() > 1000){
-                list = list.subList(list.size()-1001,list.size()-1);
-            }
-            list.stream().forEach(map -> {
-                List<String> list1 = new ArrayList();
-                Map map1 = new HashMap();
-                map1.put("name",map.get("time"));
-                list1.add(0,map.get("time"));
-                list1.add(1,map.get("number"));
-                map1.put("value",list1);
-                n_list.add(map1);
-            });
-
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
-
+           list = vipTradeSaleService.selectSale(DateUtil.beginOfDay(DateUtils.parseDate(begin)),DateUtil.endOfDay(DateUtils.parseDate(now)));
         }
-        return ResponseResult.success();
+
+        if(list.size() > 1000){
+            list = list.subList(list.size()-1001,list.size()-1);
+        }
+        list.stream().forEach(map -> {
+            List<String> list1 = new ArrayList();
+            Map map1 = new HashMap();
+            map1.put("name",map.get("time"));
+            list1.add(0,map.get("time"));
+            list1.add(1,map.get("number"));
+            map1.put("value",list1);
+            n_list.add(map1);
+        });
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
     }
 
 
@@ -1055,9 +1023,9 @@ public class TradeRecordController extends BaseFrontController {
      */
     @GetMapping("/ktime")
     public ResponseResult ktime(){
-        String now = DateUtil.format(DateUtil.offsetMinute(new Date(),1), DateUtils.YYYY_MM_DD_HH_MM_SS); //1分钟后
+        String now = DateUtil.format(DateUtil.offsetMinute(new Date(),6), DateUtils.YYYY_MM_DD_HH_MM_SS); //1分钟后
 
-        String begin = DateUtil.format(DateUtil.offsetMinute(new Date(), -10),DateUtils.YYYY_MM_DD_HH_MM_SS); //10分钟前
+        String begin = DateUtil.format(DateUtil.offsetMinute(new Date(), 0),DateUtils.YYYY_MM_DD_HH_MM_SS); //1现在
 
         List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.parse(begin),DateUtil.parse(now));
 
