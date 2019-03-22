@@ -129,7 +129,7 @@ public class TradeSaleController extends BaseFrontController {
                     return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
                 }
 
-               int i = vipTradeHkdSaleService.saleHkd(vipUser,number,vipAccount);
+               int i = vipTradeHkdSaleService.saleHkd(vipUser,number,vipAccounts.get(0));
                 if(i == 100){
                     //HKD资产不足
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
