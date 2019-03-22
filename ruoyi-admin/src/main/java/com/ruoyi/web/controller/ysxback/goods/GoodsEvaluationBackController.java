@@ -93,6 +93,7 @@ public class GoodsEvaluationBackController extends BaseController
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, ModelMap mmap){
 		GoodsEvaluation goodsEvaluation = goodsEvaluationService.selectGoodsEvaluationById(id);
+	//	goodsEvaluation.getParams().put()
 		mmap.put("goodsEvaluation", goodsEvaluation);
 	    return prefix + "/edit";
 	}
