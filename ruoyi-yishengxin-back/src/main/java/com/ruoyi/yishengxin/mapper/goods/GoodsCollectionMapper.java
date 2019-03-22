@@ -2,6 +2,8 @@ package com.ruoyi.yishengxin.mapper.goods;
 
 
 import com.ruoyi.yishengxin.domain.goods.GoodsCollection;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -44,7 +46,14 @@ public interface GoodsCollectionMapper
      * @return 结果
      */
 	public int deleteGoodsCollectionById(Integer id);
-	
+	/**
+	 * 用户删除特定商品收藏
+	 *
+	 * @param
+	 * @return 结果
+	 */
+	@Delete("delete from ysx_goods_collection where uid = #{uid} and gid = #{gid}")
+	public int deleteGoodsCollectionByGid(@Param("uid") Integer uid, @Param("gid") Integer gid);
 	/**
      * 批量删除商品收藏
      * 
@@ -52,5 +61,9 @@ public interface GoodsCollectionMapper
      * @return 结果
      */
 	public int deleteGoodsCollectionByIds(String[] ids);
+
+
+
+
 	
 }

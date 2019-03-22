@@ -150,5 +150,71 @@ public class GoodsCollectionController extends BaseFrontController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 
     }
+    //public int deleteGoodsCollectionByGid(Integer uid, Integer gid);
+
+    /**
+     * 删除商品收藏
+     */
+    @PostMapping("/deleteGoodsCollectionByGid")
+    @ResponseBody
+    public ResponseResult deleteGoodsCollectionByGid(@RequestHeader("token")String token, Integer gid) {
+
+
+        //校验传参
+        if ( null == token || "".equals(token)) {
+            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+        }
+
+        // 校验登录状态
+        VipUser vipUser = userExist(token);
+
+        if (null == vipUser) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        Integer id = vipUser.getId();
+
+        int i1 = goodsCollectionService.deleteGoodsCollectionByGid(id,gid);
+            if (i1 == 0) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+            }
+
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+
+    }
+
+    /**
+     * 删除商品收藏
+     */
+    @PostMapping("/removeCollection")
+    @ResponseBody
+    public ResponseResult removeCollection(@RequestHeader("token")String token, String ids) {
+
+        String[] ids1 =ids.split("\\.");
+        //校验传参
+        if (null == ids || "".equals(token) || null == token) {
+            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+        }
+
+        // 校验登录状态
+        VipUser vipUser = userExist(token);
+
+        if (vipUser == null) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        Integer id1 = vipUser.getId();
+
+        for (int i = 0; i < ids1.length; i++) {
+            String id = ids1[i];
+            int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
+            if (i1 == 0) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+            }
+        }
+
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+
+    }
 
 }
