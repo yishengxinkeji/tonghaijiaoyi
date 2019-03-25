@@ -177,10 +177,11 @@ public class GoodsEvaluationController extends BaseFrontController {
 
     @PostMapping("/add")
     @ResponseBody
-    public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
+    public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("gid") int gid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
 
         GoodsEvaluation goodsEvaluation = new GoodsEvaluation();
         goodsEvaluation.setOid(oid);
+        goodsEvaluation.setGid(gid);
         goodsEvaluation.setEvaluationContent(evaluationContent);
         goodsEvaluation.setDescribeEvaluation(describeEvaluation);
         goodsEvaluation.setLogisticsEvaluation(logisticsEvaluation);
