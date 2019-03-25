@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.utils.file.FileUploadUtils;
@@ -83,6 +84,7 @@ public class GoodsInformation extends BaseController
     @ResponseBody
     public AjaxResult addSave(Goods goods,String figure1,String figure2,String figure3,String figure4,String figure6,String figure7,String figure8,String figure9,String figure10,String figure11,String figure12){
             goods.setGoodsSoldNumber(0);
+            goods.setCreateTime(new Date());
       goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+"");
       goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+"");
       goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+"");
