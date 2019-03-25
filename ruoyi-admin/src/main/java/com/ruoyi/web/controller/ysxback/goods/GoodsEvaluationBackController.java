@@ -1,11 +1,15 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.goods.GoodsEvaluation;
+import com.ruoyi.yishengxin.domain.goods.Picture;
+
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -86,15 +90,38 @@ public class GoodsEvaluationBackController extends BaseController
 	    goodsEvaluation.setCreateBy(ShiroUtils.getLoginName());
 		return toAjax(goodsEvaluationService.insertGoodsEvaluation(goodsEvaluation));
 	}
-
+/**
+ *        @RequestMapping("/show3")
+ *    public String showInfo3(Model model){
+ * 		List<Users> list = new ArrayList<>();
+ * 		list.add(new Users(1,"张三",20));
+ * 		list.add(new Users(2,"李四",22));
+ * 		list.add(new Users(3,"王五",24));
+ * 		model.addAttribute("list", list);
+ * 		return "index3";
+ *    }
+ */
 	/**
 	 * 修改商品评价
 	 */
 	@GetMapping("/edit/{id}")
-	public String edit(@PathVariable("id") Integer id, ModelMap mmap){
+	public String edit(@PathVariable("id") Integer id, Model mmap){
 		GoodsEvaluation goodsEvaluation = goodsEvaluationService.selectGoodsEvaluationById(id);
-	//	goodsEvaluation.getParams().put()
-		mmap.put("goodsEvaluation", goodsEvaluation);
+		String evaluationImage = goodsEvaluation.getEvaluationImage();
+		String[] split = evaluationImage.split(",");
+		List list = new ArrayList<>();
+		if (split.length > 0) {
+			for (int i = 0; i < split.length; i++) {
+
+			String 	path = "http://122.114.239.176:"+split[i];
+				Picture picture = new Picture(path);
+				list.add(picture);
+			}
+		}
+
+
+
+		mmap.addAttribute("list", list);
 	    return prefix + "/edit";
 	}
 	

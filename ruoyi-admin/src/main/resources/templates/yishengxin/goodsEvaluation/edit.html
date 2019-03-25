@@ -2,124 +2,27 @@
 <html  lang="zh" xmlns:th="http://www.thymeleaf.org">
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
+<link rel="stylesheet" th:href="@{/ajax/libs/layui/css/layui.css}" media="all">
+<link th:href="@{/ajax/libs/summernote/summernote.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/summernote/summernote-bs3.css}" rel="stylesheet"/>
 <body class="white-bg">
-    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
-        <form class="form-horizontal m" id="form-goodsEvaluation-edit" th:object="${goodsEvaluation}">
-            <input id="id" name="id" th:field="*{id}"  type="hidden">
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">用户手机号：</label>
+<table border="1">
+	<tr th:each="u,var : ${list}">
+		<td>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"></label>
 				<div class="col-sm-8">
-					<input id="phone" name="phone" th:field="*{phone}" class="form-control" type="text">
+					<!--<img src='http://122.114.239.176:'+'${u.path}" style="width: 200px;height: 200px;" id="pic3">-->
+					<!--th:src=-->
+					<!--<img src="th:text="${u.path}" style="width: 200px;height: 200px;" id="pic3">-->
+					<img th:src="${u.path}" style="width: 200px;height: 200px;" id="pic3">
 				</div>
 			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">订单号：</label>
-				<div class="col-sm-8">
-					<input id="oraderNumber" name="oraderNumber" th:field="*{oraderNumber}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品名：</label>
-				<div class="col-sm-8">
-					<input id="goodsName" name="goodsName" th:field="*{goodsName}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">用户的id：</label>
-				<div class="col-sm-8">
-					<input id="uid" name="uid" th:field="*{uid}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">商品的id：</label>
-				<div class="col-sm-8">
-					<input id="gid" name="gid" th:field="*{gid}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">订单的id：</label>
-				<div class="col-sm-8">
-					<input id="oid" name="oid" th:field="*{oid}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">评价内容：</label>
-				<div class="col-sm-8">
-					<input id="evaluationContent" name="evaluationContent" th:field="*{evaluationContent}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">评价图片：</label>
-				<div class="col-sm-8">
-					<input id="evaluationImage" name="evaluationImage" th:field="*{evaluationImage}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">描述评价：</label>
-				<div class="col-sm-8">
-					<input id="describeEvaluation" name="describeEvaluation" th:field="*{describeEvaluation}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">物流评价：</label>
-				<div class="col-sm-8">
-					<input id="logisticsEvaluation" name="logisticsEvaluation" th:field="*{logisticsEvaluation}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">服务态度：</label>
-				<div class="col-sm-8">
-					<input id="serviceAttitude" name="serviceAttitude" th:field="*{serviceAttitude}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">创建者：</label>
-				<div class="col-sm-8">
-					<input id="createBy" name="createBy" th:field="*{createBy}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">创建时间：</label>
-				<div class="col-sm-8">
-					<input id="createTime" name="createTime" th:field="*{createTime}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">更新者：</label>
-				<div class="col-sm-8">
-					<input id="updateBy" name="updateBy" th:field="*{updateBy}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">更新时间：</label>
-				<div class="col-sm-8">
-					<input id="updateTime" name="updateTime" th:field="*{updateTime}" class="form-control" type="text">
-				</div>
-			</div>
-			<div class="form-group">	
-				<label class="col-sm-3 control-label">备注：</label>
-				<div class="col-sm-8">
-					<input id="remark" name="remark" th:field="*{remark}" class="form-control" type="text">
-				</div>
-			</div>
-		</form>
-    </div>
-    <div th:include="include::footer"></div>
-    <script type="text/javascript">
-		var prefix = ctx + "yishengxin/goodsEvaluation";
-		$("#form-goodsEvaluation-edit").validate({
-			rules:{
-				xxxx:{
-					required:true,
-				},
-			}
-		});
-		
-		function submitHandler() {
-	        if ($.validate.form()) {
-	            $.operate.save(prefix + "/edit", $('#form-goodsEvaluation-edit').serialize());
-	        }
-	    }
-	</script>
+			<br/>
+		</td>
+		<td></td>
+
+	</tr>
+</table>
 </body>
 </html>
