@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ruoyi.common.base.ResponseResult;
@@ -9,6 +10,7 @@ import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.domain.goods.GoodsSalesreturn;
+import com.ruoyi.yishengxin.domain.goods.Picture;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
 import com.ruoyi.yishengxin.service.IGoodsService;
@@ -16,6 +18,7 @@ import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -114,7 +117,43 @@ public class GoodsSalesreturnBackController extends BaseController
 		mmap.put("goodsSalesreturn", goodsSalesreturn);
 	    return prefix + "/edit";
 	}
-	
+
+
+	/**
+	 * 查看凭证
+	 */
+	@RequiresPermissions("yishengxin:goodsSalesreturn:recommend")
+	@GetMapping("/recommend/{id}")
+	public String edit1(@PathVariable("id") Integer id, Model mmap){
+		GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnById(id);
+		String ploadDocuments = goodsSalesreturn.getPloadDocuments();
+		if(null == ploadDocuments) {
+			List list = new ArrayList<>();
+			String 	path = "http://122.114.239.176:"+"/home/noPictures.gif";
+			Picture picture = new Picture(path);
+			list.add(picture);
+
+			mmap.addAttribute("list", list);
+			return prefix + "/edit1";
+		}
+
+		String[] split = ploadDocuments.split(",");
+		List list = new ArrayList<>();
+		if (split.length > 0) {
+			for (int i = 0; i < split.length; i++) {
+
+				String 	path = "http://122.114.239.176:"+split[i];
+				Picture picture = new Picture(path);
+				list.add(picture);
+			}
+		}
+
+
+
+		mmap.addAttribute("list", list);
+		return prefix + "/edit1";
+	}
+
 	/**
 	 * 修改保存商品退货
 	 */
@@ -179,5 +218,20 @@ public class GoodsSalesreturnBackController extends BaseController
 	public AjaxResult remove(String ids){
 		return toAjax(goodsSalesreturnService.deleteGoodsSalesreturnByIds(ids));
 	}
-	
+
+
+
+//	/**
+//	 *测试
+//	 */
+//	@RequiresPermissions("yishengxin:vipUser:address")
+//	@GetMapping("/detail/{id}")
+//	public String detail(@PathVariable("id") Integer id, ModelMap mmap) {
+//		mmap.put("vipId",id);
+//		return "yishengxin/vipAddress/vipAddress";
+//	}
+
+
+
+
 }

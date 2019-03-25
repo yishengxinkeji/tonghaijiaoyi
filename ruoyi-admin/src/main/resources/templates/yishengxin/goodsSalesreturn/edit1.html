@@ -8,18 +8,18 @@
 <body class="white-bg">
 
 <tr>
-	<td>
+    <td>
 
-		<div  class="col-sm-16" id ="juzhong">
-			<img  th:each="u,var : ${list}"  th:src="${u.path}" style="width: 200px;height: 200px;margin-right: 10px" id="pic3";>
-		</div>
+        <div  class="col-sm-16" id ="juzhong">
+            <img  th:each="u,var : ${list}"  th:src="${u.path}" style="width: 200px;height: 200px;margin-right: 10px" id="pic3";>
+        </div>
 
-	</td>
+    </td>
 
 </tr>
 <style>
-	#juzhong{text-align:center; margin-top: 100px;
-	}
+    #juzhong{text-align:center; margin-top: 100px;
+    }
 </style>
 </body>
 </html>

@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.enums.ResponseEnum;
@@ -69,7 +71,7 @@ public class GoodsShareController extends BaseFrontController
         Integer id = vipUser.getId();
         //用户首次分享
         if (null == goodsShareService.selectGoodsShareByUid(id)) {
-            GoodsShare goodsShare1 = goodsShareService.selectGoodsShareById(1);
+
             VipUser vipUser1 = iVipUserService.selectVipUserById(id);
             String sslMoney = vipUser1.getSslMoney();
 
@@ -87,8 +89,10 @@ public class GoodsShareController extends BaseFrontController
                 goodsShare.setUid(id);
                 goodsShare.setCreateTime(new Date());
                 goodsShareService.insertGoodsShare(goodsShare);
-
-                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+                String extensionCode = vipUser1.getExtensionCode();
+                Map<Object, Object> map = new TreeMap();
+                map.put("data",extensionCode);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
             }
             return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SSLEERROR);
         }else {
@@ -101,7 +105,12 @@ public class GoodsShareController extends BaseFrontController
 
             if (s.equals(s1)){
                 //今日已经分享过
-                return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SHARE);
+                VipUser vipUser1 = iVipUserService.selectVipUserById(id);
+                String extensionCode = vipUser1.getExtensionCode();
+                Map<Object, Object> map = new TreeMap();
+                map.put("data",extensionCode);
+
+                return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SHARE,map);
             }else{
                 //今日未分享
                 GoodsShare goodsShare1 = goodsShareService.selectGoodsShareById(1);
@@ -122,13 +131,16 @@ public class GoodsShareController extends BaseFrontController
                     goodsShare3.setUid(id);
                     goodsShare3.setCreateTime(new Date());
                     goodsShareService.insertGoodsShare(goodsShare3);
-                    return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+
+                    String extensionCode = vipUser1.getExtensionCode();
+                    Map<Object, Object> map = new TreeMap();
+                    map.put("data",extensionCode);
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
                 }
                 return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SSLEERROR);
             }
         }
 	}
-
 
 	/**
 	 *后台修改保存商品分享
@@ -145,8 +157,5 @@ public class GoodsShareController extends BaseFrontController
 			return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 		}
 		return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_UPLODEERROR);
-
 	}
-
-
 }

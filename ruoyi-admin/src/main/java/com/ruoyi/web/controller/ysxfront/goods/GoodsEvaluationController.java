@@ -183,6 +183,9 @@ public class GoodsEvaluationController extends BaseFrontController {
     public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
         GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(oid);
         String goodsPicture = goodsOrder1.getGoodsPicture();
+     //商品名
+        String goodsName = goodsOrder1.getGoodsName();
+        String orderNumber = goodsOrder1.getOrderNumber();
         Goods goods = new Goods();
         goods.setGoodsMainFigure(goodsPicture);
 
@@ -198,6 +201,8 @@ public class GoodsEvaluationController extends BaseFrontController {
         goodsEvaluation.setLogisticsEvaluation(logisticsEvaluation);
         goodsEvaluation.setServiceAttitude(serviceAttitude);
         goodsEvaluation.setEvaluationImage(evaluationImage);
+        goodsEvaluation.setOraderNumber(orderNumber);
+        goodsEvaluation.setGoodsName(goodsName);
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
@@ -208,6 +213,10 @@ public class GoodsEvaluationController extends BaseFrontController {
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
+
+
+        goodsEvaluation.setPhone(vipUser.getPhone());
+
 
         GoodsEvaluation goodsEvaluation1 = new GoodsEvaluation();
 

@@ -54,6 +54,7 @@ public class GoodsOrderBackController extends BaseController
 	@ResponseBody
 	public TableDataInfo list(GoodsOrder goodsOrder){
 		startPage();
+
         List<GoodsOrder> list = goodsOrderService.selectGoodsOrderList(goodsOrder);
 		return getDataTable(list);
 	}

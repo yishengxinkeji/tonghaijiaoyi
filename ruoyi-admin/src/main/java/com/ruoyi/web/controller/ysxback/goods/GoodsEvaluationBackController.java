@@ -102,12 +102,22 @@ public class GoodsEvaluationBackController extends BaseController
  *    }
  */
 	/**
-	 * 修改商品评价
+	 * 查看商品评价
 	 */
 	@GetMapping("/edit/{id}")
 	public String edit(@PathVariable("id") Integer id, Model mmap){
 		GoodsEvaluation goodsEvaluation = goodsEvaluationService.selectGoodsEvaluationById(id);
-		String evaluationImage = goodsEvaluation.getEvaluationImage();
+		String  evaluationImage= goodsEvaluation.getEvaluationImage();
+		if(null == evaluationImage) {
+			List list = new ArrayList<>();
+			String 	path = "http://122.114.239.176:"+"/home/noPictures.gif";
+			Picture picture = new Picture(path);
+			list.add(picture);
+
+			mmap.addAttribute("list", list);
+			return prefix + "/edit";
+		}
+
 		String[] split = evaluationImage.split(",");
 		List list = new ArrayList<>();
 		if (split.length > 0) {
