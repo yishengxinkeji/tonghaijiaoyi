@@ -319,7 +319,7 @@ public class VipUserCenterController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
-            
+
             ResponseResult map = new ResponseResult();
             //二维码
             map.put("extension",Global.getFrontPath() + vipUser.getExtensionCode());
@@ -1020,7 +1020,6 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -1030,6 +1029,7 @@ public class VipUserCenterController extends BaseFrontController {
                 map.put("path",Global.getFrontPath()+path);
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
             }
+
             return ResponseResult.error();
         } catch(FileSizeLimitExceededException e){
             log.error("文件过大");

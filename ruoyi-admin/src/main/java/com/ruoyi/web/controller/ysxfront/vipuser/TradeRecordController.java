@@ -159,21 +159,21 @@ public class TradeRecordController extends BaseFrontController {
     @PostMapping("/trading")
     public ResponseResult trading(@RequestHeader("token") String token){
 
-        VipUser vipUser = userExist(token);
+         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
-        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_status = 1 or sale_status=5 or sale_status=6 order by sale_time desc");
+        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and (sale_status = 1 or sale_status=5 or sale_status=6) order by sale_time desc");
 
         List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
 
         VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
         vipTradeHkdBuy.setVipId(vipUser.getId());
-        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_status=1 or buy_status=5 or buy_status=6 order by buy_time desc ");
+        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and (buy_status=1 or buy_status=5 or buy_status=6) order by buy_time desc ");
 
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -313,6 +313,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
             map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
             list.add(map);
         });
 
@@ -325,6 +326,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
             map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
             list.add(map);
         });
 

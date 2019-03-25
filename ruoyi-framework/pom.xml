@@ -169,6 +169,13 @@
             <version>${hutool.version}</version>
         </dependency>
 
+        <!-- 图片压缩 -->
+        <dependency>
+            <groupId>com.tinify</groupId>
+            <artifactId>tinify</artifactId>
+            <version>RELEASE</version>
+        </dependency>
+
         <!--二维码 -->
         <dependency>
             <groupId>com.google.zxing</groupId>

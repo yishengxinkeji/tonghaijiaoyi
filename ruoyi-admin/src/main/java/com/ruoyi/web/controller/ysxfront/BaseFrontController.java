@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.ysxfront;
 
+import cn.hutool.core.img.ImgUtil;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.web.base.BaseController;
@@ -10,8 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 前端控制器公共类
@@ -60,6 +64,7 @@ public class BaseFrontController extends BaseController {
             //头像格式不支持
             return null;
         }
+
         String avatar = FileUploadUtils.upload(Global.getFrontPath(), file,filetype);
         return avatar;
     }
