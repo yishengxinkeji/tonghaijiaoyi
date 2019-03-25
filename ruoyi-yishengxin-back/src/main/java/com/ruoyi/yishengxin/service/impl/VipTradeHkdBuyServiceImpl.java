@@ -142,7 +142,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.setBuyStatus(TradeStatus.TRADING.getCode()); //交易中
+            vipTradeHkdBuy.setBuyStatus(TradeStatus.WAIT_BUY_SEND.getCode()); //等待买家打款
             vipTradeHkdBuy.setBuyNo(vipTradeHkdSale.getSaleNo());   //订单编号
             vipTradeHkdBuy.setBuyNumber(number);
             vipTradeHkdBuy.setBuyTotal(number);
@@ -164,7 +164,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.setBuyStatus(TradeStatus.TRADING.getCode()); //交易中
+            vipTradeHkdBuy.setBuyStatus(TradeStatus.WAIT_BUY_SEND.getCode()); //等待买家打款
             vipTradeHkdBuy.setBuyNo(mmNo);   //订单编号
             vipTradeHkdBuy.setBuyNumber(number);
             vipTradeHkdBuy.setBuyTotal(number);
@@ -193,6 +193,8 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
             vipTradeHkdSale1.setSaleNumber(number);
             vipTradeHkdSale1.setIsAppeal(CustomerConstants.NO);
             vipTradeHkdSale1.setSaleType(TradeType.SALE_HKD.getCode());
+            vipTradeHkdSale1.setSaleAccount(vipTradeHkdSale.getSaleAccount());
+            vipTradeHkdSale1.setSaleAccountProof(vipTradeHkdSale.getSaleAccountProof());
 
             vipTradeHkdSaleMapper.insertVipTradeHkdSale(vipTradeHkdSale1);
 

@@ -33,6 +33,8 @@ public class HomePageController {
     private IProjectService projectService;
     @Autowired
     private INoticeService noticeService;
+    @Autowired
+    private ITradeExplainService tradeExplainService;
 
     /**
      * 轮播图
@@ -260,5 +262,24 @@ public class HomePageController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
+
+    /**
+     * 首页下拉框的交易说明
+     * @return
+     */
+    @RequestMapping("/tradeExplainList")
+    public ResponseResult tradeExplainList(){
+        TradeExplain tradeExplain = new TradeExplain();
+
+        List<TradeExplain> tradeExplains = tradeExplainService.selectTradeExplainList(new TradeExplain());
+        List list = new ArrayList();
+        tradeExplains.stream().forEach(tradeExplain1 -> {
+            Map map = new HashMap();
+            map.put("title",tradeExplain1.getTitle());
+            map.put("content",tradeExplain1.getContent());
+            list.add(map);
+        });
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+    }
 
 }

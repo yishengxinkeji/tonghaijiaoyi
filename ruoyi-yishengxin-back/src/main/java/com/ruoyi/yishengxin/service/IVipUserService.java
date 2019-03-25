@@ -86,12 +86,8 @@ public interface IVipUserService
 	 */
     int tranSport(VipUser vip, VipUser myVip, String type, String number, double tranMoney) throws Exception;
 
-	/**
-	 * 根据时间段统计注册人数
-	 * @param beginOfDay
-	 * @param endOfDay
-	 * @return
-	 */
+
+
     int selectCount(VipUser vipUser);
 
 

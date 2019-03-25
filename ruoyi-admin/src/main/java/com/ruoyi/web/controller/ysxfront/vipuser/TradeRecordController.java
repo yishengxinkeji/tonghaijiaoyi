@@ -159,21 +159,21 @@ public class TradeRecordController extends BaseFrontController {
     @PostMapping("/trading")
     public ResponseResult trading(@RequestHeader("token") String token){
 
-        VipUser vipUser = userExist(token);
+         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
-        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_status = 1 or sale_status=5 or sale_status=6 order by sale_time desc");
+        vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and (sale_status=5 or sale_status=6) order by sale_time desc");
 
         List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
 
         VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
         vipTradeHkdBuy.setVipId(vipUser.getId());
-        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_status=1 or buy_status=5 or buy_status=6 order by buy_time desc ");
+        vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and (buy_status=5 or buy_status=6) order by buy_time desc ");
 
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -313,6 +313,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdSale1.getId());
             map.put("time",vipTradeHkdSale1.getSaleTime());
             map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
             list.add(map);
         });
 
@@ -325,6 +326,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("id",vipTradeHkdBuy1.getId());
             map.put("time",vipTradeHkdBuy1.getBuyTime());
             map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+            map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
             list.add(map);
         });
 
@@ -741,13 +743,9 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        VipAccount vipAccount = new VipAccount();
-        vipAccount.setIsDefault(CustomerConstants.YES);
-
         //买HKD
         if(vipTrade.equalsIgnoreCase(TradeType.BUY_HKD.getCode())){
-            vipAccount.setVipId(vipUser.getId());
-            List<VipAccount> vipAccounts = accountService.selectVipAccountList(vipAccount);
+
 
             Map map = new HashMap();
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
@@ -759,21 +757,10 @@ public class TradeRecordController extends BaseFrontController {
             map.put("total",vipTradeHkdBuy.getBuyTotal());
             map.put("saleId",vipTradeHkdBuy.getSaleId());
             map.put("salePhone",vipTradeHkdBuy.getSalePhone());
-            if(vipAccounts.size() > 0){
-                map.put("saleAccount",vipAccounts.get(0).getAccountNumber());
-                map.put("accountImg",vipAccounts.get(0).getAccountImg());
-            }else {
-                map.put("saleAccount","");
-                map.put("accountImg","");
-            }
-
-            if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.FAIL)){
-                map.put("proof",vipTradeHkdBuy.getFailReason());
-            }else if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.SUCCESS)){
-                map.put("proof",vipTradeHkdBuy.getProof());
-            }else {
-                map.put("proof","");
-            }
+            map.put("saleAccount",vipTradeHkdBuy.getSaleAccount());
+            map.put("accountImg",vipTradeHkdBuy.getSaleAccountProof());
+            map.put("proof",vipTradeHkdBuy.getProof());
+            map.put("failReason",vipTradeHkdBuy.getFailReason());
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 
@@ -782,8 +769,6 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleService.selectVipTradeHkdSaleById(Integer.parseInt(id));
 
             VipUser saleUser = vipUserService.selectVipUserById(vipTradeHkdSale.getVipId());
-            vipAccount.setVipId(saleUser.getId());
-            List<VipAccount> vipAccounts = accountService.selectVipAccountList(vipAccount);
             Map map = new HashMap();
 
             map.put("id",id);
@@ -793,21 +778,11 @@ public class TradeRecordController extends BaseFrontController {
             map.put("total",vipTradeHkdSale.getSaleTotal());
             map.put("saleId",vipTradeHkdSale.getVipId());
             map.put("salePhone",saleUser.getPhone());
-            if(vipAccounts.size() > 0){
-                map.put("saleAccount",vipAccounts.get(0).getAccountNumber());
-                map.put("accountImg",vipAccounts.get(0).getAccountImg());
-            }else {
-                map.put("saleAccount","");
-                map.put("accountImg","");
-            }
+            map.put("saleAccount",vipTradeHkdSale.getSaleAccount());
+            map.put("accountImg",vipTradeHkdSale.getSaleAccountProof());
+            map.put("proof",vipTradeHkdSale.getProof());
+            map.put("failReason",vipTradeHkdSale.getFailReason());
 
-            if(vipTradeHkdSale.getSaleStatus().equals(TradeStatus.FAIL)){
-                map.put("proof",vipTradeHkdSale.getFailReason());
-            }else if(vipTradeHkdSale.getSaleType().equals(TradeStatus.SUCCESS)){
-                map.put("proof",vipTradeHkdSale.getProof());
-            }else {
-                map.put("proof","");
-            }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 

@@ -121,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="saleAvater != null  and saleAvater != ''  ">sale_avater = #{saleAvater},</if>
             <if test="failReason != null  and failReason != ''  ">fail_reason = #{failReason},</if>
             <if test="isAppeal != null  and isAppeal != ''  ">is_appeal = #{isAppeal},</if>
-            <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus}></if>
+            <if test="appealStatus != null  and appealStatus != ''  ">appeal_status = #{appealStatus},</if>
             <if test="proof != null  and proof != ''  ">proof = #{proof},</if>
             <if test="saleAccount != null  and saleAccount != ''  ">sale_account = #{saleAccount},</if>
             <if test="saleAccountProof != null  and saleAccountProof != ''  ">sale_account_proof = #{saleAccountProof},</if>
