@@ -769,12 +769,18 @@ public class TradeRecordController extends BaseFrontController {
                 map.put("accountImg","");
             }
 
-            if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.FAIL)){
+           /* if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.FAIL)){
                 map.put("proof",vipTradeHkdBuy.getFailReason());
-            }else if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.SUCCESS)){
+            }else if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.SUCCESS) ){
                 map.put("proof",vipTradeHkdBuy.getProof());
             }else {
                 map.put("proof","");
+            }*/
+            map.put("proof",vipTradeHkdBuy.getFailReason());
+            if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.FAIL)){
+                map.put("failReason",vipTradeHkdBuy.getFailReason());
+            }else {
+                map.put("failReason","");
             }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
@@ -803,13 +809,20 @@ public class TradeRecordController extends BaseFrontController {
                 map.put("accountImg","");
             }
 
-            if(vipTradeHkdSale.getSaleStatus().equals(TradeStatus.FAIL)){
+           /* if(vipTradeHkdSale.getSaleStatus().equals(TradeStatus.FAIL)){
                 map.put("proof",vipTradeHkdSale.getFailReason());
             }else if(vipTradeHkdSale.getSaleType().equals(TradeStatus.SUCCESS)){
                 map.put("proof",vipTradeHkdSale.getProof());
             }else {
                 map.put("proof","");
+            }*/
+            map.put("proof",vipTradeHkdSale.getFailReason());
+            if(vipTradeHkdSale.getSaleStatus().equals(TradeStatus.FAIL)){
+                map.put("failReason",vipTradeHkdSale.getFailReason());
+            }else {
+                map.put("failReason","");
             }
+
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 
