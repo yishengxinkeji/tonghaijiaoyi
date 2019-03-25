@@ -8,10 +8,12 @@ import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.Vo.GoodsEvalutionVo;
 import com.ruoyi.yishengxin.Vo.VipUserEvaluation;
+import com.ruoyi.yishengxin.domain.goods.Goods;
 import com.ruoyi.yishengxin.domain.goods.GoodsEvaluation;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsOrderService;
+import com.ruoyi.yishengxin.service.IGoodsService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,8 @@ public class GoodsEvaluationController extends BaseFrontController {
     @Autowired
     private IGoodsOrderService goodsOrderService;
 
-
+    @Autowired
+    private IGoodsService goodsService;
     /**
      * 上传文件
      *
@@ -178,9 +181,18 @@ public class GoodsEvaluationController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
+        GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(oid);
+        String goodsPicture = goodsOrder1.getGoodsPicture();
+        Goods goods = new Goods();
+        goods.setGoodsMainFigure(goodsPicture);
+
+        List<Goods> goods1 = goodsService.selectGoodsList(goods);
+        Goods goods2 = goods1.get(0);
+        Integer gid = goods2.getId();
 
         GoodsEvaluation goodsEvaluation = new GoodsEvaluation();
         goodsEvaluation.setOid(oid);
+        goodsEvaluation.setGid(gid);
         goodsEvaluation.setEvaluationContent(evaluationContent);
         goodsEvaluation.setDescribeEvaluation(describeEvaluation);
         goodsEvaluation.setLogisticsEvaluation(logisticsEvaluation);
