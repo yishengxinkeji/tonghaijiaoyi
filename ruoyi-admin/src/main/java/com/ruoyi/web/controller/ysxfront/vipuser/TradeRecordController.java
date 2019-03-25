@@ -760,11 +760,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdBuy.getSaleAccount());
             map.put("accountImg",vipTradeHkdBuy.getSaleAccountProof());
             map.put("proof",vipTradeHkdBuy.getProof());
-            if(vipTradeHkdBuy.getBuyStatus().equals(TradeStatus.FAIL)){
-                map.put("failReason",vipTradeHkdBuy.getFailReason());
-            }else {
-                map.put("failReason","");
-            }
+            map.put("failReason",vipTradeHkdBuy.getFailReason());
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 
@@ -785,11 +781,7 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdSale.getSaleAccount());
             map.put("accountImg",vipTradeHkdSale.getSaleAccountProof());
             map.put("proof",vipTradeHkdSale.getProof());
-            if(vipTradeHkdSale.getSaleStatus().equals(TradeStatus.FAIL)){
-                map.put("failReason",vipTradeHkdSale.getFailReason());
-            }else {
-                map.put("failReason","");
-            }
+            map.put("failReason",vipTradeHkdSale.getFailReason());
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
