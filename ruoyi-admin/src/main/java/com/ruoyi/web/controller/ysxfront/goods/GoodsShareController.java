@@ -88,6 +88,7 @@ public class GoodsShareController extends BaseFrontController
                 GoodsShare goodsShare = new GoodsShare();
                 goodsShare.setUid(id);
                 goodsShare.setCreateTime(new Date());
+                goodsShare.setBounty(dayGift);
                 goodsShareService.insertGoodsShare(goodsShare);
                 String extensionCode = vipUser1.getExtensionCode();
                 Map<Object, Object> map = new TreeMap();
@@ -130,6 +131,7 @@ public class GoodsShareController extends BaseFrontController
                     GoodsShare goodsShare3 = new GoodsShare();
                     goodsShare3.setUid(id);
                     goodsShare3.setCreateTime(new Date());
+                    goodsShare.setBounty(dayGift);
                     goodsShareService.insertGoodsShare(goodsShare3);
 
                     String extensionCode = vipUser1.getExtensionCode();

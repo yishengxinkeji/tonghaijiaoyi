@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.ysxback.goods;
 import java.util.List;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.goods.GoodsShare;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
+import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,7 +36,10 @@ public class GoodsShareBackController extends BaseController
 	
 	@Autowired
 	private IGoodsShareService goodsShareService;
-	
+
+	@Autowired
+	private IVipUserService vipUserService;
+
 	@RequiresPermissions("yishengxin:goodsShare:view")
 	@GetMapping()
 	public String goodsShare(){
@@ -50,6 +55,16 @@ public class GoodsShareBackController extends BaseController
 	public TableDataInfo list(GoodsShare goodsShare){
 		startPage();
         List<GoodsShare> list = goodsShareService.selectGoodsShareList(goodsShare);
+
+		if (list.size() > 0) {
+			for (int i = 0; i < list.size() ; i++) {
+				Integer id = list.get(i).getUid();
+				VipUser vipUser = vipUserService.selectVipUserById(id);
+				String phone = vipUser.getPhone();
+				list.get(i).setRemark(phone);
+			}
+
+		}
 		return getDataTable(list);
 	}
 	
@@ -62,6 +77,9 @@ public class GoodsShareBackController extends BaseController
     @ResponseBody
     public AjaxResult export(GoodsShare goodsShare){
     	List<GoodsShare> list = goodsShareService.selectGoodsShareList(goodsShare);
+
+
+
         ExcelUtil<GoodsShare> util = new ExcelUtil<GoodsShare>(GoodsShare.class);
         return util.exportExcel(list, "goodsShare");
     }
