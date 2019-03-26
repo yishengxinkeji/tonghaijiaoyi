@@ -29,5 +29,4 @@ public class Notice extends BaseEntity
 	/** 公告内容 */
 	private String noticeContent;
 
-
 }

@@ -92,7 +92,7 @@ public class HomePageController {
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
             //默认初始页为0
-            currentNum = "0";
+            currentNum = "1";
         }
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
@@ -104,7 +104,7 @@ public class HomePageController {
         int endNumber =  beginNumber + Integer.parseInt(pageSize);
 
         News news2 = new News();
-        news2.getParams().put("News"," order by news_time desc limit "+beginNumber+"," + (endNumber-1) );
+        news2.getParams().put("News"," order by news_time desc limit "+beginNumber+"," + endNumber );
         List<News> news = newsService.selectNewsList(news2);
         List list = new ArrayList();
         if(news.size() > 0){
@@ -162,7 +162,7 @@ public class HomePageController {
         int endNumber =  beginNumber + Integer.parseInt(pageSize);
 
         Project project1 = new Project();
-        project1.getParams().put("Project"," order by project_time desc limit "+beginNumber+"," + (endNumber-1)  );
+        project1.getParams().put("Project"," order by project_time desc limit "+beginNumber+"," + endNumber  );
         List<Project> projects = projectService.selectProjectList(project1);
 
         List list = new ArrayList();
@@ -209,8 +209,8 @@ public class HomePageController {
     public ResponseResult notice(@RequestParam("currentNum") String currentNum,@RequestParam(value = "pageSize",required = false) String pageSize){
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
-            //默认初始页为0
-            currentNum = "0";
+            //默认初始页为1
+            currentNum = "1";
         }
 
         if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
@@ -221,7 +221,7 @@ public class HomePageController {
         int endNumber =  beginNumber + Integer.parseInt(pageSize);
 
         Notice notice = new Notice();
-        notice.getParams().put("Notice"," order by notice_time desc limit "+beginNumber+"," + (endNumber-1) );
+        notice.getParams().put("Notice"," order by notice_time desc limit "+beginNumber+"," + endNumber );
 
         List<Notice> notices = noticeService.selectNoticeList(notice);
         List list = new ArrayList();
@@ -237,7 +237,7 @@ public class HomePageController {
         }
 
         Map map = new HashMap();
-        int total = newsService.selectTotal();  //查询记录数
+        int total = noticeService.selectTotal();  //查询记录数
         map.put("total",total);
         map.put("pageSize",pageSize);
 
