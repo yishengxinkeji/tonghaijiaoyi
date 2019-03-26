@@ -1,8 +1,6 @@
 package com.ruoyi.web.controller.ysxfront;
 
-import cn.hutool.core.img.ImgUtil;
 import com.ruoyi.common.config.Global;
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.web.base.BaseController;

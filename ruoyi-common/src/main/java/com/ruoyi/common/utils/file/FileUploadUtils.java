@@ -1,12 +1,7 @@
 package com.ruoyi.common.utils.file;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
-
-import net.coobird.thumbnailator.Thumbnails;
-import org.omg.PortableServer.IdUniquenessPolicy;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
@@ -14,7 +9,6 @@ import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.Md5Utils;
 
-import javax.imageio.ImageIO;
 
 /**
  * 文件上传工具类
