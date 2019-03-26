@@ -11,6 +11,7 @@
 			<form id="formId">
 				<div class="select-list">
 					<input id="parentCode" name="parentCode" th:value="${parentCode}"  type="hidden">
+					<input id="recommendCode" name="recommendCode" th:value="${recommendCode}"  type="hidden">
 					<ul>
 						<li>
 							手机号：<input type="text" name="phone"/>
@@ -40,7 +41,8 @@
 		var options = {
 			url: prefix + "/recommend",
 			queryParams:{
-				"parentCode":$("#parentCode").val()
+				"parentCode":$("#parentCode").val(),
+				"recommendCode":$("#recommendCode").val()
 			},
 			method: "POST",
 			modalName: "会员基本",

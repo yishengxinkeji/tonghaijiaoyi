@@ -35,6 +35,8 @@ public class HomePageController {
     private INoticeService noticeService;
     @Autowired
     private ITradeExplainService tradeExplainService;
+    @Autowired
+    private IPlatDataService platDataService;
 
     /**
      * 轮播图
@@ -267,7 +269,7 @@ public class HomePageController {
      * 首页下拉框的交易说明
      * @return
      */
-    @RequestMapping("/tradeExplainList")
+    @GetMapping("/tradeExplainList")
     public ResponseResult tradeExplainList(){
         TradeExplain tradeExplain = new TradeExplain();
 
@@ -282,4 +284,23 @@ public class HomePageController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
+    /**
+     * 首页新闻或者公告上面的大图
+     * @param type   news:新闻, notice:公告
+     * @return
+     */
+    @GetMapping("/platPic")
+    public ResponseResult platPic(@RequestParam(value = "type",defaultValue = "news") String type){
+
+        PlatData platData = platDataService.selectPlatDataList(new PlatData()).get(0);
+        Map map = new HashMap();
+        if(type.equalsIgnoreCase("news")){
+            map.put("pic",platData.getNewsBigPic());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }else if(type.equalsIgnoreCase("notice")){
+            map.put("pic",platData.getNoticeBigPic());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }
+        return ResponseResult.success();
+    }
 }

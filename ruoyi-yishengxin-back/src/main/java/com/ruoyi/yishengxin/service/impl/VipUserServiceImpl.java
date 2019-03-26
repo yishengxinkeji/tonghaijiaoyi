@@ -118,36 +118,6 @@ public class VipUserServiceImpl implements IVipUserService {
      */
     @Override
     public void newReceiveGift(VipUser vipUser,String giftType,String giftNumber) {
-        //上级和上上级
-        VipUser parentUser = null;
-        VipUser pparentUser = null;
-
-        //分销对象
-        Distribution distribution = new Distribution();
-        List<Distribution> distributions = distributionMapper.selectDistributionList(new Distribution());
-        if(distributions.size() > 0){
-            distribution = distributions.get(0);
-        }
-
-        double parentCharge = Double.parseDouble(distribution.getParentCharge());   //上级手续费
-        double grandparentCharge = Double.parseDouble(distribution.getGrandparentCharge()); //上上级手续费
-
-
-        //找到卖家的上级和上上级
-        VipUser paUser = new VipUser();
-        if(!vipUser.getParentCode().equals("-1")){
-            paUser.setRecommendCode(vipUser.getParentCode());
-            List<VipUser> vipUsers = vipUserMapper.selectVipUserList(paUser);
-            if(vipUsers.size() > 0){
-                parentUser = vipUsers.get(0);
-                if(!parentUser.getParentCode().equals("-1")){
-                    paUser.setRecommendCode(parentUser.getParentCode());
-                    List<VipUser> vipUsers1 = vipUserMapper.selectVipUserList(paUser);
-                    pparentUser = vipUsers1.get(0);
-                }
-            }
-        }
-
         try{
             //更新资产及状态,同时将信息插入收益表中
             if(giftType.equals(CustomerConstants.SSL)){
@@ -160,35 +130,6 @@ public class VipUserServiceImpl implements IVipUserService {
 
                 vipUserMapper.updateVipUser(vipUser);
                 vipProfitDetailMapper.insertVipProfitDetail(detail);
-                if(parentUser != null){
-                    VipProfitDetail detail1 = new VipProfitDetail();    //  一级
-                    detail1.setVipId(parentUser.getId());
-                    detail1.setProfitDate(DateUtils.dateTimeNow("yyyy-MM-dd"));
-                    detail1.setProfitDescription(String.format(CustomerConstants.PROFIT_TEMPLATE,giftNumber,giftType));
-                    //收益类型: 一级
-                    detail1.setProfitType(ProfitType.ONE.getCode());
-
-                    double mul1 = NumberUtil.mul(Double.parseDouble(giftNumber), parentCharge);
-                    double mul = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
-                    parentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(parentUser.getSslMoney()),mul)));
-                    vipUserMapper.updateVipUser(parentUser);
-                    vipProfitDetailMapper.insertVipProfitDetail(detail1);
-                }
-
-                if(pparentUser != null){
-                    VipProfitDetail detail2 = new VipProfitDetail();    //二级
-                    detail2.setVipId(pparentUser.getId());
-                    detail2.setProfitDate(DateUtils.dateTimeNow("yyyy-MM-dd"));
-                    detail2.setProfitDescription(String.format(CustomerConstants.PROFIT_TEMPLATE,giftNumber,giftType));
-                    //收益类型: 一级
-                    detail2.setProfitType(ProfitType.TWO.getCode());
-
-                    double mul1 = NumberUtil.mul(Double.parseDouble(giftNumber), grandparentCharge);
-                    double mul = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
-                    pparentUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(pparentUser.getSslMoney()),mul)));
-                    vipUserMapper.updateVipUser(pparentUser);
-                    vipProfitDetailMapper.insertVipProfitDetail(detail2);
-                }
             }
         }catch (Exception e){
             e.printStackTrace();
