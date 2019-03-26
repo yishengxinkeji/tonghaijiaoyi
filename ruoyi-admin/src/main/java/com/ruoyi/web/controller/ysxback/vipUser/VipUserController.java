@@ -333,6 +333,7 @@ public class VipUserController extends BaseController
 	public String toRecommend(@PathVariable("id") Integer id, ModelMap mmap) {
 		VipUser vipUser = vipUserService.selectVipUserById(id);
 		mmap.put("parentCode",vipUser.getParentCode());
+		mmap.put("recommendCode",vipUser.getRecommendCode());
 		return prefix+"/recommend";
 	}
 
@@ -345,11 +346,18 @@ public class VipUserController extends BaseController
 		startPage();
 
 		List<Map> list = new ArrayList();
-		VipUser vipUser2 = new VipUser();
-		vipUser2.setRecommendCode(vipUser.getParentCode());
-		List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser2);
+		List<VipUser> vipUsers = new ArrayList<>();
+		if(!vipUser.getParentCode().equalsIgnoreCase("-1")){
+			VipUser vipUser2 = new VipUser();
+			vipUser2.setRecommendCode(vipUser.getParentCode());
+			//查询其父一级
+			vipUsers = vipUserService.selectVipUserList(vipUser2);
+		}
 
-		List<VipUser> list1 = vipUserService.selectVipUserList(vipUser);
+		VipUser vipUser3 = new VipUser();
+		vipUser3.setParentCode(vipUser.getRecommendCode());
+		//查询自己下面的人
+		List<VipUser> list1 = vipUserService.selectVipUserList(vipUser3);
 		if(vipUsers.size() > 0){
 			Map map = new HashMap();
 			map.put("id",vipUsers.get(0).getId());
