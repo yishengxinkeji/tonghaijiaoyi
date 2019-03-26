@@ -43,7 +43,7 @@ public enum ResponseEnum {
     CAN_NOT_BUY_YOURSELF("1113","不能与自己的订单交易"),
     UNITE_PRICE_TOO_LOW("1114","单价太低"),
     UNITE_PRICE_TOO_HIGH("1115","单价太高"),
-
+    USER_ISFROZEN("1300","账户冻结"),
 
 
 

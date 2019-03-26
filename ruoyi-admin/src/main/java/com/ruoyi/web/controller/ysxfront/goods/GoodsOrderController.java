@@ -63,6 +63,11 @@ public class GoodsOrderController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
         }
+
+        String isFrozen = vipUser.getIsFrozen();
+        if (isFrozen.equals("Y")){
+            return ResponseResult.responseResult(ResponseEnum.USER_ISFROZEN);
+        }
         //生成订单号
         String orderIdByTime = Order.getOrderIdByTime();
         goodsOrder.setOrderNumber(orderIdByTime);
