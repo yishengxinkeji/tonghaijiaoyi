@@ -93,15 +93,14 @@ public class VipUserLoginController extends BaseFrontController {
         if(!FileUtil.exist(Global.getFrontPath())){
             FileUtil.mkdir(Global.getFrontPath());
         }
-        //使用hutool生成一个默认的二维码,文件名默认为推广码.jpg
-        File file = QrCodeUtil.generate(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
+        //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
+        File file = QrCodeUtil.generate(Global.getConfig("tonghaijiaoyi.QrCode")+"?invicode="+exten, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
         new_User.setExtensionCode(Global.getFrontPath()+file.getName());
 
         //钱包地址
         new_User.setMoneyCode(IdUtil.simpleUUID());
-        //邀请链接
-       // new_User.setInviteLink(Base64Encoder.encode(CustomerConstants.PRE_INVI_LINK+exten));
-        new_User.setInviteLink(Global.getConfig("tonghaijiaoyi.link")+"?invicode="+exten);
+        //邀请链接,链接8080端口,指向pc端
+        new_User.setInviteLink(Global.getConfig("tonghaijiaoyi.inviLink")+"?invicode="+exten);
 
         new_User.setHkdMoney("0");
         new_User.setSslMoney("0");

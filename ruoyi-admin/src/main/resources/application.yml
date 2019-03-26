@@ -152,4 +152,7 @@ gen:
 
 #通海交易前端注册链接,用于邀请二维码,跳转注册页面
 tonghaijiaoyi:
-  link: 122.114.239.176:8081/dist/index.html
+  #邀请链接,指向PC端,8080端口
+  inviLink: https://dwz.cn/i7cHEa4K
+  #二维码指向手机端, 8081端口
+  QrCode: https://dwz.cn/XnQp4tmI
