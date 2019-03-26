@@ -12,6 +12,7 @@ import cn.hutool.core.util.URLUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.utils.BaiduDwz;
 import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.config.ServerConfig;
@@ -41,6 +42,7 @@ public class testMain {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
-
+        String res = BaiduDwz.createShortUrl("http://122.114.239.176:8080/dist/index.html#/register?invicode=3d94fe87");
+        System.out.println(res);
     }
 }

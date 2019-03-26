@@ -12,6 +12,7 @@ import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.json.JSON;
+import com.ruoyi.common.utils.BaiduDwz;
 import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.JwtUtils;
@@ -94,13 +95,15 @@ public class VipUserLoginController extends BaseFrontController {
             FileUtil.mkdir(Global.getFrontPath());
         }
         //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
-        File file = QrCodeUtil.generate(Global.getConfig("tonghaijiaoyi.QrCode")+"?invicode="+exten, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
+        String qrUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + exten);
+        File file = QrCodeUtil.generate(qrUrl, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
         new_User.setExtensionCode(Global.getFrontPath()+file.getName());
 
         //钱包地址
         new_User.setMoneyCode(IdUtil.simpleUUID());
         //邀请链接,链接8080端口,指向pc端
-        new_User.setInviteLink(Global.getConfig("tonghaijiaoyi.inviLink")+"?invicode="+exten);
+        String pcUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.inviLink") + "?invicode=" + exten);
+        new_User.setInviteLink(pcUrl);
 
         new_User.setHkdMoney("0");
         new_User.setSslMoney("0");

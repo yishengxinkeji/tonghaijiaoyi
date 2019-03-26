@@ -27,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="projectIntroduction != null  and projectIntroduction != '' "> and project_introduction = #{projectIntroduction}</if>
              <if test="projectContent != null  and projectContent != '' "> and project_content = #{projectContent}</if>
          </where>
+        ${params.Project}
     </select>
     
     <select id="selectProjectById" parameterType="Integer" resultMap="ProjectResult">
