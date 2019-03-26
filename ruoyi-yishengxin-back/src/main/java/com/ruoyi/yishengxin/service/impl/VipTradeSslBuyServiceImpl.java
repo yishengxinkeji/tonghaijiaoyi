@@ -139,7 +139,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
         vipTradeSslBuy.setBuyNo(IdUtil.simpleUUID());
         vipTradeSslBuy.setBuyNumber(number);
-        vipTradeSslBuy.setUnitPrice(price);
+        vipTradeSslBuy.setUnitPrice(NumberUtil.roundStr(price,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuy.setBuyTotal(String.valueOf(mul));
         vipTradeSslBuy.setBuyTime(DateUtils.dateTimeNow("yyyy-MM-dd HH:mm"));
         vipTradeSslBuy.setBuyType(TradeType.BUY_SSL.getCode());
