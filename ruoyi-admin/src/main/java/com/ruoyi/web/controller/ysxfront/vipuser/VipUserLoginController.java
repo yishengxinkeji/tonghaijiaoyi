@@ -83,7 +83,7 @@ public class VipUserLoginController extends BaseFrontController {
         new_User.setPhone(phone);
         String salt = ShiroUtils.randomSalt();
         new_User.setSalt(salt);
-        new_User.setAvater("/img/default_avater.jpg");
+        new_User.setAvater("/img/default_avater.png");
         new_User.setNickname("新用户");
         String loginPassword= DigestUtils.md5Hex(password + salt);
         new_User.setLoginPassword(loginPassword);
