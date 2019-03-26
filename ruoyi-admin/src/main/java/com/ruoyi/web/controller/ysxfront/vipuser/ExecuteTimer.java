@@ -49,11 +49,11 @@ public class ExecuteTimer {
 
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
         vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc");
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time asc");
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
         vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
-        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc");
+        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time asc");
 
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 

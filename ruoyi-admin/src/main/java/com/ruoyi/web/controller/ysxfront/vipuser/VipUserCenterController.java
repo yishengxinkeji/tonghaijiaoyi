@@ -322,7 +322,7 @@ public class VipUserCenterController extends BaseFrontController {
 
             ResponseResult map = new ResponseResult();
             //二维码
-            map.put("extension",Global.getFrontPath() + vipUser.getExtensionCode());
+            map.put("extension",vipUser.getExtensionCode());
             //推荐码
             map.put("recommend",vipUser.getRecommendCode());
             map.put("inviteLink",vipUser.getInviteLink());
