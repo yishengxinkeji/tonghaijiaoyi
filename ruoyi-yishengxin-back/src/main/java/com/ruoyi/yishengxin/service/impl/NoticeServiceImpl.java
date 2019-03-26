@@ -79,5 +79,10 @@ public class NoticeServiceImpl implements INoticeService
 	{
 		return noticeMapper.deleteNoticeByIds(Convert.toStrArray(ids));
 	}
+
+	@Override
+	public int selectTotal() {
+		return noticeMapper.selectTotal();
+	}
 	
 }
