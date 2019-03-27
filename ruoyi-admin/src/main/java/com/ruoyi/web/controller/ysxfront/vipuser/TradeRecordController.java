@@ -769,10 +769,15 @@ public class TradeRecordController extends BaseFrontController {
                     String appealThing = vipAppeals.get(0).getAppealReason();
                     map.put("failReason",vipTradeHkdBuy.getFailReason()+"("+appealThing+")");
                 }else {
-                    map.put("failReason",vipTradeHkdBuy.getFailReason());
+                    map.put("failReason","-1");
                 }
-            }else {
-                map.put("failReason","-1");
+            }else if(vipTradeHkdBuy.getBuyStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
+                if(vipAppeals.size() > 0){
+                    String appealThing = vipAppeals.get(0).getAppealReason();
+                    map.put("failReason",appealThing);
+                }else {
+                    map.put("failReason","-1");
+                }
             }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
@@ -803,10 +808,15 @@ public class TradeRecordController extends BaseFrontController {
                     String appealThing = vipAppeals.get(0).getAppealReason();
                     map.put("failReason",vipTradeHkdSale.getFailReason()+"("+appealThing+")");
                 }else {
-                    map.put("failReason",vipTradeHkdSale.getFailReason());
+                    map.put("failReason","-1");
                 }
-            }else {
-                map.put("failReason","-1");
+            }else if(vipTradeHkdSale.getSaleStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
+                if(vipAppeals.size() > 0){
+                    String appealThing = vipAppeals.get(0).getAppealReason();
+                    map.put("failReason",appealThing);
+                }else {
+                    map.put("failReason","-1");
+                }
             }
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
