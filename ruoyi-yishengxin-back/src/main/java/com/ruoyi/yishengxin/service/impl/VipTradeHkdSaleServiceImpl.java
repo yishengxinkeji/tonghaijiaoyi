@@ -152,7 +152,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         vipTradeHkdSale.setVipId(vipUser.getId());
         vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
         vipTradeHkdSale.setSaleNo(IdUtil.simpleUUID());
-        vipTradeHkdSale.setSaleNumber(String.valueOf(mulCharge));       //订单数量
+        vipTradeHkdSale.setSaleNumber(NumberUtil.roundStr(mulCharge,CustomerConstants.ROUND_NUMBER));       //订单数量
         vipTradeHkdSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeHkdSale.setIsAppeal(CustomerConstants.NO);
         vipTradeHkdSale.setSaleTotal(String.valueOf(mulCharge));    //实际订单数量,是扣除手续费之后的数量

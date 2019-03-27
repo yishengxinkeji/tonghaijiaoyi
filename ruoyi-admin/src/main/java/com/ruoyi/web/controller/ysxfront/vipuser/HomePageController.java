@@ -135,7 +135,7 @@ public class HomePageController {
      * @param id
      * @return
      */
-    @PostMapping("/newsDetail")
+    @GetMapping("/newsDetail")
     public ResponseResult newsDetail(@RequestParam("id") String id){
 
         News news = newsService.selectNewsById(Integer.parseInt(id));
@@ -187,7 +187,7 @@ public class HomePageController {
      * @param id
      * @return
      */
-    @PostMapping("/projectDetail")
+    @GetMapping("/projectDetail")
     public ResponseResult projectDetail(@RequestParam("id") String id){
 
         Project project = projectService.selectProjectById(Integer.parseInt(id));
@@ -251,7 +251,7 @@ public class HomePageController {
      * @param id
      * @return
      */
-    @PostMapping("/noticeDetail")
+    @GetMapping("/noticeDetail")
     public ResponseResult noticeDetail(@RequestParam("id") String id){
 
         Notice notice = noticeService.selectNoticeById(Integer.parseInt(id));

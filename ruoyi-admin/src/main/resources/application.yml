@@ -156,3 +156,10 @@ tonghaijiaoyi:
   inviLink: http://122.114.239.176:8080/dist/index.html#/register
   #二维码指向手机端, 8081端口
   QrCode: http://122.114.239.176:8081/dist/index.html#/registernow
+  #轮播图几个前缀
+  #新闻
+  PREFIX_NEWS: http://122.114.239.176:8080/dist/index.html#/newsDetail?news_id=
+  #公告
+  PREFIX_NOTICE: http://122.114.239.176:8080/dist/index.html#/noticeDetail?notice_id=
+  #项目
+  PREFIX_PROJECT: http://122.114.239.176:8080/dist/index.html#/projectView?project_id=

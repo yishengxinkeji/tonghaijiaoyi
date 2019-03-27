@@ -138,7 +138,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         //交易中
         vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
         vipTradeSslBuy.setBuyNo(IdUtil.simpleUUID());
-        vipTradeSslBuy.setBuyNumber(number);
+        vipTradeSslBuy.setBuyNumber(NumberUtil.roundStr(number,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuy.setUnitPrice(NumberUtil.roundStr(price,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuy.setBuyTotal(String.valueOf(mul));
         vipTradeSslBuy.setBuyTime(DateUtils.dateTimeNow("yyyy-MM-dd HH:mm"));
@@ -266,7 +266,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         //更新买的订单状态
         vipTradeSslBuy1.setBuyStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslBuy1.setSaleId(String.valueOf(vipTradeSslSale1.getVipId()));
+        vipTradeSslBuy1.setSaleId(String.valueOf(saleUser.getId()));
         vipTradeSslBuy1.setSalePhone(saleUser.getPhone());
         vipTradeSslBuy1.setSaleNickname(saleUser.getNickname());
         vipTradeSslBuy1.setSaleAvater(saleUser.getAvater());
@@ -431,7 +431,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         //更新买的订单状态
         vipTradeSslBuy1.setBuyStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslBuy1.setSaleId(String.valueOf(vipTradeSslSale1.getVipId()));
+        vipTradeSslBuy1.setSaleId(String.valueOf(saleUser.getId()));
         vipTradeSslBuy1.setSalePhone(saleUser.getPhone());
         vipTradeSslBuy1.setSaleNickname(saleUser.getNickname());
         vipTradeSslBuy1.setSaleAvater(saleUser.getAvater());
@@ -444,7 +444,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         //更新卖的订单状态
         vipTradeSslSale1.setSaleStatus(TradeStatus.SUCCESS.getCode());
-        vipTradeSslSale1.setBuyId(String.valueOf(vipTradeSslBuy1.getVipId()));
+        vipTradeSslSale1.setBuyId(String.valueOf(buyUser.getId()));
         vipTradeSslSale1.setBuyAvater(buyUser.getAvater());
         vipTradeSslSale1.setBuyNickname(buyUser.getNickname());
         vipTradeSslSale1.setBuyPhone(buyUser.getPhone());
@@ -597,7 +597,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         String simpleUuid = IdUtil.simpleUUID();
         //创建新的买订单信息
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-        vipTradeSslBuy.setVipId(vipTradeSslBuy1.getVipId());
+        vipTradeSslBuy.setVipId(buyUser.getId());
         vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
         vipTradeSslBuy.setBuyNo(simpleUuid);
         vipTradeSslBuy.setUnitPrice(saleUnitPrice);
@@ -605,7 +605,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         double mul1 = NumberUtil.mul(Double.parseDouble(saleNumber), Double.parseDouble(saleUnitPrice));
         vipTradeSslBuy.setBuyTotal(NumberUtil.roundStr(mul1,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuy.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
-        vipTradeSslBuy.setSaleId(String.valueOf(vipTradeSslSale1.getVipId()));
+        vipTradeSslBuy.setSaleId(String.valueOf(saleUser.getId()));
         vipTradeSslBuy.setSalePhone(saleUser.getPhone());
         vipTradeSslBuy.setSaleNickname(saleUser.getNickname());
         vipTradeSslBuy.setSaleAvater(saleUser.getAvater());
@@ -616,11 +616,11 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
 
         //剩余需要买的数量
         double sub = NumberUtil.sub(Double.parseDouble(buyNumber), Double.parseDouble(saleNumber));
-        double buy_num = NumberUtil.round(sub,CustomerConstants.ROUND_NUMBER).doubleValue();
+        String buy_num = NumberUtil.roundStr(sub,CustomerConstants.ROUND_NUMBER);
 
         //更新买的订单状态
-        vipTradeSslBuy1.setBuyNumber(String.valueOf(buy_num));
-        double mul2 = NumberUtil.mul(buy_num, Double.parseDouble(vipTradeSslBuy1.getUnitPrice()));
+        vipTradeSslBuy1.setBuyNumber(buy_num);
+        double mul2 = NumberUtil.mul(Double.parseDouble(buy_num), Double.parseDouble(vipTradeSslBuy1.getUnitPrice()));
         vipTradeSslBuy1.setBuyTotal(NumberUtil.roundStr(mul2,CustomerConstants.ROUND_NUMBER));
         vipTradeSslBuyMapper.updateVipTradeBuy(vipTradeSslBuy1);
 

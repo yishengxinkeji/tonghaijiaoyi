@@ -3,68 +3,72 @@
 <meta charset="utf-8">
 <head th:include="include :: header"></head>
 <body class="gray-bg">
-    
-     <div class="container-div">
-		<div class="row">
-			<div class="col-sm-12 search-collapse">
-				<form id="formId">
-					<div class="select-list">
 
-					</div>
-				</form>
-			</div>
-			
-	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
-				<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:customerLog:add">
-					<i class="fa fa-plus"></i> 添加
-				</a>
-				<a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:customerLog:edit">
-					<i class="fa fa-edit"></i> 修改
-				</a>
-				<a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:customerLog:remove">
-					<i class="fa fa-remove"></i> 删除
-				</a>
-				<a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:customerLog:export">
-						<i class="fa fa-download"></i> 导出
-				 </a>
-			</div>
-			<div class="col-sm-12 select-table table-striped">
-				<table id="bootstrap-table" data-mobile-responsive="true"></table>
-			</div>
+<div class="container-div">
+	<div class="row">
+		<div class="col-sm-12 search-collapse">
+			<form id="formId">
+				<div class="select-list">
+				</div>
+			</form>
+		</div>
+
+		<!--<div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:customerLog:add">
+                <i class="fa fa-plus"></i> 添加
+            </a>
+            <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="yishengxin:customerLog:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger btn-del btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="yishengxin:customerLog:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="yishengxin:customerLog:export">
+                    <i class="fa fa-download"></i> 导出
+             </a>
+        </div>-->
+		<input type="hidden" th:value="${vipId}" id="vipId">
+		<div class="col-sm-12 select-table table-striped">
+			<table id="bootstrap-table" data-mobile-responsive="true"></table>
 		</div>
 	</div>
-    <div th:include="include :: footer"></div>
-    <script th:inline="javascript">
-        var editFlag = [[${@permission.hasPermi('yishengxin:customerLog:edit')}]];
-        var removeFlag = [[${@permission.hasPermi('yishengxin:customerLog:remove')}]];
-        var prefix = ctx + "yishengxin/customerLog";
-		var datas = [[${@dict.getType('customer_user_log')}]];
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+	var editFlag = [[${@permission.hasPermi('yishengxin:customerLog:edit')}]];
+	var removeFlag = [[${@permission.hasPermi('yishengxin:customerLog:remove')}]];
+	var prefix = ctx + "yishengxin/customerLog";
+	var datas = [[${@dict.getType('customer_user_log')}]];
 
-        $(function() {
-            var options = {
-                url: prefix + "/list",
-                createUrl: prefix + "/add",
-                updateUrl: prefix + "/edit/{id}",
-                removeUrl: prefix + "/remove",
-				exportUrl: prefix + "/export",
-                modalName: "客服操作会员记录",
-				search: false,
-		        showExport: true,
-                columns: [{
-		            checkbox: true
-		        },
+	$(function() {
+		$.table.search();
+		var options = {
+			url: prefix + "/list",
+			queryParams:{
+				"vipId":$("#vipId").val()
+			},
+			createUrl: prefix + "/add",
+			updateUrl: prefix + "/edit/{id}",
+			removeUrl: prefix + "/remove",
+			exportUrl: prefix + "/export",
+			modalName: "客服操作会员记录",
+			search: false,
+			showExport: true,
+			columns: [{
+				checkbox: true
+			},
 				{
-					field : 'id', 
+					field : 'id',
 					title : '',
 					visible: false
 				},
 				{
-					field : 'vipId', 
+					field : 'vipId',
 					title : '会员id',
 					sortable: true
 				},
 				{
-					field : 'logType', 
+					field : 'logType',
 					title : '操作类型',
 					align: 'center',
 					formatter: function (value, row, index) {
@@ -82,43 +86,44 @@
 					sortable: true
 				},
 				{
-					field : 'phone', 
+					field : 'phone',
 					title : '用户手机号',
 					sortable: true
 				},
 				{
-					field : 'nickname', 
+					field : 'nickname',
 					title : '用户昵称',
 					sortable: true
 				},
 				{
-					field : 'createBy', 
+					field : 'createBy',
 					title : '操作人',
 					sortable: true
 				},
 				{
-					field : 'createTime', 
+					field : 'createTime',
 					title : '操作时间',
 					sortable: true
 				},
 				{
-					field : 'reason', 
+					field : 'reason',
 					title : '操作原因',
 					sortable: true
 				},
-		        {
-		            title: '操作',
-		            align: 'center',
-		            formatter: function(value, row, index) {
-		            	var actions = [];
-		            	actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
-                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+				{
+					title: '操作',
+					align: 'center',
+					formatter: function(value, row, index) {
+						var actions = [];
+						actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+						actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
 						return actions.join('');
-		            }
-		        }]
-            };
-            $.table.init(options);
-        });
-    </script>
+					}
+				}]
+		};
+		$.table.init(options);
+	});
+
+</script>
 </body>
 </html>
