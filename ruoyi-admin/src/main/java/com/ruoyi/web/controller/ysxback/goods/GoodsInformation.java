@@ -180,8 +180,7 @@ public class GoodsInformation extends BaseController
     @PostMapping("/edit")
     @ResponseBody
     public AjaxResult editSave(Goods goods,String figure1,String figure2,String figure3,String figure4,String figure6,String figure7,String figure8,String figure9,String figure10,String figure11,String figure12){
-        goods.setGoodsSoldNumber(0);
-        goods.setCreateTime(new Date());
+
         goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+" ");
         goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+" ");
         goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+" ");
