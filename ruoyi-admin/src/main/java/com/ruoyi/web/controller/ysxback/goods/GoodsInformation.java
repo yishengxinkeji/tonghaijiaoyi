@@ -1,12 +1,19 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
+import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.Vo.GoodsBackVo;
 import com.ruoyi.yishengxin.domain.goods.Goods;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +42,7 @@ public class GoodsInformation extends BaseController
 
     @Autowired
     private IGoodsService goodsService;
+
 
     @RequiresPermissions("yishengxin:goods:view")
     @GetMapping()
@@ -85,9 +93,9 @@ public class GoodsInformation extends BaseController
     public AjaxResult addSave(Goods goods,String figure1,String figure2,String figure3,String figure4,String figure6,String figure7,String figure8,String figure9,String figure10,String figure11,String figure12){
             goods.setGoodsSoldNumber(0);
             goods.setCreateTime(new Date());
-      goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+" ,");
-      goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+" ,");
-      goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+" ,");
+      goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+" ");
+      goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+" ");
+      goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+" ");
                 goods.setStandUpAndDown("下架");
         String goodsPrice = goods.getGoodsPrice();
         if (null != goodsPrice) {
