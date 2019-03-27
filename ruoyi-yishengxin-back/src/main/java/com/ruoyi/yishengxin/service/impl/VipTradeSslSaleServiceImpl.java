@@ -166,7 +166,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
         vipTradeSslSale.setSaleNo(IdUtil.simpleUUID());
         vipTradeSslSale.setSaleNumber(String.valueOf(mulCharge));   //实际订单金额是扣除了手续费之后的
-        vipTradeSslSale.setUnitPrice(price);
+        vipTradeSslSale.setUnitPrice(NumberUtil.roundStr(price,CustomerConstants.ROUND_NUMBER));
         vipTradeSslSale.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         double mul = NumberUtil.mul(mulCharge, Double.parseDouble(price));
         vipTradeSslSale.setSaleTotal(NumberUtil.roundStr(mul,CustomerConstants.ROUND_NUMBER));
