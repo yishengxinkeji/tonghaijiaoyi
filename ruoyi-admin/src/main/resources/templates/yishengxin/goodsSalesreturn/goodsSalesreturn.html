@@ -62,6 +62,7 @@
 	var removeFlag = [[${@permission.hasPermi('yishengxin:goodsSalesreturn:remove')}]];
 	var types = [[${@dict.getType('goods_salesreturn_status')}]];
 	var types1 = [[${@dict.getType('goods_salesreturn_way')}]];
+
 	var prefix = ctx + "yishengxin/goodsSalesreturn";
 
 	$(function() {
@@ -150,9 +151,14 @@
 					title : '退货物流号',
 					sortable: false
 				},
+				//	goods_salesreturn_way
 				{
 					field : 'refundWay',
 					title : '退款方式',
+					align: 'center',
+					formatter: function(value, row, index) {
+						return $.table.selectDictLabel(types1, value);
+					}
 				},
 				{
 					field : 'refundStatus',
