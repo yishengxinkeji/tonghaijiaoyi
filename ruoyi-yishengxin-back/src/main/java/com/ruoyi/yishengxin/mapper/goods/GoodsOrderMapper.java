@@ -77,4 +77,6 @@ public interface GoodsOrderMapper
 	@Select("select * from ysx_goods_order where orderNumber=#{orderNumber}")
 	public GoodsOrder selectByOraderNumber(String orderNumber);
 
+	@Select("select ifnull(sum(goodsOrderTotalAmount),0) from ysx_goods_order where (goodsStatus='带评价' or goodsStatus='交易完成')")
+    double selectSum();
 }

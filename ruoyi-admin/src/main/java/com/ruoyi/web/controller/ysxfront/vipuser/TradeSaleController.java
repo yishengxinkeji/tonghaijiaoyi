@@ -167,7 +167,7 @@ public class TradeSaleController extends BaseFrontController {
             //查的是ssl售卖列表
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             //交易成功
-            vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
+            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
             vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
@@ -348,6 +348,7 @@ public class TradeSaleController extends BaseFrontController {
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
+        vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
         vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,10");
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 

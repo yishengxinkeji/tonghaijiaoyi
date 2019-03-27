@@ -62,4 +62,10 @@ public interface IGoodsOrderService
 	 * @return 结果
 	 */
 	public GoodsOrder selectByOraderNumber(String orderNumber);
+
+	/**
+	 * 统计所有交易成功订单花费的ssl总和
+	 * @return
+	 */
+	double selectSum();
 }

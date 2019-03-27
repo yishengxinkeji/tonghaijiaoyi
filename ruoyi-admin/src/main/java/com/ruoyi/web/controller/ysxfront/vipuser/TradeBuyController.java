@@ -123,7 +123,7 @@ public class TradeBuyController extends BaseFrontController {
 
         }else if(!type.equals("")){
             //查的是列表
-            vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
+            vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
             vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
         }
 

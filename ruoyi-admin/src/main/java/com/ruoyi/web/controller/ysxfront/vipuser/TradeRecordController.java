@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.druid.wall.Violation;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -54,6 +55,7 @@ public class TradeRecordController extends BaseFrontController {
     private IVipAppealService vipAppealService;
     @Autowired
     private ITradeExplainService tradeExplainService;
+
 
 
     /**
@@ -743,13 +745,15 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        VipAppeal vipAppeal = new VipAppeal();
         //买HKD
         if(vipTrade.equalsIgnoreCase(TradeType.BUY_HKD.getCode())){
-
-
             Map map = new HashMap();
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
-
+            
+            vipAppeal.setOrderNo(vipTradeHkdBuy.getBuyNo());
+            vipAppeal.setBuyId(vipUser.getId());
+            List<VipAppeal> vipAppeals = vipAppealService.selectVipAppealList(vipAppeal);
             map.put("id",id);
             map.put("orderNo",vipTradeHkdBuy.getBuyNo());
             map.put("time",vipTradeHkdBuy.getBuyTime());
@@ -760,7 +764,16 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdBuy.getSaleAccount());
             map.put("accountImg",vipTradeHkdBuy.getSaleAccountProof());
             map.put("proof",vipTradeHkdBuy.getProof());
-            map.put("failReason",vipTradeHkdBuy.getFailReason());
+            if(vipTradeHkdBuy.getBuyStatus().equalsIgnoreCase(TradeStatus.FAIL.getCode())){
+                if(vipAppeals.size() > 0){
+                    String appealThing = vipAppeals.get(0).getAppealReason();
+                    map.put("failReason",vipTradeHkdBuy.getFailReason()+"("+appealThing+")");
+                }else {
+                    map.put("failReason",vipTradeHkdBuy.getFailReason());
+                }
+            }else {
+                map.put("failReason","-1");
+            }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 
@@ -770,6 +783,10 @@ public class TradeRecordController extends BaseFrontController {
 
             VipUser saleUser = vipUserService.selectVipUserById(vipTradeHkdSale.getVipId());
             Map map = new HashMap();
+
+            vipAppeal.setOrderNo(vipTradeHkdSale.getSaleNo());
+            vipAppeal.setSaleId(vipUser.getId());
+            List<VipAppeal> vipAppeals = vipAppealService.selectVipAppealList(vipAppeal);
 
             map.put("id",id);
             map.put("orderNo",vipTradeHkdSale.getSaleNo());
@@ -781,14 +798,23 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdSale.getSaleAccount());
             map.put("accountImg",vipTradeHkdSale.getSaleAccountProof());
             map.put("proof",vipTradeHkdSale.getProof());
-            map.put("failReason",vipTradeHkdSale.getFailReason());
+            if(vipTradeHkdSale.getSaleStatus().equalsIgnoreCase(TradeStatus.FAIL.getCode())){
+                if(vipAppeals.size() > 0){
+                    String appealThing = vipAppeals.get(0).getAppealReason();
+                    map.put("failReason",vipTradeHkdSale.getFailReason()+"("+appealThing+")");
+                }else {
+                    map.put("failReason",vipTradeHkdSale.getFailReason());
+                }
+            }else {
+                map.put("failReason","-1");
+            }
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
 
             return ResponseResult.success();
 
-        }
+    }
 
 
     /**

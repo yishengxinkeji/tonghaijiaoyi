@@ -38,6 +38,8 @@ public class FinancialController extends BaseController {
     private IVipTradeHkdSaleService vipTradeHkdSaleService;
     @Autowired
     private ITradeService tradeService;
+    @Autowired
+    private IGoodsOrderService goodsOrderService;
 
 
 //总资金[  现金[即兑换的差价], [ssl: 交易手续费+商品购买]   ] , [hkd:交易手续费 ] , 可用资金 [ 购买-兑换的差价 ],
@@ -46,7 +48,8 @@ public class FinancialController extends BaseController {
     @GetMapping()
     public String customer(ModelMap modelMap) {
 
-        //TODO 商品购买金额还没算
+        //客户购买商品花费的ssl
+        double goodSum = goodsOrderService.selectSum();
 
         //总资金(兑换-购买的差价)
         double buySum = vipBuyService.selectSum();    //购买总金额
@@ -54,7 +57,7 @@ public class FinancialController extends BaseController {
         double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
         double waitExchange = vipExchangeService.selectSumByIfExchage("1");  //当前未兑换的现金总和 -- 待返资金
 
-        //2019年一直到以后的今天,ssl交易总和
+        //2019年一直到以后的今天,ssl手续费总和
         double sslSum = vipTradeSslSaleService.selectSum(DateUtil.beginOfYear(DateUtil.parseDate("2019-01-01")),DateUtil.endOfDay(new Date()));
         //2019年一直到以后的今天,hkd交易总和
         double hkdSum = vipTradeHkdSaleService.selectSum(DateUtil.beginOfYear(DateUtil.parseDate("2019-01-01")),DateUtil.endOfDay(new Date())); //
@@ -65,9 +68,9 @@ public class FinancialController extends BaseController {
         //hkd交易手续费
         String hkdCharge = trade.getHkdCharge();
 
-        double sslChargeSum = NumberUtil.mul(sslSum, Double.parseDouble(sslCharge));   //ssl手续费
+        //ssl总资金 = ssl手续费 + 商品购买花费
+        double sslChargeSum = NumberUtil.add(sslSum,goodSum);
         double hkdChargeSum = NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge));   //hkd交易手续费
-
 
         modelMap.put("exchangeSum",exchangeSum);
         modelMap.put("divSum",divSum);

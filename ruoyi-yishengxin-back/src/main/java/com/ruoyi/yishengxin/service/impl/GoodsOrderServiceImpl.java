@@ -96,4 +96,8 @@ public class GoodsOrderServiceImpl implements IGoodsOrderService
 		return goodsOrderMapper.selectByOraderNumber(orderNumber);
 	}
 
+	@Override
+	public double selectSum() {
+		return goodsOrderMapper.selectSum();
+	}
 }

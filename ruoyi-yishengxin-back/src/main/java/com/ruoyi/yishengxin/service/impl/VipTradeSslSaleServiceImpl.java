@@ -157,8 +157,10 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
             return 500;
         }
 
+        //扣的手续费
+        double mul2 = NumberUtil.mul(Double.parseDouble(number), sslCharge);
         //内扣手续费后,实际应得的
-        double mul1 = NumberUtil.mul(Double.parseDouble(number), NumberUtil.sub(1, sslCharge));
+        double mul1 = NumberUtil.sub(Double.parseDouble(number), mul2);
         double mulCharge = NumberUtil.round(mul1,CustomerConstants.ROUND_NUMBER).doubleValue();
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
@@ -171,6 +173,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         double mul = NumberUtil.mul(mulCharge, Double.parseDouble(price));
         vipTradeSslSale.setSaleTotal(NumberUtil.roundStr(mul,CustomerConstants.ROUND_NUMBER));
         vipTradeSslSale.setSaleType(TradeType.SALE_SSL.getCode());
+        vipTradeSslSale.setChargeMoney(NumberUtil.roundStr(mul2,CustomerConstants.ROUND_NUMBER));
 
         vipTradeSslSaleMapper.insertVipTradeSale(vipTradeSslSale);
         vipUser.setSslMoney(NumberUtil.roundStr(NumberUtil.sub(ssl, Double.parseDouble(number)), CustomerConstants.ROUND_NUMBER));
@@ -188,17 +191,16 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     public int cancelSale(VipUser vipUser, String id) {
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
         VipTradeSslSale vipTradeSslSale = vipTradeSslSaleMapper.selectVipTradeSaleById(Integer.parseInt(id));
-        Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
-        String sslCharge = trade.getSslCharge();
         //原订单金额
-        double div = NumberUtil.div(Double.parseDouble(vipTradeSslSale.getSaleNumber()), NumberUtil.sub(1, Double.parseDouble(sslCharge)));
+        double div = NumberUtil.add(Double.parseDouble(vipTradeSslSale.getSaleNumber()), Double.parseDouble(vipTradeSslSale.getChargeMoney()));
         double yNo = NumberUtil.round(div,CustomerConstants.ROUND_NUMBER).doubleValue();
 
-        vipUser1.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser1.getSslMoney()),yNo)));
+        vipUser1.setSslMoney(NumberUtil.roundStr(NumberUtil.add(Double.parseDouble(vipUser1.getSslMoney()),yNo),CustomerConstants.ROUND_NUMBER));
         //更新用户
         vipUserMapper.updateVipUser(vipUser1);
-        //更新订单状态
+        //更新订单状态,以及手续费
         vipTradeSslSale.setSaleStatus(TradeStatus.CANCEL.getCode());
+        vipTradeSslSale.setChargeMoney("0");
         return vipTradeSslSaleMapper.updateVipTradeSale(vipTradeSslSale);
     }
 

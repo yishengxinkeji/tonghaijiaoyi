@@ -46,6 +46,8 @@ public class VipTradeSslSale extends BaseEntity
 	private String buyAvater;
 	/** 关联订单号 */
 	private String relationOrderno;
+	/** 订单扣除的手续费 */
+	private String chargeMoney;
 
 
 }
