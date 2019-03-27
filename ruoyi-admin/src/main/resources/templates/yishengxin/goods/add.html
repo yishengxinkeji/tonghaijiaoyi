@@ -23,14 +23,14 @@
 		<div class="form-group">
 			<label class="col-sm-3 control-label">商品价格：</label>
 			<div class="col-sm-8">
-				<input id="goodsPrice" name="goodsPrice" class="form-control" type="text">
+				<input id="goodsPrice" name="goodsPrice" class="form-control" type="text" onkeyup="clearNoNum(this)">
 			</div>
 		</div>
 
 		<div class="form-group">
 			<label class="col-sm-3 control-label">商品库存：</label>
 			<div class="col-sm-8">
-				<input id="goodsInventory" name="goodsInventory" class="form-control" type="text">
+				<input id="goodsInventory" name="goodsInventory" class="form-control" type="text" oninput="value=value.replace(/[^\d]/g,'')">
 			</div>
 		</div>
 
@@ -246,6 +246,13 @@
 <script th:src="@{/ajax/libs/summernote/summernote.min.js}"></script>
 <script th:src="@{/ajax/libs/summernote/summernote-zh-CN.js}"></script>
 <script type="text/javascript">
+
+	function clearNoNum(obj){   obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+		obj.value = obj.value.replace(/^\./g,"");  //验证第一个字符是数字而不是.
+		obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的.
+		obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+
+	}
 	var prefix = ctx + "yishengxin/goods";
 
 	$("#form-goods-add").validate({
