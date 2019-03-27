@@ -1,12 +1,19 @@
 package com.ruoyi.web.controller.ysxback.goods;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
+import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.Vo.GoodsBackVo;
 import com.ruoyi.yishengxin.domain.goods.Goods;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,6 +42,7 @@ public class GoodsInformation extends BaseController
 
     @Autowired
     private IGoodsService goodsService;
+
 
     @RequiresPermissions("yishengxin:goods:view")
     @GetMapping()
@@ -85,26 +93,23 @@ public class GoodsInformation extends BaseController
     public AjaxResult addSave(Goods goods,String figure1,String figure2,String figure3,String figure4,String figure6,String figure7,String figure8,String figure9,String figure10,String figure11,String figure12){
             goods.setGoodsSoldNumber(0);
             goods.setCreateTime(new Date());
-      goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+"");
-      goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+"");
-      goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+"");
-
-
+      goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+" ");
+      goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+" ");
+      goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+" ");
+                goods.setStandUpAndDown("下架");
+        String goodsPrice = goods.getGoodsPrice();
+        if (null != goodsPrice) {
+            int length = goodsPrice.length();
+            String s = goodsPrice.charAt(length - 1) + "";
+            if (s.equals(".")){
+                goodsPrice= goodsPrice.substring(0, length - 1);
+              goods.setGoodsPrice(goodsPrice);
+            }
+        }
         goods.setCreateBy(ShiroUtils.getLoginName());
         return toAjax(goodsService.insertGoods(goods));
     }
 
-
-    public static void main(String[] args) {
-
-            String sourceStr = " , , , ,";
-
-
-            String[] sourceStrArray = sourceStr.split(",");
-            for (int i = 0; i < sourceStrArray.length; i++) {
-                System.out.println(sourceStrArray.length);
-            }
-    }
     /**
      * 修改商品
      */
@@ -174,7 +179,21 @@ public class GoodsInformation extends BaseController
     @Log(title = "商品", businessType = BusinessType.UPDATE)
     @PostMapping("/edit")
     @ResponseBody
-    public AjaxResult editSave(Goods goods){
+    public AjaxResult editSave(Goods goods,String figure1,String figure2,String figure3,String figure4,String figure6,String figure7,String figure8,String figure9,String figure10,String figure11,String figure12){
+
+        goods.setSmallPicture(figure1+" ,"+figure2+" ,"+figure3+" ,"+figure4+" ");
+        goods.setCenterPicture(goods.getGoodsMainFigure()+" ,"+figure6+" ,"+figure7+" ,"+figure8+" ");
+        goods.setBigPicture(figure9+" ,"+figure10+" ,"+figure11+" ,"+figure12+" ");
+
+        String goodsPrice = goods.getGoodsPrice();
+        if (null != goodsPrice) {
+            int length = goodsPrice.length();
+            String s = goodsPrice.charAt(length - 1) + "";
+            if (s.equals(".")){
+                goodsPrice= goodsPrice.substring(0, length - 1);
+                goods.setGoodsPrice(goodsPrice);
+            }
+        }
         goods.setUpdateBy(ShiroUtils.getLoginName());
         return toAjax(goodsService.updateGoods(goods));
     }
