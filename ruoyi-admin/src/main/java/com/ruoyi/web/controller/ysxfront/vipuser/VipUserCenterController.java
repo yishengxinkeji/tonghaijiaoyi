@@ -13,6 +13,7 @@ import com.ruoyi.web.controller.system.SysProfileController;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.PlatData;
 import com.ruoyi.yishengxin.domain.Trade;
+import com.ruoyi.yishengxin.domain.Transfer;
 import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.service.*;
 import org.slf4j.Logger;
@@ -58,17 +59,9 @@ public class VipUserCenterController extends BaseFrontController {
     @Autowired
     private IVipTradeService vipTradeService;
     @Autowired
-    private IVipTradeHkdBuyService vipTradeHkdBuyService;
-    @Autowired
-    private IVipTradeHkdSaleService vipTradeHkdSaleService;
-    @Autowired
-    private IVipTradeSslBuyService vipTradeSslBuyService;
-    @Autowired
-    private IVipTradeSslSaleService vipTradeSslSaleService;
-    @Autowired
-    private IVipAccountService accountService;
-    @Autowired
     private IVipAppealService appealService;
+    @Autowired
+    private ITransferService transferService;
 
 
     /**
@@ -175,10 +168,17 @@ public class VipUserCenterController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
+
+            List<Transfer> transfers = transferService.selectTransferList(new Transfer());
             ResponseResult map = new ResponseResult();
             map.put("ssl",vipUser.getSslMoney());
             map.put("hkd",vipUser.getHkdMoney());
             map.put("moneyCode",vipUser.getMoneyCode());
+            if(transfers.size() > 0){
+                map.put("transferId",transfers.get(0).getId());
+            }else {
+                map.put("transferId","");
+            }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         } catch (Exception e) {
             e.printStackTrace();

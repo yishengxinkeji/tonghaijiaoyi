@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.yishengxin.mapper.TransferMapper">
+    
+    <resultMap type="Transfer" id="TransferResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+    </resultMap>
+	
+	<sql id="selectTransferVo">
+        select id, title, content from ysx_transfer
+    </sql>
+	
+    <select id="selectTransferList" parameterType="Transfer" resultMap="TransferResult">
+        <include refid="selectTransferVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+             <if test="title != null  and title != '' "> and title = #{title}</if>
+             <if test="content != null  and content != '' "> and content = #{content}</if>
+         </where>
+    </select>
+    
+    <select id="selectTransferById" parameterType="Integer" resultMap="TransferResult">
+        <include refid="selectTransferVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTransfer" parameterType="Transfer" useGeneratedKeys="true" keyProperty="id">
+        insert into ysx_transfer
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="title != null  and title != ''  ">title,</if>
+			<if test="content != null  and content != ''  ">content,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="title != null  and title != ''  ">#{title},</if>
+			<if test="content != null  and content != ''  ">#{content},</if>
+         </trim>
+    </insert>
+	 
+    <update id="updateTransfer" parameterType="Transfer">
+        update ysx_transfer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null  and title != ''  ">title = #{title},</if>
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+	<delete id="deleteTransferById" parameterType="Integer">
+        delete from ysx_transfer where id = #{id}
+    </delete>
+	
+    <delete id="deleteTransferByIds" parameterType="String">
+        delete from ysx_transfer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+</mapper>

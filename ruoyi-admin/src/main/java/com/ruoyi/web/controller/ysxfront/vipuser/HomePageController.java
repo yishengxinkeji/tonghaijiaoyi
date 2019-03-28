@@ -40,6 +40,8 @@ public class HomePageController {
     private IPlatDataService platDataService;
     @Autowired
     private ICustomerService customerService;
+    @Autowired
+    private ITransferService transferService;
 
     /**
      * 轮播图
@@ -362,5 +364,21 @@ public class HomePageController {
             }
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
+    }
+
+
+    /**
+     * 转入转出说明
+     * @param id
+     * @return
+     */
+    @GetMapping("/transfer")
+    public ResponseResult transfer(@RequestParam("id") Integer id) {
+
+        Transfer transfers = transferService.selectTransferById(id);
+        Map map = new HashMap();
+        map.put("title", transfers.getTitle());
+        map.put("content", transfers.getContent());
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, map);
     }
 }

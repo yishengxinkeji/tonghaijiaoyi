@@ -17,6 +17,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.TradeExplain;
+import com.ruoyi.yishengxin.domain.Transfer;
 import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.service.*;
 import io.swagger.models.auth.In;
@@ -55,8 +56,6 @@ public class TradeRecordController extends BaseFrontController {
     private IVipAppealService vipAppealService;
     @Autowired
     private ITradeExplainService tradeExplainService;
-
-
 
     /**
      * 进入交易中心
@@ -808,7 +807,7 @@ public class TradeRecordController extends BaseFrontController {
                     String appealThing = vipAppeals.get(0).getAppealReason();
                     map.put("failReason",vipTradeHkdSale.getFailReason()+"("+appealThing+")");
                 }else {
-                    map.put("failReason","-1");
+                    map.put("failReason",vipTradeHkdSale.getFailReason());
                 }
             }else if(vipTradeHkdSale.getSaleStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
                 if(vipAppeals.size() > 0){
