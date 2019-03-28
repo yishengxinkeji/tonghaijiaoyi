@@ -769,7 +769,7 @@ public class TradeRecordController extends BaseFrontController {
                     String appealThing = vipAppeals.get(0).getAppealReason();
                     map.put("failReason",vipTradeHkdBuy.getFailReason()+"("+appealThing+")");
                 }else {
-                    map.put("failReason","-1");
+                    map.put("failReason",vipTradeHkdBuy.getFailReason());
                 }
             }else if(vipTradeHkdBuy.getBuyStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
                 if(vipAppeals.size() > 0){
