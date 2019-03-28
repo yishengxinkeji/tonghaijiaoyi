@@ -74,7 +74,7 @@ public interface VipTradeSslSaleMapper {
     @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where to_days(sale_time) <= to_days(now())")
     public double selectSslMaxNumberByDay(Integer id);
 
-    @Select("select sale_number as number,sale_time as time from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end} and sale_status=2 order by sale_time asc")
+    @Select("select unit_price as number,sale_time as time from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end} and sale_status=2 order by sale_time asc")
     public List<Map<String,String>> selectSale(@Param("begin") DateTime begin, @Param("end") DateTime end);
 
     @Select("select ifNull(sum(charge_money),0) from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end}" )
