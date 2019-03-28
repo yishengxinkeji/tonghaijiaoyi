@@ -4,6 +4,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
+import com.ruoyi.common.enums.CustomerType;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.yishengxin.domain.*;
@@ -37,6 +38,8 @@ public class HomePageController {
     private ITradeExplainService tradeExplainService;
     @Autowired
     private IPlatDataService platDataService;
+    @Autowired
+    private ICustomerService customerService;
 
     /**
      * 轮播图
@@ -302,5 +305,62 @@ public class HomePageController {
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
         return ResponseResult.success();
+    }
+
+    /**
+     * 联系我们
+     * @return
+     */
+    @GetMapping("/contactUs")
+    public ResponseResult contactUs() {
+        List list = new ArrayList();
+        Customer customer = new Customer();
+        customer.setCustomerType(CustomerType.PLAT.getCode());
+        List<Customer> customers = customerService.selectCustomerList(customer);
+        if (customers.size() > 0) {
+            customers.stream().forEach(customer1 -> {
+                Map map = new HashMap();
+                map.put("phone", customer1.getPhone());
+                map.put("address", customer1.getAddress());
+                map.put("email", customer1.getEmail());
+                list.add(map);
+            });
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
+    }
+
+    /**
+     * 购买/兑换区客服电话
+     * @param type      exchange:兑换, buy:购买
+     * @return
+     */
+    @GetMapping("/exchangeOrBuy")
+    public ResponseResult exchangeOrBuy(@RequestParam("type") String type) {
+
+        List list = new ArrayList();
+        Customer customer = new Customer();
+        //兑换客服
+        if(type.equalsIgnoreCase("exchange")){
+            customer.setCustomerType(CustomerType.EXCHANGE.getCode());
+            List<Customer> customers = customerService.selectCustomerList(customer);
+            if (customers.size() > 0) {
+                customers.stream().forEach(customer1 -> {
+                    Map map = new HashMap();
+                    map.put("phone", customer1.getPhone());
+                    list.add(map);
+                });
+            }
+        }else if(type.equalsIgnoreCase("buy")){
+            customer.setCustomerType(CustomerType.BUY.getCode());
+            List<Customer> customers = customerService.selectCustomerList(customer);
+            if (customers.size() > 0) {
+                customers.stream().forEach(customer1 -> {
+                    Map map = new HashMap();
+                    map.put("phone", customer1.getPhone());
+                    list.add(map);
+                });
+            }
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
     }
 }

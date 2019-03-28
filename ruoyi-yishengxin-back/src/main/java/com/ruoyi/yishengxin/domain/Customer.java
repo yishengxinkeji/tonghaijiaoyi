@@ -1,5 +1,7 @@
 package com.ruoyi.yishengxin.domain;
 
+import lombok.Data;
+import lombok.ToString;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.base.BaseEntity;
@@ -10,6 +12,8 @@ import com.ruoyi.common.base.BaseEntity;
  * @author ruoyi
  * @date 2019-02-26
  */
+@Data
+@ToString
 public class Customer extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -25,36 +29,9 @@ public class Customer extends BaseEntity {
      * 客服电话
      */
     private String phone;
+    /** 联系地址 */
+    private String address;
+    /** 邮箱 */
+    private String email;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setCustomerType(String customerType) {
-        this.customerType = customerType;
-    }
-
-    public String getCustomerType() {
-        return customerType;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("customerType", getCustomerType())
-                .append("phone", getPhone())
-                .toString();
-    }
 }
