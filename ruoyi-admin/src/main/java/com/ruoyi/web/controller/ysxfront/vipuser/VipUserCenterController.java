@@ -325,7 +325,9 @@ public class VipUserCenterController extends BaseFrontController {
             map.put("extension",vipUser.getExtensionCode());
             //推荐码
             map.put("recommend",vipUser.getRecommendCode());
-            map.put("inviteLink",vipUser.getInviteLink());
+            map.put("inviteLink",vipUser.getInviteLink());  //pc端的
+            map.put("mobileLink",Global.getConfig("tonghaijiaoyi.QrCode")+"?invicode="+vipUser.getRecommendCode());
+
 
             //将用户最新的信息保存到Redis中
             RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
