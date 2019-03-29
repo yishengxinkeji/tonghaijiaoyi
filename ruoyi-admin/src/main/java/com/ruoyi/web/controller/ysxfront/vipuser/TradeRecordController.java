@@ -819,6 +819,8 @@ public class TradeRecordController extends BaseFrontController {
                 }else {
                     map.put("failReason","-1");
                 }
+            }else{
+                map.put("failReason","-1");
             }
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
