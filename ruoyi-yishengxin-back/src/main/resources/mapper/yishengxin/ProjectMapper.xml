@@ -11,10 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="projectPic"    column="project_pic"    />
         <result property="projectIntroduction"    column="project_introduction"    />
         <result property="projectContent"    column="project_content"    />
+        <result property="unitPrice"    column="unit_price"    />
+        <result property="maxNumber"    column="max_number"    />
+        <result property="minNumber"    column="min_number"    />
     </resultMap>
 	
 	<sql id="selectProjectVo">
-        select id, project_title, project_time, project_pic, project_introduction, project_content from ysx_project
+        select id, project_title, project_time, project_pic, project_introduction, project_content,unit_price,max_number,min_number  from ysx_project
     </sql>
 	
     <select id="selectProjectList" parameterType="Project" resultMap="ProjectResult">
@@ -26,6 +29,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="projectPic != null  and projectPic != '' "> and project_pic = #{projectPic}</if>
              <if test="projectIntroduction != null  and projectIntroduction != '' "> and project_introduction = #{projectIntroduction}</if>
              <if test="projectContent != null  and projectContent != '' "> and project_content = #{projectContent}</if>
+             <if test="unitPrice != null  and unitPrice != '' "> and unit_price = #{unitPrice}</if>
+             <if test="maxNumber != null  and maxNumber != '' "> and max_number = #{maxNumber}</if>
+             <if test="minNumber != null  and minNumber != '' "> and min_number = #{minNumber}</if>
          </where>
         ${params.Project}
     </select>
@@ -43,6 +49,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="projectPic != null  and projectPic != ''  ">project_pic,</if>
 			<if test="projectIntroduction != null  and projectIntroduction != ''  ">project_introduction,</if>
 			<if test="projectContent != null  and projectContent != ''  ">project_content,</if>
+            <if test="unitPrice != null  and unitPrice != ''  ">unit_price,</if>
+            <if test="maxNumber != null  and maxNumber != ''  ">max_number,</if>
+            <if test="minNumber != null  and minNumber != ''  ">min_number,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="projectTitle != null  and projectTitle != ''  ">#{projectTitle},</if>
@@ -50,6 +59,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="projectPic != null  and projectPic != ''  ">#{projectPic},</if>
 			<if test="projectIntroduction != null  and projectIntroduction != ''  ">#{projectIntroduction},</if>
 			<if test="projectContent != null  and projectContent != ''  ">#{projectContent},</if>
+            <if test="unitPrice != null  and unitPrice != ''  ">#{unitPrice},</if>
+            <if test="maxNumber != null  and maxNumber != ''  ">#{maxNumber},</if>
+            <if test="minNumber != null  and minNumber != ''  ">#{minNumber},</if>
          </trim>
     </insert>
 	 
@@ -61,6 +73,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="projectPic != null  and projectPic != ''  ">project_pic = #{projectPic},</if>
             <if test="projectIntroduction != null  and projectIntroduction != ''  ">project_introduction = #{projectIntroduction},</if>
             <if test="projectContent != null  and projectContent != ''  ">project_content = #{projectContent},</if>
+            <if test="unitPrice != null  and unitPrice != ''  ">unit_price = #{unitPrice},</if>
+            <if test="maxNumber != null  and maxNumber != ''  ">max_number = #{maxNumber},</if>
+            <if test="minNumber != null  and minNumber != ''  ">min_number = #{minNumber},</if>
         </trim>
         where id = #{id}
     </update>

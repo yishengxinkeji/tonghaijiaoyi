@@ -44,6 +44,8 @@ public enum ResponseEnum {
     UNITE_PRICE_TOO_LOW("1114","单价太低"),
     UNITE_PRICE_TOO_HIGH("1115","单价太高"),
     USER_ISFROZEN("1300","账户冻结"),
+    MAX_BUY("1301","超出规定最大额"),
+    MIN_BUY("1302","低于规定最低额"),
 
 
 

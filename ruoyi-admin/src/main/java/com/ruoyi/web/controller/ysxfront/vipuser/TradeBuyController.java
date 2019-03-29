@@ -108,12 +108,12 @@ public class TradeBuyController extends BaseFrontController {
                                      @RequestParam(value = "type",defaultValue = "") String type){
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
 
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,10");
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by unit_price asc limit 0,10");
+        vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
         List list = new ArrayList();
         List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
         if("".equals(type)){
             //查的是个人
-            vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -123,7 +123,6 @@ public class TradeBuyController extends BaseFrontController {
 
         }else if(!type.equals("")){
             //查的是列表
-            vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
             vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
         }
 

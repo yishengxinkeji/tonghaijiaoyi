@@ -65,4 +65,16 @@ public interface IVipTradeSslSaleService
     List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay);
 
     int selectSum(DateTime beginOfDay, DateTime endOfDay);
+
+	/**
+	 * 查询最近两条成交记录
+	 * @return
+	 */
+	List<Map<String,String>> selectTwoLeast();
+
+	/**
+	 * 查询最近一条成交记录
+	 * @return
+	 */
+	VipTradeSslSale selectByMaxId();
 }

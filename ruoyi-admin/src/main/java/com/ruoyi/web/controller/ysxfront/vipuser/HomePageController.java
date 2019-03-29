@@ -1,28 +1,33 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.CustomerType;
 import com.ruoyi.common.enums.ResponseEnum;
+import com.ruoyi.common.enums.TradeType;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.RegexUtils;
+import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.*;
+import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
+import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * 首页相关的接口
  */
 @RestController
 @RequestMapping("/front/homePage")
-public class HomePageController {
+public class HomePageController extends BaseFrontController {
 
     @Autowired
     private IRotationService rotationService;
@@ -42,6 +47,10 @@ public class HomePageController {
     private ICustomerService customerService;
     @Autowired
     private ITransferService transferService;
+    @Autowired
+    private IVipUserService vipUserService;
+    @Autowired
+    private IVipTradeService vipTradeService;
 
     /**
      * 轮播图
@@ -204,6 +213,7 @@ public class HomePageController {
         map.put("time",project.getProjectTime());
         map.put("title",project.getProjectTitle());
         map.put("content",project.getProjectContent());
+        map.put("unitPrice",project.getUnitPrice());
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
@@ -381,5 +391,64 @@ public class HomePageController {
         map.put("title", transfers.getTitle());
         map.put("content", transfers.getContent());
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, map);
+    }
+
+    /**
+     * 用户在项目中进行认购
+     * @param token
+     * @param projectId     项目id
+     * @param number  数量
+     * @return
+     */
+    @PostMapping("/takeUp")
+    public ResponseResult takeUp (@RequestHeader("token") String token,
+                                  @RequestParam("projectId") String projectId,
+                                  @RequestParam("number") String number
+    ){
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        Project project = projectService.selectProjectById(Integer.parseInt(projectId));
+        String unitPrice = project.getUnitPrice();
+        String maxNumber = project.getMaxNumber();
+        String minNumber = project.getMinNumber();
+        //数字不正确
+        if(!Pattern.matches(RegexUtils.INTEGER_REGEX,number) && !Pattern.matches(RegexUtils.DECIMAL_REGEX,number) ){
+            return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
+        }
+
+        if(Double.parseDouble(maxNumber) < Double.parseDouble(number)){
+            return ResponseResult.responseResult(ResponseEnum.MAX_BUY);
+        }
+        if(Double.parseDouble(minNumber) > Double.parseDouble(number)){
+            return ResponseResult.responseResult(ResponseEnum.MIN_BUY);
+        }
+
+        double mul = NumberUtil.mul(Double.parseDouble(unitPrice), Double.parseDouble(number));     //认购总价
+        String hkdMoney = vipUser.getHkdMoney();
+        //hkd不足
+        if(NumberUtil.sub(Double.parseDouble(hkdMoney),mul) < 0) {
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
+        }
+
+        //应得的ssl和应扣的hkd
+        String s = NumberUtil.roundStr(String.valueOf(NumberUtil.add(vipUser.getSslMoney(), number)), CustomerConstants.ROUND_NUMBER);
+        String s1 = NumberUtil.roundStr(String.valueOf(NumberUtil.sub(Double.parseDouble(vipUser.getHkdMoney()), mul)), CustomerConstants.ROUND_NUMBER);
+        //更新用户信息
+        vipUser.setSslMoney(s);
+        vipUser.setHkdMoney(s1);
+        //更新用户信息
+        int i = vipUserService.updateVipUser(vipUser);
+        if(i > 0){
+            VipTrade vipTrade = new VipTrade();
+            vipTrade.setVipTrade(TradeType.BACK_BUY.getCode());     //平台购买
+            vipTrade.setVipId(vipUser.getId());
+            vipTrade.setTradeTime(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM));
+            vipTrade.setTradeNumber(number);
+            vipTradeService.insertVipTrade(vipTrade);
+        }
+        return ResponseResult.success();
     }
 }

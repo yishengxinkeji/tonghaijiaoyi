@@ -158,8 +158,8 @@ public class TradeSaleController extends BaseFrontController {
      * @return
      */
     @PostMapping("/saleList")
-    public ResponseResult saleSslList(@RequestHeader(value = "token",required = false) String token,
-                                      @RequestParam(value = "type",required = false) String type){
+    public ResponseResult saleSslList(@RequestHeader(value = "token",required = false,defaultValue = "") String token,
+                                      @RequestParam(value = "type",required = false,defaultValue = "") String type){
 
         List list = new ArrayList();
 
@@ -168,7 +168,7 @@ public class TradeSaleController extends BaseFrontController {
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             //交易成功
             vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
-            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
+            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by unit_price desc limit 0,10");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
             vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
@@ -180,8 +180,8 @@ public class TradeSaleController extends BaseFrontController {
             });
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                    String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
-                    String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
+                    String name1 = String.valueOf(o1.get("price"));
+                    String name2 = String.valueOf(o2.get("price"));
                     return name2.compareTo(name1);
                 }
             });
@@ -189,7 +189,7 @@ public class TradeSaleController extends BaseFrontController {
             //查的是hkd列表
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
-            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc limit 0,10");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
@@ -221,13 +221,13 @@ public class TradeSaleController extends BaseFrontController {
             //等待交易中
             vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
             vipTradeSslSale.setVipId(vipUser.getId());
-            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc");
+            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by sale_time desc limit 0,10");
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
             vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
-            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc limit 0,10");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
             vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {

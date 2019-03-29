@@ -30,6 +30,11 @@ public class Project extends BaseEntity
 	private String projectIntroduction;
 	/**  项目内容  */
 	private String projectContent;
-
+	//认购单价
+	private String unitPrice;
+	//认购最大购买量
+	private String maxNumber;
+	//认购最小购买量
+	private String minNumber;
 
 }

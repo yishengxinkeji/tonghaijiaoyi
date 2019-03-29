@@ -219,4 +219,14 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeSslSaleMapper.selectSum(beginOfDay,endOfDay);
     }
+
+    @Override
+    public List<Map<String,String>> selectTwoLeast() {
+        return vipTradeSslSaleMapper.selectTwoLeast();
+    }
+
+    @Override
+    public VipTradeSslSale selectByMaxId() {
+        return vipTradeSslSaleMapper.selecByMaxId();
+    }
 }

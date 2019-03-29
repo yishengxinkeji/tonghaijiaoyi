@@ -18,7 +18,7 @@ public class VipTrade extends BaseEntity
 	private Integer id;
 	/** 用户id */
 	private Integer vipId;
-	/** 兑换类型(4.转入HKD,5.转出HKD,8.转入SSL,9.转出SSL,10.平台兑换,11.平台购买) */
+	/** 兑换类型(1,购买商品,2.挂卖HKD,3.挂买HKD,4.转入HKD,5.转出HKD,6.挂卖SSL,7.挂买SSL,8.转入SSL,9.转出SSL,10.平台兑换,11.平台购买)*/
 	private String vipTrade;
 	/** 交易时间 */
 	private String tradeTime;

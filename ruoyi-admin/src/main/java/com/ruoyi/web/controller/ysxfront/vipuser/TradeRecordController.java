@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxfront.vipuser;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONUtil;
@@ -777,6 +778,8 @@ public class TradeRecordController extends BaseFrontController {
                 }else {
                     map.put("failReason","-1");
                 }
+            }else {
+                map.put("failReason","-1");
             }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }
@@ -1067,5 +1070,39 @@ public class TradeRecordController extends BaseFrontController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
+    /**
+     * 实时成交单价及百分比
+     * @return
+     */
+    @GetMapping("/actualPrice")
+    public ResponseResult actualPrice (){
+        Map map = new HashMap();
+        //查询最近交易成功的两条记录
+        List<Map<String,String>> list = vipTradeSaleService.selectTwoLeast();
+
+        if(list.size()  == 2){
+            //说明今日已经有交易了
+            String unitPrice = list.get(0).get("unit_price");
+            map.put("actualPrice",unitPrice);   //最新成交单价
+            String unitPrice1 = list.get(1).get("unit_price");
+            double div = NumberUtil.div(Double.parseDouble(unitPrice), Double.parseDouble(unitPrice1));
+            //增长百分比
+            String upPercent = NumberUtil.roundStr(NumberUtil.mul(div, 100), CustomerConstants.ROUND_NUMBER);
+            map.put("percent",upPercent+"%");
+        }else if(list.size() == 1){
+            //说明已经凌晨,并且只交易了一条,则增长为100
+            String unitPrice = list.get(0).get("unit_price");
+            map.put("actualPrice",unitPrice);   //最新成交单价
+            map.put("percent",1);
+        }else if(list.size() == 0){
+            //说明今天没有成交的,
+            VipTradeSslSale vipTradeSslSale = vipTradeSaleService.selectByMaxId();
+            if(vipTradeSslSale != null){
+                map.put("actualPrice",vipTradeSslSale.getUnitPrice());   //最新成交单价
+                map.put("percent",1);
+            }
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+    }
 
 }

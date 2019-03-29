@@ -79,4 +79,13 @@ public interface VipTradeSslSaleMapper {
 
     @Select("select ifNull(sum(charge_money),0) from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end}" )
     int selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
+
+    /**
+     * 查询当天最近两条交易成功记录
+     * @return
+     */
+    @Select("SELECT * FROM ysx_vip_trade_ssl_sale where to_days(sale_time)=to_days(now()) order by id DESC limit 2")
+    List<Map<String,String>>  selectTwoLeast();
+    @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale);")
+    VipTradeSslSale selecByMaxId();
 }
