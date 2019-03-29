@@ -58,7 +58,8 @@ public class HomePageController {
             rotations.stream().forEach(rotation1 -> {
                 Map map = new HashMap();
                 map.put("address",rotation1.getPicDetail());
-                map.put("link",rotation1.getPicLink());
+                map.put("pcLink",rotation1.getPicLink());
+                map.put("mobileLink",rotation1.getMobileLink());
                 list.add(map);
             });
         }

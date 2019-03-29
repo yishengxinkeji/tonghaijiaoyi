@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="picDetail"    column="pic_detail"    />
         <result property="picLink"    column="pic_link"    />
         <result property="isShow"    column="is_show"    />
+        <result property="mobileLink"    column="mobile_link"    />
     </resultMap>
 	
 	<sql id="selectRotationVo">
-        select id, pic_title, pic_detail, pic_link, is_show from ysx_rotation
+        select id, pic_title, pic_detail, pic_link, is_show,mobile_link from ysx_rotation
     </sql>
 	
     <select id="selectRotationList" parameterType="Rotation" resultMap="RotationResult">
@@ -24,6 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="picDetail != null  and picDetail != '' "> and pic_detail = #{picDetail}</if>
              <if test="picLink != null  and picLink != '' "> and pic_link = #{picLink}</if>
              <if test="isShow != null  and isShow != '' "> and is_show = #{isShow}</if>
+            <if test="mobileLink != null  and mobileLink != '' "> and mobile_link = #{mobileLink}</if>
          </where>
     </select>
     
@@ -39,12 +41,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="picDetail != null  and picDetail != ''  ">pic_detail,</if>
 			<if test="picLink != null  and picLink != ''  ">pic_link,</if>
 			<if test="isShow != null  and isShow != ''  ">is_show,</if>
+            <if test="mobileLink != null  and mobileLink != ''  ">mobile_link,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="picTitle != null  and picTitle != ''  ">#{picTitle},</if>
 			<if test="picDetail != null  and picDetail != ''  ">#{picDetail},</if>
 			<if test="picLink != null  and picLink != ''  ">#{picLink},</if>
 			<if test="isShow != null  and isShow != ''  ">#{isShow},</if>
+            <if test="mobileLink != null  and mobileLink != ''  ">#{mobileLink},</if>
          </trim>
     </insert>
 	 
@@ -55,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="picDetail != null  and picDetail != ''  ">pic_detail = #{picDetail},</if>
             <if test="picLink != null  and picLink != ''  ">pic_link = #{picLink},</if>
             <if test="isShow != null  and isShow != ''  ">is_show = #{isShow},</if>
+            <if test="mobileLink != null  and mobileLink != ''  ">mobile_link = #{mobileLink},</if>
         </trim>
         where id = #{id}
     </update>

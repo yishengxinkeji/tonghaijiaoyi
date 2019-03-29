@@ -29,5 +29,7 @@ public class Rotation extends BaseEntity
 	/** 是否显示 Y,是 N.否 */
 	private String isShow;
 
+	private String mobileLink;
+
 
 }

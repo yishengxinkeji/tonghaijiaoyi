@@ -163,6 +163,7 @@ public class RotationController extends BaseController {
         //新闻
         if (type.equalsIgnoreCase("1")) {
             ajaxResult.put("link",Global.getConfig("tonghaijiaoyi.PREFIX_NEWS"));
+            ajaxResult.put("mobileLink","-1");  //手机端没有新闻
             List<News> news = newsService.selectNewsList(new News());
             news.stream().forEach(news1 -> {
                 Map map = new HashMap();
@@ -175,6 +176,7 @@ public class RotationController extends BaseController {
         //公告
         if (type.equalsIgnoreCase("2")) {
             ajaxResult.put("link",Global.getConfig("tonghaijiaoyi.PREFIX_NOTICE"));
+            ajaxResult.put("mobileLink",Global.getConfig("tonghaijiaoyi.PREFIX_MOBILE_NOTICE"));
             List<Notice> notices = noticeService.selectNoticeList(new Notice());
             notices.stream().forEach(notice -> {
                 Map map = new HashMap();
@@ -187,6 +189,7 @@ public class RotationController extends BaseController {
         //项目
         if (type.equalsIgnoreCase("3")) {
             ajaxResult.put("link",Global.getConfig("tonghaijiaoyi.PREFIX_PROJECT"));
+            ajaxResult.put("mobileLink",Global.getConfig("tonghaijiaoyi.PREFIX_MOBILE_PROJECT"));
             List<Project> projects = projectService.selectProjectList(new Project());
             projects.stream().forEach(project -> {
                 Map map = new HashMap();

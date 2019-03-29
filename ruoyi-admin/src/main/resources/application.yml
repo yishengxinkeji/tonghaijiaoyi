@@ -163,3 +163,8 @@ tonghaijiaoyi:
   PREFIX_NOTICE: http://122.114.239.176:8080/dist/index.html#/noticeDetail?notice_id=
   #项目
   PREFIX_PROJECT: http://122.114.239.176:8080/dist/index.html#/projectView?project_id=
+  #手机端项目
+  PREFIX_MOBILE_PROJECT: http://122.114.239.176:8081/dist/#/projectdetail?id=
+  #手机端公告
+  PREFIX_MOBILE_NOTICE: http://122.114.239.176:8081/dist/#/noticeshell/noticedetail?id=
+
