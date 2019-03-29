@@ -70,13 +70,14 @@ public class FinancialController extends BaseController {
 
         //ssl总资金 = ssl手续费 + 商品购买花费
         double sslChargeSum = NumberUtil.add(sslSum,goodSum);
-        double hkdChargeSum = NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge));   //hkd交易手续费
+        double hkdChargeSum = NumberUtil.add(NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge)),exchangeSum);   //hkd交易手续费+兑换的hkd
 
-        modelMap.put("exchangeSum",exchangeSum);
-        modelMap.put("divSum",divSum);
-        modelMap.put("waitExchange",waitExchange);
-        modelMap.put("sslChargeSum",sslChargeSum);
-        modelMap.put("hkdChargeSum",hkdChargeSum);
+        modelMap.put("exchangeSum",exchangeSum);  //已提现
+        modelMap.put("divSum",divSum);  //可用资金
+        modelMap.put("waitExchange",waitExchange);  //待返资金
+        modelMap.put("sslChargeSum",sslChargeSum);  //ssl总资金
+        modelMap.put("hkdChargeSum",hkdChargeSum);  //hkd总资金
+        modelMap.put("buySum",buySum);      //现金入账总资金
 
         return prefix + "/financial";
     }
