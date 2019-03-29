@@ -1,12 +1,15 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.extra.qrcode.QrCodeUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.*;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
+import com.ruoyi.common.utils.BaiduDwz;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.system.SysProfileController;
@@ -22,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -326,8 +330,9 @@ public class VipUserCenterController extends BaseFrontController {
             //推荐码
             map.put("recommend",vipUser.getRecommendCode());
             map.put("inviteLink",vipUser.getInviteLink());  //pc端的
-            map.put("mobileLink",Global.getConfig("tonghaijiaoyi.QrCode")+"?invicode="+vipUser.getRecommendCode());
-
+            //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
+            String qrUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + vipUser.getRecommendCode());
+            map.put("mobileLink",qrUrl);
 
             //将用户最新的信息保存到Redis中
             RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
