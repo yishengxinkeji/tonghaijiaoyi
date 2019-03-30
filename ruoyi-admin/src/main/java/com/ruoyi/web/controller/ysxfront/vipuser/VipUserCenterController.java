@@ -1201,21 +1201,12 @@ public class VipUserCenterController extends BaseFrontController {
 
     /**
      * 身份证正反面图片上传
-     * @param token
      * @param file
      * @return
      */
     @PostMapping("/cardUpload")
-    public ResponseResult cardUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
+    public ResponseResult cardUpload(@RequestParam("file") MultipartFile file){
 
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
