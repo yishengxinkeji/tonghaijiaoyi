@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.ysxfront.goods;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
@@ -64,6 +65,9 @@ public class GoodsSalesreturnController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try {
             if (!file.isEmpty()) {
@@ -137,7 +141,9 @@ public class GoodsSalesreturnController extends BaseFrontController {
         goodsSalesreturn.setEfundInstructions(efundInstructions);
         goodsSalesreturn.setRefundReason(refundReason);
         VipUser vipUser = userExist(token);
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -217,6 +223,9 @@ public class GoodsSalesreturnController extends BaseFrontController {
         }
         VipUser vipUser = userExist(token);
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }

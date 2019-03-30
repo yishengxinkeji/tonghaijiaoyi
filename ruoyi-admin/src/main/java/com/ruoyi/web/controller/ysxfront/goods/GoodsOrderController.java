@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.ysxfront.goods;
 
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.order.Order;
 import com.ruoyi.common.utils.DateConversion;
@@ -63,7 +64,9 @@ public class GoodsOrderController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
         }
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         String isFrozen = vipUser.getIsFrozen();
         if (isFrozen.equals("Y")){
             return ResponseResult.responseResult(ResponseEnum.USER_ISFROZEN);
@@ -208,7 +211,9 @@ public class GoodsOrderController extends BaseFrontController {
 
         // 校验登录状态
         VipUser vipUser = userExist(token);
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -247,7 +252,9 @@ public class GoodsOrderController extends BaseFrontController {
 
         // 校验登录状态
         VipUser vipUser = userExist(token);
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -383,7 +390,9 @@ public class GoodsOrderController extends BaseFrontController {
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         Integer id = goodsOrder.getId();
         GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
         goodsOrder1.setGoodsStatus("待评价");

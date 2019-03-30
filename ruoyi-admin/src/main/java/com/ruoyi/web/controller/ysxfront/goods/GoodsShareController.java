@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.Gift;
@@ -67,6 +68,9 @@ public class GoodsShareController extends BaseFrontController
 
 
         VipUser vipUser = userExist(token);
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         //校验传参
         Integer id = vipUser.getId();
         //用户首次分享

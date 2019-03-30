@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.ysxfront.goods;
 
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
@@ -61,6 +62,9 @@ public class GoodsEvaluationController extends BaseFrontController {
     public ResponseResult avaterUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
 
         VipUser vipUser = userExist(token);
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -141,6 +145,9 @@ public class GoodsEvaluationController extends BaseFrontController {
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
+        if(vipUser1.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         Integer id = vipUser1.getId();
         goodsEvaluation.setUid(id);
         List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
@@ -181,6 +188,10 @@ public class GoodsEvaluationController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token") String token,@RequestParam("oid") int oid,@RequestParam("evaluationContent")String evaluationContent,@RequestParam("describeEvaluation")int describeEvaluation, @RequestParam("logisticsEvaluation")int logisticsEvaluation,@RequestParam("serviceAttitude")int serviceAttitude,@RequestParam("evaluationImage") String evaluationImage) throws IOException {
+
+
+
+
         GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(oid);
         String goodsPicture = goodsOrder1.getGoodsPicture();
      //商品名
@@ -205,7 +216,9 @@ public class GoodsEvaluationController extends BaseFrontController {
         goodsEvaluation.setGoodsName(goodsName);
         // 校验登录状态
         VipUser vipUser = userExist(token);
-
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }

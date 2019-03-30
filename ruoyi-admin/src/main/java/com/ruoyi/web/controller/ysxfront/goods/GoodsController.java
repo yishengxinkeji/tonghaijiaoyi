@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
@@ -45,8 +46,11 @@ public class GoodsController extends BaseFrontController {
     public ResponseResult avaterUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
 
         VipUser vipUser = userExist(token);
-        if(vipUser == null){
+        if(null==vipUser){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try {
             if (!file.isEmpty()) {
@@ -94,7 +98,9 @@ public class GoodsController extends BaseFrontController {
             }
             // 校验登录状态
             VipUser vipUser = userExist(token);
-
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             if (null == vipUser ) {
                 goods1.setCollectionStatus(0);
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);

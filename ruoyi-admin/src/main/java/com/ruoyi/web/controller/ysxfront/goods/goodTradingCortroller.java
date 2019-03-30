@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.ysxfront.goods;
 
 import com.ruoyi.common.base.ResponseResult;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.ResponseEnum;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.goods.GoodsOrder;
@@ -56,6 +57,10 @@ public class goodTradingCortroller extends BaseFrontController{
         if (null == vipUser){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         Integer id = vipUser.getId();
