@@ -78,7 +78,6 @@ public class VipUserCenterController extends BaseFrontController {
     @PostMapping("/base")
     public ResponseResult userCenter(@RequestHeader("token") String token){
 
-        System.out.println(token);
         try {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
@@ -1225,7 +1224,6 @@ public class VipUserCenterController extends BaseFrontController {
         }
     }
 
-
     /**
      * 身份认证
      * @param token
@@ -1261,12 +1259,12 @@ public class VipUserCenterController extends BaseFrontController {
         return ResponseResult.success();
     }
 
-    /**
+    /**et
      * 去进行身份认证
      * @param token
      * @return
      */
-    @PostMapping("/toLdentify")
+    @GetMapping("/toLdentify")
     public ResponseResult toLdentify(@RequestHeader("token") String token){
 
         VipUser vipUser1 = userExist(token);
@@ -1282,6 +1280,5 @@ public class VipUserCenterController extends BaseFrontController {
         map.put("isMark",vipUser1.getIsMark());
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
-
 
 }

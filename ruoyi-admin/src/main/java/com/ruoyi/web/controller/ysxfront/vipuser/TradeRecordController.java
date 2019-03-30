@@ -792,7 +792,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
             
             vipAppeal.setOrderNo(vipTradeHkdBuy.getBuyNo());
-            vipAppeal.setBuyId(vipUser.getId());
+            vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
             List<VipAppeal> vipAppeals = vipAppealService.selectVipAppealList(vipAppeal);
             map.put("id",id);
             map.put("orderNo",vipTradeHkdBuy.getBuyNo());
@@ -842,6 +842,7 @@ public class TradeRecordController extends BaseFrontController {
 
             vipAppeal.setOrderNo(vipTradeHkdSale.getSaleNo());
             vipAppeal.setSaleId(vipUser.getId());
+            vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
             List<VipAppeal> vipAppeals = vipAppealService.selectVipAppealList(vipAppeal);
 
             map.put("id",id);
