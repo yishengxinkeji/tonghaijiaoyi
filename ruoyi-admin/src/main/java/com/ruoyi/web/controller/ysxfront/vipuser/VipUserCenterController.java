@@ -78,21 +78,20 @@ public class VipUserCenterController extends BaseFrontController {
     @PostMapping("/base")
     public ResponseResult userCenter(@RequestHeader("token") String token){
 
+        System.out.println(token);
         try {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
             ResponseResult map = new ResponseResult();
             map.put("ID",vipUser.getId());
             map.put("avater",vipUser.getAvater());
             map.put("nickname",vipUser.getNickname());
             map.put("extension",vipUser.getExtensionCode());
             map.put("recommend",vipUser.getRecommendCode());
+            map.put("isMark",vipUser.getIsMark());
 
             //将用户最新的信息保存到Redis中
             RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
@@ -1202,21 +1201,12 @@ public class VipUserCenterController extends BaseFrontController {
 
     /**
      * 身份证正反面图片上传
-     * @param token
      * @param file
      * @return
      */
     @PostMapping("/cardUpload")
-    public ResponseResult cardUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
+    public ResponseResult cardUpload(@RequestParam("file") MultipartFile file){
 
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
