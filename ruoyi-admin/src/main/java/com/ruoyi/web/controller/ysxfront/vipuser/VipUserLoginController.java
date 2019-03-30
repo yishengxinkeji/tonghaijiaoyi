@@ -219,11 +219,7 @@ public class VipUserLoginController extends BaseFrontController {
             e.printStackTrace();
             return ResponseResult.responseResult(ResponseEnum.FAIL);
         }
-
-        Map map = new HashMap();
-        map.put("token",token);
-        map.put("isMark",userList.get(0).getIsMark());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,token);
     }
 
 
