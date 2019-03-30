@@ -87,5 +87,18 @@ public class VipUser extends BaseEntity {
      */
     private String newReceive;
 
+    //是否认证
+    private String isMark;
 
+    //真实姓名
+    private String realName;
+
+    //身份证
+    private String idCard;
+
+    //身份证正面
+    private String frontImg;
+
+    //身份证背面
+    private String backImg;
 }

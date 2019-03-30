@@ -410,6 +410,10 @@ public class HomePageController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         Project project = projectService.selectProjectById(Integer.parseInt(projectId));
         String unitPrice = project.getUnitPrice();
         String maxNumber = project.getMaxNumber();

@@ -70,6 +70,10 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         VipUser vipUser1 = vipUserService.selectVipUserById(vipUser.getId());
         Map map = new HashMap();
         map.put("ssl",vipUser1.getSslMoney());
@@ -102,6 +106,10 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -166,6 +174,10 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
         vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and (sale_status=5 or sale_status=6) order by sale_time desc");
@@ -225,6 +237,10 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -288,6 +304,10 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -355,6 +375,10 @@ public class TradeRecordController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
             List list = new ArrayList();
             //交易明细
@@ -475,6 +499,9 @@ public class TradeRecordController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
@@ -545,6 +572,9 @@ public class TradeRecordController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
@@ -614,6 +644,9 @@ public class TradeRecordController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             List list = new ArrayList();
             //交易明细
             VipTrade vipTrade = new VipTrade();
@@ -675,6 +708,10 @@ public class TradeRecordController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
             List list = new ArrayList();
             //交易明细
@@ -744,6 +781,9 @@ public class TradeRecordController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
 
         VipAppeal vipAppeal = new VipAppeal();
         //买HKD
@@ -764,17 +804,26 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdBuy.getSaleAccount());
             map.put("accountImg",vipTradeHkdBuy.getSaleAccountProof());
             map.put("proof",vipTradeHkdBuy.getProof());
+            map.put("isAppeal",vipTradeHkdBuy.getIsAppeal());
             if(vipTradeHkdBuy.getBuyStatus().equalsIgnoreCase(TradeStatus.FAIL.getCode())){
                 if(vipAppeals.size() > 0){
                     String appealThing = vipAppeals.get(0).getAppealReason();
-                    map.put("failReason",vipTradeHkdBuy.getFailReason()+"("+appealThing+")");
+                    if(!"".equals(appealThing) && appealThing != null){
+                        map.put("failReason",vipTradeHkdBuy.getFailReason()+"("+appealThing+")");
+                    }else {
+                        map.put("failReason","-1");
+                    }
                 }else {
                     map.put("failReason",vipTradeHkdBuy.getFailReason());
                 }
             }else if(vipTradeHkdBuy.getBuyStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
                 if(vipAppeals.size() > 0){
                     String appealThing = vipAppeals.get(0).getAppealReason();
-                    map.put("failReason",appealThing);
+                    if(!"".equals(appealThing) && appealThing != null){
+                        map.put("failReason",appealThing);
+                    }else {
+                        map.put("failReason","-1");
+                    }
                 }else {
                     map.put("failReason","-1");
                 }
@@ -805,21 +854,30 @@ public class TradeRecordController extends BaseFrontController {
             map.put("saleAccount",vipTradeHkdSale.getSaleAccount());
             map.put("accountImg",vipTradeHkdSale.getSaleAccountProof());
             map.put("proof",vipTradeHkdSale.getProof());
+            map.put("isAppeal",vipTradeHkdSale.getIsAppeal());
             if(vipTradeHkdSale.getSaleStatus().equalsIgnoreCase(TradeStatus.FAIL.getCode())){
                 if(vipAppeals.size() > 0){
                     String appealThing = vipAppeals.get(0).getAppealReason();
-                    map.put("failReason",vipTradeHkdSale.getFailReason()+"("+appealThing+")");
+                    if(!"".equals(appealThing) && appealThing != null){
+                        map.put("failReason",vipTradeHkdSale.getFailReason()+"("+appealThing+")");
+                    }else {
+                        map.put("failReason","-1");
+                    }
                 }else {
                     map.put("failReason",vipTradeHkdSale.getFailReason());
                 }
             }else if(vipTradeHkdSale.getSaleStatus().equalsIgnoreCase(TradeStatus.SUCCESS.getCode())) {
                 if(vipAppeals.size() > 0){
                     String appealThing = vipAppeals.get(0).getAppealReason();
-                    map.put("failReason",appealThing);
+                    if(!"".equals(appealThing) && appealThing != null){
+                        map.put("failReason",appealThing);
+                    }else {
+                        map.put("failReason","-1");
+                    }
                 }else {
                     map.put("failReason","-1");
                 }
-            }else{
+            }else {
                 map.put("failReason","-1");
             }
 
@@ -846,6 +904,10 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try{
 
@@ -1073,7 +1135,7 @@ public class TradeRecordController extends BaseFrontController {
     }
 
     /**
-     * 实时成交单价及百分比
+     * 实时成交单价及百分比, (今日-昨日)/昨日 * 100%
      * @return
      */
     @GetMapping("/actualPrice")
@@ -1087,9 +1149,10 @@ public class TradeRecordController extends BaseFrontController {
             String unitPrice = list.get(0).get("unit_price");
             map.put("actualPrice",unitPrice);   //最新成交单价
             String unitPrice1 = list.get(1).get("unit_price");
-            double div = NumberUtil.div(Double.parseDouble(unitPrice), Double.parseDouble(unitPrice1));
+            double div = NumberUtil.sub(Double.parseDouble(unitPrice), Double.parseDouble(unitPrice1));
+            double div1 = NumberUtil.div(div, Double.parseDouble(unitPrice1)) * 100;
             //增长百分比
-            String upPercent = NumberUtil.roundStr(NumberUtil.mul(div, 100), CustomerConstants.ROUND_NUMBER);
+            String upPercent = NumberUtil.roundStr(div1, CustomerConstants.ROUND_NUMBER);
             map.put("percent",upPercent+"%");
         }else if(list.size() == 1){
             //说明已经凌晨,并且只交易了一条,则增长为100

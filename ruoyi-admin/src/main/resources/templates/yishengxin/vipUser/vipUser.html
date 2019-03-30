@@ -114,34 +114,61 @@
 				},
 				{
 					field : 'phone',
-					title : '手机号',
-					sortable: true,
+					title : '手机号'
 					titleTooltip : 'phone'
 				},
 				{
 					field : 'nickname',
-					title : '昵称',
-					sortable: true
+					title : '昵称'
 				},
 				{
 					field : 'recommendCode',
-					title : '推荐码',
-					sortable: true
+					title : '推荐码'
 				},
 				{
 					field : 'moneyCode',
-					title : '钱包地址',
-					sortable: true
+					title : '钱包地址'
 				},
 				{
 					field : 'sslMoney',
-					title : 'SSL资产',
-					sortable: true
+					title : 'SSL资产'
 				},
 				{
 					field : 'hkdMoney',
-					title : 'HKD资产',
+					title : 'HKD资产'
+				},
+				{
+					field : 'idCard',
+					title : '身份证'
+				},
+				{
+					field : 'realName',
+					title : '真实姓名',
 					sortable: true
+				},
+				{
+					field : 'frontImg',
+					title : '身份证正面',
+					align : 'center',
+					formatter: function(value, row, index) {
+						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+					}
+				},
+				{
+					field : 'backImg',
+					title : '身份证背面',
+					align : 'center',
+					formatter: function(value, row, index) {
+						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+					}
+				},
+				{
+					field : 'isMark',
+					title : '认证',
+					align: 'center',
+					formatter: function (value, row, index) {
+						return $.table.selectDictLabel(datas, value);;
+					}
 				},
 				{
 					field : 'isFrozen',

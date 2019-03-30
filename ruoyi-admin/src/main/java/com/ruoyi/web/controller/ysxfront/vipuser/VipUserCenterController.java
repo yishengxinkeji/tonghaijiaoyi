@@ -11,6 +11,7 @@ import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
 import com.ruoyi.common.utils.BaiduDwz;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.system.SysProfileController;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
@@ -28,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -82,6 +84,9 @@ public class VipUserCenterController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             ResponseResult map = new ResponseResult();
             map.put("ID",vipUser.getId());
             map.put("avater",vipUser.getAvater());
@@ -111,6 +116,10 @@ public class VipUserCenterController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
+
             vipUser.setNickname(nickname);
             int i = vipUserService.updateVipUser(vipUser);
             if(i > 0){
@@ -135,6 +144,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try {
             if (!file.isEmpty()) {
@@ -171,6 +184,10 @@ public class VipUserCenterController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
 
             List<Transfer> transfers = transferService.selectTransferList(new Transfer());
@@ -210,6 +227,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         if(toId.equals(String.valueOf(vipUser.getId())) || toMoneyCode.equals(vipUser.getMoneyCode()) ){
@@ -324,6 +345,9 @@ public class VipUserCenterController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
             ResponseResult map = new ResponseResult();
             //二维码
             map.put("extension",vipUser.getExtensionCode());
@@ -355,6 +379,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         //查询该会员下的一级会员
@@ -392,7 +420,6 @@ public class VipUserCenterController extends BaseFrontController {
     }
 
 
-    //TODO 收益明细还待测试
     /**
      * 用户收益明细
      * @param token
@@ -406,6 +433,9 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         try{
             VipProfitDetail detail = new VipProfitDetail();
             detail.setVipId(vipUser.getId());
@@ -432,6 +462,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try{
             VipAddress address = new VipAddress();
@@ -475,6 +509,9 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         try{
             if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
                 vipAddressService.updateDefaultAddress(vipUser.getId());
@@ -500,6 +537,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipAddress vipAddress = new VipAddress();
@@ -538,6 +579,10 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         VipAddress address = vipAddressService.selectVipAddressById(Integer.parseInt(id));
 
         Map map = new HashMap();
@@ -568,6 +613,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         try{
             if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
                 vipAddressService.updateDefaultAddress(vipAddress.getVipId());
@@ -596,6 +645,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         try{
             VipAddress vipAddress = new VipAddress();
             vipAddress.setId(Integer.parseInt(id));
@@ -622,6 +675,9 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         try{
             vipAddressService.deleteVipAddressByIds(id);
             return ResponseResult.success();
@@ -644,6 +700,10 @@ public class VipUserCenterController extends BaseFrontController {
 
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipAccount vipAccount = new VipAccount();
@@ -681,6 +741,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         account.setVipId(vipUser.getId());
         account.setIsDefault(CustomerConstants.NO);
         try{
@@ -704,6 +768,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         VipAccount account = vipAccountService.selectVipAccountById(Integer.parseInt(id));
 
@@ -731,6 +799,10 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         try{
             if(vipAccountService.updateVipAccount(account) > 0){
                 return ResponseResult.success();
@@ -756,6 +828,9 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         vipAccountService.deleteVipAccountByIds(id);
         return ResponseResult.success();
     }
@@ -772,6 +847,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         try {
             if (!file.isEmpty()) {
@@ -809,6 +888,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         if(vipAccountService.updateDefaultAccount(vipUser.getId(),Integer.parseInt(id)) > 0){
             return ResponseResult.success();
         }
@@ -826,6 +909,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
         feedback.setVipId(vipUser.getId());
         feedbackService.insertVipFeedback(feedback);
@@ -861,6 +948,10 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         VipAppeal vipAppeal = new VipAppeal();
         vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
         vipAppeal.getParams().put("VipAppeal"," order by id asc");
@@ -886,6 +977,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipExchange exchange = new VipExchange();
@@ -928,6 +1023,10 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
@@ -989,6 +1088,9 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
         VipBuy vipBuy = new VipBuy();
         vipBuy.setVipId(vipUser.getId());
         vipBuy.getParams().put("buy"," order by create_time desc");
@@ -1027,6 +1129,10 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -1064,6 +1170,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
             //用户已被冻结
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
@@ -1090,6 +1200,98 @@ public class VipUserCenterController extends BaseFrontController {
         return ResponseResult.success();
     }
 
+    /**
+     * 身份证正反面图片上传
+     * @param token
+     * @param file
+     * @return
+     */
+    @PostMapping("/cardUpload")
+    public ResponseResult cardUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
+
+        VipUser vipUser = userExist(token);
+        if(vipUser == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+        try {
+            if (!file.isEmpty()) {
+                //图片地址
+                String path = uploadFile(file);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,Global.getFrontPath()+path);
+            }
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_AVATER);
+        } catch(FileSizeLimitExceededException e){
+            log.error("文件过大");
+            return ResponseResult.responseResult(ResponseEnum.FILE_TOO_MAX);
+        }catch (FileNameLengthLimitExceededException e2){
+            log.error("文件名过长");
+            return ResponseResult.responseResult(ResponseEnum.FILE_NAME_LENGTH);
+        }catch (IOException e3){
+            return ResponseResult.error();
+        }
+    }
+
+
+    /**
+     * 身份认证
+     * @param token
+     * @return
+     */
+    @PostMapping("/identify")
+    public ResponseResult identify(@RequestHeader("token") String token,
+                                   @RequestParam("idCard") String idCard,
+                                   @RequestParam("realName") String realName,
+                                   @RequestParam("frontImg") String frontImg,
+                                   @RequestParam("backImg") String backImg
+                                   ){
+
+        VipUser vipUser1 = userExist(token);
+        if(vipUser1 == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        if(!idCard.isEmpty()){
+            if(!Pattern.matches(RegexUtils.IDENTIFY_REGEX,idCard)){
+                //身份证格式不正确
+                return ResponseResult.responseResult(ResponseEnum.IDENTIFY_REGEX);
+            }
+        }
+        vipUser1.setIsMark(CustomerConstants.YES);
+        vipUser1.setIdCard(idCard);
+        vipUser1.setRealName(realName);
+        vipUser1.setFrontImg(frontImg);
+        vipUser1.setBackImg(backImg);
+
+        vipUserService.updateVipUser(vipUser1);
+        RedisUtils.setJson(token,vipUser1, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
+        return ResponseResult.success();
+    }
+
+    /**
+     * 去进行身份认证
+     * @param token
+     * @return
+     */
+    @PostMapping("/toLdentify")
+    public ResponseResult toLdentify(@RequestHeader("token") String token){
+
+        VipUser vipUser1 = userExist(token);
+        if(vipUser1 == null){
+            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        }
+
+        Map map = new HashMap();
+        map.put("idCard",vipUser1.getIdCard());
+        map.put("realName",vipUser1.getRealName());
+        map.put("frontImg",vipUser1.getFrontImg());
+        map.put("backImg",vipUser1.getBackImg());
+        map.put("isMark",vipUser1.getIsMark());
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+    }
 
 
 }

@@ -71,7 +71,7 @@ public interface VipTradeSslSaleMapper {
      * @param id
      * @return
      */
-    @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where to_days(sale_time) <= to_days(now())")
+    @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where vip_id=#{id} and to_days(sale_time) = to_days(now())")
     public double selectSslMaxNumberByDay(Integer id);
 
     @Select("select unit_price as number,sale_time as time from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end} and sale_status=2 order by sale_time asc")
@@ -84,7 +84,7 @@ public interface VipTradeSslSaleMapper {
      * 查询当天最近两条交易成功记录
      * @return
      */
-    @Select("SELECT * FROM ysx_vip_trade_ssl_sale where to_days(sale_time)=to_days(now()) order by id DESC limit 2")
+    @Select("SELECT * FROM ysx_vip_trade_ssl_sale where sale_status='2' and  to_days(sale_time)=to_days(now()) order by id DESC limit 2")
     List<Map<String,String>>  selectTwoLeast();
     @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale);")
     VipTradeSslSale selecByMaxId();

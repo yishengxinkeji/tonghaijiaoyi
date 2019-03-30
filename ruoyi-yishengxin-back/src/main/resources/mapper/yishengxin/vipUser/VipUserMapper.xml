@@ -27,10 +27,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="isMark"    column="is_mark"    />
+        <result property="realName"    column="real_name"    />
+        <result property="idCard"    column="id_card"    />
+        <result property="frontImg"    column="front_img"    />
+        <result property="backImg"    column="back_img"    />
     </resultMap>
 	<sql id="selectVipUserVo">
         select id, phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day,
-         create_time,create_by,update_by,update_time from ysx_vip_user
+         create_time,create_by,update_by,update_time,is_mark,back_img,real_name,id_card,front_img from ysx_vip_user
     </sql>
 	
     <select id="selectVipUserList" parameterType="VipUser" resultMap="VipUserResult">
@@ -57,8 +62,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="updateBy != null  and updateBy != '' "> and update_by = #{updateBy}</if>
              <if test="updateTime != null "> and update_time = #{updateTime}</if>
              <if test="remark != null  and remark != '' "> and remark = #{remark}</if>
+            <if test="isMark != null  and isMark != '' "> and is_mark = #{isMark}</if>
+            <if test="realName != null  and realName != '' "> and real_name = #{realName}</if>
+            <if test="idCard != null  and idCard != '' "> and id_card = #{idCard}</if>
+            <if test="frontImg != null  and frontImg != '' "> and front_img = #{frontImg}</if>
+            <if test="backImg != null  and backImg != '' "> and back_img = #{backImg}</if>
          </where>
     </select>
+
 
     <!--查询用户的一级会员-->
     <select id="selectUserByParentCode" parameterType="VipUser" resultMap="VipUserResult">
@@ -79,7 +90,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVipUserVo"/>
         where id = #{id}
     </select>
-
     <insert id="insertVipUser" parameterType="VipUser" useGeneratedKeys="true" keyProperty="id">
         insert into ysx_vip_user
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -100,6 +110,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">max_trade_day,</if>
             <if test="newReceive != null  and newReceive != ''  ">new_receive,</if>
             <if test="createBy != null  and createBy != ''  ">create_by,</if>
+            <if test="isMark != null  and isMark != ''  ">is_mark,</if>
+            <if test="realName != null  and realName != ''  ">real_name,</if>
+            <if test="idCard != null  and idCard != ''  ">id_card,</if>
+            <if test="frontImg != null  and frontImg != ''  ">front_img,</if>
+            <if test="backImg != null  and backImg != ''  ">back_img,</if>
             create_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -120,6 +135,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="maxTradeDay != null  and maxTradeDay != ''  ">#{maxTradeDay},</if>
             <if test="newReceive != null  and newReceive != ''  ">#{newReceive},</if>
             <if test="createBy != null  and createBy != ''  ">#{createBy},</if>
+            <if test="isMark != null  and isMark != ''  ">#{isMark},</if>
+            <if test="realName != null  and realName != ''  ">#{realName},</if>
+            <if test="idCard != null  and idCard != ''  ">#{idCard},</if>
+            <if test="frontImg != null  and frontImg != ''  ">#{frontImg},</if>
+            <if test="backImg != null  and backImg != ''  ">#{backImg},</if>
             sysdate()
          </trim>
     </insert>
@@ -145,6 +165,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="newReceive != null  and newReceive != ''  ">new_receive = #{newReceive},</if>
             <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
             <if test="remark != null  and remark != ''  ">remark = #{remark},</if>
+            <if test="isMark != null  and isMark != ''  ">is_mark = #{isMark},</if>
+            <if test="realName != null  and realName != ''  ">real_name = #{realName},</if>
+            <if test="idCard != null  and idCard != ''  ">id_card = #{idCard},</if>
+            <if test="frontImg != null  and frontImg != ''  ">front_img = #{frontImg},</if>
+            <if test="backImg != null  and backImg != ''  ">back_img = #{backImg},</if>
             update_time = sysdate()
         </trim>
         <where>

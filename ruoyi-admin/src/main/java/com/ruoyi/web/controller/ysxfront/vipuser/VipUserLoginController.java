@@ -85,6 +85,7 @@ public class VipUserLoginController extends BaseFrontController {
         new_User.setSalt(salt);
         new_User.setAvater("/img/default_avater.png");
         new_User.setNickname("新用户");
+        new_User.setIsMark(CustomerConstants.NO);   //未认证
         String loginPassword= DigestUtils.md5Hex(password + salt);
         new_User.setLoginPassword(loginPassword);
         //推荐码
@@ -161,6 +162,7 @@ public class VipUserLoginController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.PHONE_DIFFERENT_ERROR);
         }
 
+
         VipUser vipUser = new VipUser();
         vipUser.setPhone(phone);
         List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
@@ -218,7 +220,10 @@ public class VipUserLoginController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.FAIL);
         }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,token);
+        Map map = new HashMap();
+        map.put("token",token);
+        map.put("isMark",userList.get(0).getIsMark());
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
 
@@ -254,6 +259,10 @@ public class VipUserLoginController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
 
             if(vipUser.getNewReceive().equals(CustomerConstants.YES)){
@@ -304,6 +313,9 @@ public class VipUserLoginController extends BaseFrontController {
 
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
 
             if(vipUser.getNewReceive().equals(CustomerConstants.YES)){
