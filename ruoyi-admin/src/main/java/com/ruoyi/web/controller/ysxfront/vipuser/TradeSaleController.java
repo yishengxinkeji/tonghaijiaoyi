@@ -289,9 +289,6 @@ public class TradeSaleController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
             //用户已被冻结
             return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
@@ -508,10 +505,6 @@ public class TradeSaleController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         try{

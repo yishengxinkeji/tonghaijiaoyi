@@ -122,9 +122,6 @@ public class TradeBuyController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
@@ -158,10 +155,6 @@ public class TradeBuyController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
@@ -257,9 +250,6 @@ public class TradeBuyController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try{
             //订单
             VipTradeHkdBuy vipTradeHkdBuy = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
@@ -298,9 +288,6 @@ public class TradeBuyController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -339,10 +326,6 @@ public class TradeBuyController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         try{

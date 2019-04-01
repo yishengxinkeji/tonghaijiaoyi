@@ -69,10 +69,6 @@ public class LockController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         VipLock vipLock = new VipLock();
         vipLock.setLockStatus(LockStatus.LOCKING.getCode());
         if(type != null && !type.equals("")){
@@ -107,10 +103,6 @@ public class LockController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipLock vipLock = new VipLock();
@@ -248,10 +240,6 @@ public class LockController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipLock vipLock = vipLockService.selectVipLockById(Integer.parseInt(id));

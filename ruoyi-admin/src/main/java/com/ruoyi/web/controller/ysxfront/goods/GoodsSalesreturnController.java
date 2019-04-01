@@ -66,9 +66,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -141,9 +139,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         goodsSalesreturn.setEfundInstructions(efundInstructions);
         goodsSalesreturn.setRefundReason(refundReason);
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -223,9 +219,7 @@ public class GoodsSalesreturnController extends BaseFrontController {
         }
         VipUser vipUser = userExist(token);
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }

@@ -62,9 +62,7 @@ public class GoodsEvaluationController extends BaseFrontController {
     public ResponseResult avaterUpload(@RequestHeader("token") String token,@RequestParam("file") MultipartFile file){
 
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -145,9 +143,7 @@ public class GoodsEvaluationController extends BaseFrontController {
         if (null == token || "".equals(token)) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
-        if(vipUser1.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         Integer id = vipUser1.getId();
         goodsEvaluation.setUid(id);
         List<GoodsEvaluation> goodsEvaluations = goodsEvaluationService.selectGoodsEvaluationList(goodsEvaluation);
@@ -216,9 +212,7 @@ public class GoodsEvaluationController extends BaseFrontController {
         goodsEvaluation.setGoodsName(goodsName);
         // 校验登录状态
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }

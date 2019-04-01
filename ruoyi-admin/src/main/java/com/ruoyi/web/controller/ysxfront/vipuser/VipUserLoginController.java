@@ -257,10 +257,6 @@ public class VipUserLoginController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
-
             if(vipUser.getNewReceive().equals(CustomerConstants.YES)){
                 //礼包已领
                 return ResponseResult.responseResult(ResponseEnum.VIP_GIFT_RECEIVE);
@@ -309,9 +305,6 @@ public class VipUserLoginController extends BaseFrontController {
 
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-            }
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
 
             if(vipUser.getNewReceive().equals(CustomerConstants.YES)){

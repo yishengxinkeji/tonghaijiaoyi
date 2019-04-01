@@ -76,5 +76,5 @@ public interface IVipTradeSslSaleService
 	 * 查询最近一条成交记录
 	 * @return
 	 */
-	VipTradeSslSale selectByMaxId();
+	Map<String,String> selectByMaxId();
 }

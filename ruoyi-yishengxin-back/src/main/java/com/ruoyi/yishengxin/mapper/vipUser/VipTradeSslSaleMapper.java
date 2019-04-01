@@ -86,6 +86,6 @@ public interface VipTradeSslSaleMapper {
      */
     @Select("SELECT * FROM ysx_vip_trade_ssl_sale where sale_status='2' and  to_days(sale_time)=to_days(now()) order by id DESC limit 2")
     List<Map<String,String>>  selectTwoLeast();
-    @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale);")
-    VipTradeSslSale selecByMaxId();
+    @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale)")
+    Map<String,String> selecByMaxId();
 }

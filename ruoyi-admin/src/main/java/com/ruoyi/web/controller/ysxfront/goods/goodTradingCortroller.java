@@ -28,13 +28,6 @@ public class goodTradingCortroller extends BaseFrontController{
     @Autowired
     IGoodsOrderService iGoodsOrderService;
 
-//    public static void main(String[] args) {
-//        BigDecimal bigDecimal = new BigDecimal("0.12");
-//        BigDecimal bigDecimal1 = new BigDecimal("1");
-//        BigDecimal subtract = bigDecimal.subtract(bigDecimal1);
-//        int i = subtract.compareTo(new BigDecimal(0));
-//        System.out.println(i == -1);
-//    }
     /**
      *
      * @param token 令牌
@@ -57,10 +50,6 @@ public class goodTradingCortroller extends BaseFrontController{
         if (null == vipUser){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
 
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         Integer id = vipUser.getId();

@@ -226,7 +226,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     }
 
     @Override
-    public VipTradeSslSale selectByMaxId() {
+    public Map<String,String> selectByMaxId() {
         return vipTradeSslSaleMapper.selecByMaxId();
     }
 }

@@ -70,10 +70,6 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         VipUser vipUser1 = vipUserService.selectVipUserById(vipUser.getId());
         Map map = new HashMap();
         map.put("ssl",vipUser1.getSslMoney());
@@ -106,10 +102,6 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -174,10 +166,6 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setVipId(vipUser.getId());
         vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and (sale_status=5 or sale_status=6) order by sale_time desc");
@@ -237,10 +225,6 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -304,10 +288,6 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
@@ -375,10 +355,6 @@ public class TradeRecordController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-            }
-
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
             List list = new ArrayList();
             //交易明细
@@ -499,9 +475,6 @@ public class TradeRecordController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
             VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
@@ -572,9 +545,6 @@ public class TradeRecordController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
@@ -644,9 +614,7 @@ public class TradeRecordController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
+
             List list = new ArrayList();
             //交易明细
             VipTrade vipTrade = new VipTrade();
@@ -710,9 +678,7 @@ public class TradeRecordController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
+
             List list = new ArrayList();
             //交易明细
             VipTrade vipTrade = new VipTrade();
@@ -780,9 +746,6 @@ public class TradeRecordController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipAppeal vipAppeal = new VipAppeal();
@@ -907,9 +870,6 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try{
 
             int i = vipAppealService.appeal(vipUser,vipAppeal);
@@ -1159,13 +1119,13 @@ public class TradeRecordController extends BaseFrontController {
             //说明已经凌晨,并且只交易了一条,则增长为100
             String unitPrice = list.get(0).get("unit_price");
             map.put("actualPrice",unitPrice);   //最新成交单价
-            map.put("percent",1);
+            map.put("percent","+100%");
         }else if(list.size() == 0){
             //说明今天没有成交的,
-            VipTradeSslSale vipTradeSslSale = vipTradeSaleService.selectByMaxId();
-            if(vipTradeSslSale != null){
-                map.put("actualPrice",vipTradeSslSale.getUnitPrice());   //最新成交单价
-                map.put("percent",1);
+           Map map1 = vipTradeSaleService.selectByMaxId();
+            if(map1 != null){
+                map.put("actualPrice",map1.get("unit_price"));   //最新成交单价
+                map.put("percent","-100%");
             }
         }
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);

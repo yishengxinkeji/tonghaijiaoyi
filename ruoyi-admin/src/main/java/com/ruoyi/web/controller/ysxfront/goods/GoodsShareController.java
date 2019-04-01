@@ -68,9 +68,7 @@ public class GoodsShareController extends BaseFrontController
 
 
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         //校验传参
         Integer id = vipUser.getId();
         //用户首次分享

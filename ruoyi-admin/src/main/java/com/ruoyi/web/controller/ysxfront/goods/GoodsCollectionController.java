@@ -91,9 +91,6 @@ public class GoodsCollectionController extends BaseFrontController {
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
 
         GoodsCollection goodsCollection = new GoodsCollection();
 
@@ -141,14 +138,6 @@ public class GoodsCollectionController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         for (int i = 0; i < ids1.length; i++) {
             String id = ids1[i];
             int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
@@ -182,10 +171,6 @@ public class GoodsCollectionController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         Integer id = vipUser.getId();
 
         int i1 = goodsCollectionService.deleteGoodsCollectionByGid(id,gid);
@@ -217,9 +202,7 @@ public class GoodsCollectionController extends BaseFrontController {
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         Integer id1 = vipUser.getId();
 
         for (int i = 0; i < ids1.length; i++) {

@@ -114,10 +114,6 @@ public class VipUserCenterController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
-
             vipUser.setNickname(nickname);
             int i = vipUserService.updateVipUser(vipUser);
             if(i > 0){
@@ -144,9 +140,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -182,10 +175,6 @@ public class VipUserCenterController extends BaseFrontController {
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-            }
-
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
             }
 
             List<Transfer> transfers = transferService.selectTransferList(new Transfer());
@@ -225,10 +214,6 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         if(toId.equals(String.valueOf(vipUser.getId())) || toMoneyCode.equals(vipUser.getMoneyCode()) ){
@@ -342,10 +327,6 @@ public class VipUserCenterController extends BaseFrontController {
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
-
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
             ResponseResult map = new ResponseResult();
             //二维码
             map.put("extension",vipUser.getExtensionCode());
@@ -377,10 +358,6 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         //查询该会员下的一级会员
@@ -431,9 +408,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try{
             VipProfitDetail detail = new VipProfitDetail();
             detail.setVipId(vipUser.getId());
@@ -462,9 +436,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try{
             VipAddress address = new VipAddress();
             address.setVipId(vipUser.getId());
@@ -507,9 +478,7 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         try{
             if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
                 vipAddressService.updateDefaultAddress(vipUser.getId());
@@ -535,10 +504,6 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipAddress vipAddress = new VipAddress();
@@ -578,9 +543,7 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         VipAddress address = vipAddressService.selectVipAddressById(Integer.parseInt(id));
 
         Map map = new HashMap();
@@ -611,10 +574,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         try{
             if(vipAddress.getIsDefault().equalsIgnoreCase(CustomerConstants.YES)){
                 vipAddressService.updateDefaultAddress(vipAddress.getVipId());
@@ -643,10 +602,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         try{
             VipAddress vipAddress = new VipAddress();
             vipAddress.setId(Integer.parseInt(id));
@@ -673,9 +628,7 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         try{
             vipAddressService.deleteVipAddressByIds(id);
             return ResponseResult.success();
@@ -698,10 +651,6 @@ public class VipUserCenterController extends BaseFrontController {
 
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipAccount vipAccount = new VipAccount();
@@ -739,10 +688,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         account.setVipId(vipUser.getId());
         account.setIsDefault(CustomerConstants.NO);
         try{
@@ -768,9 +713,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         VipAccount account = vipAccountService.selectVipAccountById(Integer.parseInt(id));
 
         Map map = new HashMap();
@@ -797,10 +739,6 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try{
             if(vipAccountService.updateVipAccount(account) > 0){
                 return ResponseResult.success();
@@ -826,9 +764,7 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         vipAccountService.deleteVipAccountByIds(id);
         return ResponseResult.success();
     }
@@ -847,9 +783,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -886,10 +819,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
         if(vipAccountService.updateDefaultAccount(vipUser.getId(),Integer.parseInt(id)) > 0){
             return ResponseResult.success();
         }
@@ -909,9 +838,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         feedback.setVipId(vipUser.getId());
         feedbackService.insertVipFeedback(feedback);
         return ResponseResult.success();
@@ -946,10 +872,6 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         VipAppeal vipAppeal = new VipAppeal();
         vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
         vipAppeal.getParams().put("VipAppeal"," order by id asc");
@@ -975,10 +897,6 @@ public class VipUserCenterController extends BaseFrontController {
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
 
         VipExchange exchange = new VipExchange();
@@ -1086,9 +1004,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
         VipBuy vipBuy = new VipBuy();
         vipBuy.setVipId(vipUser.getId());
         vipBuy.getParams().put("buy"," order by create_time desc");
@@ -1128,9 +1043,6 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
         try {
             if (!file.isEmpty()) {
                 //图片地址

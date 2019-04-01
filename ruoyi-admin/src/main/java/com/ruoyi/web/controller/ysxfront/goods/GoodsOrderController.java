@@ -62,11 +62,12 @@ public class GoodsOrderController extends BaseFrontController {
 
         if (null==vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-
         }
+
         if(vipUser.getIsMark().equals(CustomerConstants.NO)){
             return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
+
         String isFrozen = vipUser.getIsFrozen();
         if (isFrozen.equals("Y")){
             return ResponseResult.responseResult(ResponseEnum.USER_ISFROZEN);
@@ -101,102 +102,6 @@ public class GoodsOrderController extends BaseFrontController {
         return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_ADDERROR);
     }
 
-
-//
-//    /**
-//     * 删除商品订单
-//     */
-//
-//    @PostMapping("/remove")
-//    @ResponseBody
-//    public ResponseResult remove(@RequestHeader("token")String token, String ids,String goodsName) {
-//        //校验传参
-//        if (null == token || "".equals(token) || ids.length() == 0 || null == token) {
-//            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-//        }
-//
-//        // 校验登录状态
-//        VipUser vipUser = userExist(token);
-//
-//        if (vipUser == null) {
-//            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-//        }
-//
-//        int i = goodsOrderService.deleteGoodsOrderByIds(ids);
-//
-//        if (i > 0) {
-//
-//            Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
-//            Integer goodsSoldNumber = goods.getGoodsSoldNumber();
-//            goods.setGoodsSoldNumber(goodsSoldNumber - 1);
-//            goodsService.updateGoods(goods);
-//            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-//        }
-//
-//        return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_REMOVEERROR);
-//    }
-//
-//
-//    /**
-//     * 客户端查询各种订单状态接口
-//     * @param token
-//     * @param goodsOrder
-//     * @return
-//     */
-//
-//    @PostMapping("/selectOrader")
-//    @ResponseBody
-//    public ResponseResult selectOrader(@RequestHeader("token")String token, GoodsOrder goodsOrder) {
-//
-//        //校验传参
-//        if (null == token || "".equals(token)) {
-//            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-//        }
-//
-//        // 校验登录状态
-//        VipUser vipUser = userExist(token);
-//
-//        if (null == vipUser ) {
-//            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-//        }
-//        if(null != goodsOrder.getId()){
-//            goodsOrder.setUid(vipUser.getId());
-//            GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(goodsOrder.getId());
-//            Integer shippingAddress = goodsOrder1.getShippingAddress();
-//
-//            VipAddress vipAddress = vipAddressService.selectVipAddressById(shippingAddress);
-//            OraderVo oraderVo = new OraderVo();
-//            oraderVo.setGoodsOrder(goodsOrder1);
-//            oraderVo.setVipAddress(vipAddress);
-//            return ResponseResult.responseResult(ResponseEnum.SUCCESS,oraderVo);
-//        }
-//
-//        goodsOrder.setUid(vipUser.getId());
-//
-//        List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
-//        if(goodsOrders.size() > 0){
-//
-//
-//
-//            for (int i = 0; i < goodsOrders.size(); i++) {
-//                if (goodsOrders.get(i).getGoodsStatus().equals("退款/售后")) {
-//
-//                    String orderNumber = goodsOrders.get(i).getOrderNumber();
-//                    GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
-//
-//
-//                    String refundStatus = goodsSalesreturn.getRefundStatus();
-//
-//                    goodsOrders.get(i).setGoodsStatus(refundStatus);
-//                }
-//
-//
-//            }
-//            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
-//        }
-//        return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
-//
-//    }
     /**
      * 删除商品订单
      */
@@ -211,9 +116,7 @@ public class GoodsOrderController extends BaseFrontController {
 
         // 校验登录状态
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -252,9 +155,7 @@ public class GoodsOrderController extends BaseFrontController {
 
         // 校验登录状态
         VipUser vipUser = userExist(token);
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
@@ -390,9 +291,7 @@ public class GoodsOrderController extends BaseFrontController {
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         Integer id = goodsOrder.getId();
         GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
         goodsOrder1.setGoodsStatus("待评价");

@@ -49,9 +49,7 @@ public class GoodsController extends BaseFrontController {
         if(null==vipUser){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
+
         try {
             if (!file.isEmpty()) {
                 //图片地址
@@ -81,7 +79,7 @@ public class GoodsController extends BaseFrontController {
 
     @PostMapping("/list")
     @ResponseBody
-    public ResponseResult list(@RequestHeader(value = "token",required = false)String token) {
+    public ResponseResult list(@RequestHeader(value = "token",required = false,defaultValue = "")String token) {
 
 
         Goods goods = new Goods();
@@ -98,9 +96,7 @@ public class GoodsController extends BaseFrontController {
             }
             // 校验登录状态
             VipUser vipUser = userExist(token);
-            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-            }
+
             if (null == vipUser ) {
                 goods1.setCollectionStatus(0);
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
@@ -122,12 +118,6 @@ public class GoodsController extends BaseFrontController {
         }
       
        return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);
-    }
-    @PostMapping("/ceshi")
-    @ResponseBody
-    public ResponseResult addSave1(Goods goods){
-        int i = goodsService.insertGoods(goods);
-        return null;
     }
 
     /**
