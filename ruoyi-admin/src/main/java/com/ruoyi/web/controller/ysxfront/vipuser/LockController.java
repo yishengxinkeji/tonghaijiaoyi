@@ -119,12 +119,17 @@ public class LockController extends BaseFrontController {
                 Map map = new HashMap();
                 map.put("time",vipLock1.getLockTime());
                 map.put("number",vipLock1.getLockNumber());
-                if(Double.parseDouble(vipLock1.getLockProfit())< 0){
+                map.put("deduct",vipLock1.getDeduct());
+                String deduct = vipLock1.getDeduct();
+                if(deduct.equals("0")){
                     map.put("profit",vipLock1.getLockProfit());
                 }else {
-                    map.put("profit",String.valueOf(NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber()))));
+                    String number = NumberUtil.roundStr(NumberUtil.add(Double.parseDouble(vipLock1.getLockNumber()),Double.parseDouble(deduct)),CustomerConstants.ROUND_NUMBER);
+                    map.put("profit",number);
                 }
+
                 map.put("status",vipLock1.getLockStatus());
+
                 list.add(map);
             });
         }
@@ -204,7 +209,8 @@ public class LockController extends BaseFrontController {
                 String sixRate = trade.getSixRate();
                 double mul = NumberUtil.mul(Double.parseDouble(number), (1 + Double.parseDouble(sixRate)));
                 vipLock.setLockType(LockType.SIX.getCode());
-                vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offset(new Date(), DateField.MONTH,6)));//6个月
+                //vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offset(new Date(), DateField.MONTH,6)));//6个月
+                vipLock.setLockExpire(DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD,DateUtil.offsetMinute(new Date(),2)));
                 vipLock.setLockProfit(String.valueOf(mul));
             }else if(type.equals(LockType.TWELVE.getCode())){
                 //12个月

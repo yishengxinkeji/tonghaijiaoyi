@@ -13,10 +13,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lockProfit"    column="lock_profit"    />
         <result property="lockStatus"    column="lock_status"    />
         <result property="lockExpire"    column="lock_expire"    />
+        <result property="deduct"    column="deduct"    />
     </resultMap>
 	
 	<sql id="selectVipLockVo">
-        select id, vip_id, lock_time,lock_expire, lock_type, lock_number, lock_profit, lock_status from ysx_vip_lock
+        select id, vip_id, lock_time,lock_expire, lock_type, lock_number, lock_profit, lock_status,deduct from ysx_vip_lock
     </sql>
 	
     <select id="selectVipLockList" parameterType="VipLock" resultMap="VipLockResult">
@@ -31,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="lockProfit != null  and lockProfit != '' "> and lock_profit = #{lockProfit}</if>
              <if test="lockStatus != null  and lockStatus != '' "> and lock_status = #{lockStatus}</if>
              <if test="lockExpire != null  and lockExpire != '' "> and lock_expire = #{lockExpire}</if>
+            <if test="deduct != null  and deduct != '' "> and deduct = #{deduct}</if>
          </where>
         ${params.VipLock}
     </select>
@@ -50,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="lockProfit != null  and lockProfit != ''  ">lock_profit,</if>
 			<if test="lockStatus != null  and lockStatus != ''  ">lock_status,</if>
             <if test="lockExpire != null  and lockExpire != ''  ">lock_expire,</if>
+            <if test="deduct != null  and deduct != ''  ">deduct,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="vipId != null  ">#{vipId},</if>
@@ -59,6 +62,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="lockProfit != null  and lockProfit != ''  ">#{lockProfit},</if>
 			<if test="lockStatus != null  and lockStatus != ''  ">#{lockStatus},</if>
             <if test="lockExpire != null  and lockExpire != ''  ">#{lockExpire},</if>
+            <if test="deduct != null  and deduct != ''  ">#{deduct},</if>
          </trim>
     </insert>
 	 
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="lockProfit != null  and lockProfit != ''  ">lock_profit = #{lockProfit},</if>
             <if test="lockStatus != null  and lockStatus != ''  ">lock_status = #{lockStatus},</if>
             <if test="lockExpire != null  and lockExpire != ''  ">lock_expire = #{lockExpire},</if>
+            <if test="deduct != null  and deduct != ''  ">deduct = #{deduct},</if>
         </trim>
         where id = #{id}
     </update>

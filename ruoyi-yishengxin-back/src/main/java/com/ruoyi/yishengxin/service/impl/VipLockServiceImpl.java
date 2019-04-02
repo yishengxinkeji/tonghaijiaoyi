@@ -5,7 +5,9 @@ import java.util.List;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
+import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.LockStatus;
+import com.ruoyi.common.enums.LockType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
@@ -133,7 +135,7 @@ public class VipLockServiceImpl implements IVipLockService {
 
         vipUser.setSslMoney(String.valueOf(NumberUtil.add(Double.parseDouble(vipUser.getSslMoney()),backMoney)));
         vipLock.setLockStatus(LockStatus.INTERUPT.getCode());
-        vipLock.setLockProfit(String.valueOf(0-mul));
+        vipLock.setDeduct("-"+NumberUtil.roundStr(mul, CustomerConstants.ROUND_NUMBER));
 
         vipUserMapper.updateVipUser(vipUser);
         return vipLockMapper.updateVipLock(vipLock);
@@ -146,6 +148,7 @@ public class VipLockServiceImpl implements IVipLockService {
     public void updateTimerLock() {
         VipLock vipLock = new VipLock();
         vipLock.setLockExpire(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD));
+        vipLock.setLockStatus(LockStatus.LOCKING.getCode());
         List<VipLock> vipLocks = vipLockMapper.selectVipLockList(vipLock);
         if(vipLocks.size() > 0){
             //查找今日锁仓到期的数据,更新状态,并更新用户余额

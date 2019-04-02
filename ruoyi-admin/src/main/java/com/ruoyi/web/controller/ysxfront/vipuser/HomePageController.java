@@ -424,10 +424,10 @@ public class HomePageController extends BaseFrontController {
         }
 
         if(Double.parseDouble(maxNumber) < Double.parseDouble(number)){
-            return ResponseResult.responseResult(ResponseEnum.MAX_BUY);
+            return ResponseResult.responseResult(ResponseEnum.MAX_BUY,maxNumber);
         }
         if(Double.parseDouble(minNumber) > Double.parseDouble(number)){
-            return ResponseResult.responseResult(ResponseEnum.MIN_BUY);
+            return ResponseResult.responseResult(ResponseEnum.MIN_BUY,minNumber);
         }
 
         double mul = NumberUtil.mul(Double.parseDouble(unitPrice), Double.parseDouble(number));     //认购总价

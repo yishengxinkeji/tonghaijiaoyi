@@ -216,6 +216,10 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+        }
+
         if(toId.equals(String.valueOf(vipUser.getId())) || toMoneyCode.equals(vipUser.getMoneyCode()) ){
             return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
         }

@@ -34,6 +34,8 @@ public class VipLock extends BaseEntity
 	private String lockStatus;
 	//到期时间
 	private String lockExpire;
+	// 扣除的金额
+	private String deduct;
 
 
 }
