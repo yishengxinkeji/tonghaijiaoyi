@@ -36,5 +36,8 @@ public class Project extends BaseEntity
 	private String maxNumber;
 	//认购最小购买量
 	private String minNumber;
-
+	//认购总量
+	private String projectNumber;
+	//认购余量
+	private String projectOver;
 }

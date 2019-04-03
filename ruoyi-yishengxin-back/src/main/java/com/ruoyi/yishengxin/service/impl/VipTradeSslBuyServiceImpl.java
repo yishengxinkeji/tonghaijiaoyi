@@ -3,6 +3,7 @@ package com.ruoyi.yishengxin.service.impl;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.util.IdUtil;
@@ -153,25 +154,28 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
     /**
      * 处理ssl的定时匹配任务
      * @param vipTradeSslBuy1
-     * @param vipTradeSslSale1
      */
     @Override
-    public void dealTimer(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1) {
-
-        vipTradeSslBuy1 = vipTradeSslBuyMapper.selectVipTradeBuyById(vipTradeSslBuy1.getId());
-        String saleNumber = vipTradeSslSale1.getSaleNumber();
-        String buyNumber = vipTradeSslBuy1.getBuyNumber();
-        if(Double.parseDouble(saleNumber) > Double.parseDouble(buyNumber)){
-            //卖的数量大于买的数量
-            dealLgOrder(vipTradeSslBuy1,vipTradeSslSale1);
-        }else if(Double.parseDouble(saleNumber) == Double.parseDouble(buyNumber)){
-            //两个数量相同
-            dealEqOrder(vipTradeSslBuy1,vipTradeSslSale1);
-        }else if(Double.parseDouble(saleNumber) < Double.parseDouble(buyNumber)){
-            //卖的数量小于买的数量
-            dealltOrder(vipTradeSslBuy1,vipTradeSslSale1);
-        }else if(vipTradeSslBuy1.getBuyStatus().equals(TradeStatus.SUCCESS.getCode())){
-            System.out.println("买订单已经处理完成了!");
+    public synchronized void dealTimer(VipTradeSslBuy vipTradeSslBuy1, List<VipTradeSslSale> list) {
+        if(list.size() > 0){
+            for(VipTradeSslSale vipTradeSslSale1 : list){
+                vipTradeSslBuy1 = vipTradeSslBuyMapper.selectVipTradeBuyById(vipTradeSslBuy1.getId());
+                if(vipTradeSslBuy1.getBuyStatus().equals(TradeStatus.SUCCESS.getCode())){
+                    break;
+                }
+                String saleNumber = vipTradeSslSale1.getSaleNumber();
+                String buyNumber = vipTradeSslBuy1.getBuyNumber();
+                if(Double.parseDouble(saleNumber) > Double.parseDouble(buyNumber)){
+                    //卖的数量大于买的数量
+                    dealLgOrder(vipTradeSslBuy1,vipTradeSslSale1);
+                }else if(Double.parseDouble(saleNumber) == Double.parseDouble(buyNumber)){
+                    //两个数量相同
+                    dealEqOrder(vipTradeSslBuy1,vipTradeSslSale1);
+                }else if(Double.parseDouble(saleNumber) < Double.parseDouble(buyNumber)){
+                    //卖的数量小于买的数量
+                    dealltOrder(vipTradeSslBuy1,vipTradeSslSale1);
+                }
+            }
         }
     }
 
@@ -270,9 +274,10 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy1.setRelationOrderno(simpleUuid);
         //更新其单价和总额
         vipTradeSslBuy1.setUnitPrice(saleUnitePrice);
+        vipTradeSslBuy1.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeSslBuy1.setBuyTotal(NumberUtil.roundStr(mul1,CustomerConstants.ROUND_NUMBER));
 
-        updateVipTradeBuy(vipTradeSslBuy1);
+        vipTradeSslBuyMapper.updateVipTradeBuy(vipTradeSslBuy1);
 
         //更新卖的订单状态
         double sub = NumberUtil.sub(Double.parseDouble(saleNumber), Double.parseDouble(buyNumber));
@@ -442,9 +447,10 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy1.setRelationOrderno(vipTradeSslSale1.getSaleNo());
         //更新其单价和总额
         vipTradeSslBuy1.setUnitPrice(saleUnitePrice);
+        vipTradeSslBuy1.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeSslBuy1.setBuyTotal(NumberUtil.roundStr(mul4,CustomerConstants.ROUND_NUMBER));
 
-        updateVipTradeBuy(vipTradeSslBuy1);
+        vipTradeSslBuyMapper.updateVipTradeBuy(vipTradeSslBuy1);
 
         //更新卖的订单状态
         vipTradeSslSale1.setSaleStatus(TradeStatus.SUCCESS.getCode());
@@ -453,8 +459,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslSale1.setBuyNickname(buyUser.getNickname());
         vipTradeSslSale1.setBuyPhone(buyUser.getPhone());
         vipTradeSslSale1.setRelationOrderno(vipTradeSslBuy1.getBuyNo());
-
-
+        vipTradeSslSale1.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
 
         //更新两位用户的账户信息
         //卖家更新hkd余额 += number*unitprice
@@ -618,6 +623,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslBuy.setSaleNickname(saleUser.getNickname());
         vipTradeSslBuy.setSaleAvater(saleUser.getAvater());
         vipTradeSslBuy.setBuyType(TradeType.BUY_SSL.getCode());
+        vipTradeSslBuy.setBuyTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
         vipTradeSslBuy.setRelationOrderno(vipTradeSslSale1.getSaleNo());
 
         vipTradeSslBuyMapper.insertVipTradeBuy(vipTradeSslBuy);
@@ -639,8 +645,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
         vipTradeSslSale1.setBuyNickname(buyUser.getNickname());
         vipTradeSslSale1.setBuyAvater(buyUser.getAvater());
         vipTradeSslSale1.setRelationOrderno(simpleUuid);
-
-
+        vipTradeSslSale1.setSaleTime(DateUtils.dateTimeNow(DateUtils.YYYY_MM_DD_HH_MM));
 
         //更新两位用户的账户信息
         //卖家更新hkd余额 += number*unitprice
@@ -752,5 +757,14 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
     @Override
     public double selectAvgByDay(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeSslBuyMapper.selectAvgByDay(beginOfDay,endOfDay);
+    }
+
+    /**
+     * 按单价分组统计交易中的数量
+     * @return
+     */
+    @Override
+    public List<Map<String,String>> selectSumNumberByUnitPrice() {
+        return vipTradeSslBuyMapper.selectSumNumberByUnitPrice();
     }
 }

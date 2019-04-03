@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.constant.CustomerConstants;
@@ -10,6 +11,7 @@ import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.Md5Utils;
 import com.ruoyi.common.utils.RegexUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.vipUser.*;
@@ -170,18 +172,18 @@ public class TradeSaleController extends BaseFrontController {
         if(type.equalsIgnoreCase(TradeType.SALE_SSL.getCode())){
             //查的是ssl售卖列表
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
-            //交易成功
-            vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
-            vipTradeSslSale.getParams().put("vipTradeSslSale"," order by unit_price desc limit 0,10");
-            List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
+            //交易中的数据按照单价分组统计数量
+            List<Map<String,String>> list1 = vipTradeSaleService.selectSumNumberByUnitPrice();
 
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map = new HashMap();
-                map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
-                map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
-                map.put("time",vipTradeSslSale1.getSaleTime());  //时间
-                list.add(map);
-            });
+            if(list1.size() > 0){
+                list1.stream().forEach(map1 -> {
+                    Map map = new HashMap();
+                    map.put("number", map1.get("sale_number"));  //数量
+                    map.put("price",map1.get("unit_price"));   //单价
+                    list.add(map);
+                });
+            }
+
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                     String name1 = String.valueOf(o1.get("price"));
@@ -191,21 +193,24 @@ public class TradeSaleController extends BaseFrontController {
             });
         }else if(type.equalsIgnoreCase(TradeType.SALE_HKD.getCode())){
             //查的是hkd列表
+            //查的是hkd列表
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setSaleStatus(TradeStatus.WAITING.getCode());
             vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc limit 0,10");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
+            if(vipTradeHkdSaleList.size() > 0){
+                vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
+                    Map map = new HashMap();
+                    map.put("type", TradeType.SALE_HKD.getCode());
+                    map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                    map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
+                    map.put("id",vipTradeHkdSale1.getId());
+                    map.put("vipId",vipTradeHkdSale1.getVipId());
+                    list.add(map);
+                });
+            }
 
-            vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
-                Map map = new HashMap();
-                map.put("type", TradeType.SALE_HKD.getCode());
-                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-                map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
-                map.put("id",vipTradeHkdSale1.getId());
-                map.put("vipId",vipTradeHkdSale1.getVipId());
-                list.add(map);
-            });
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                     String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
@@ -234,24 +239,28 @@ public class TradeSaleController extends BaseFrontController {
             vipTradeHkdSale.getParams().put("vipTradeHkdSale"," order by sale_time desc limit 0,10");
 
             List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map = new HashMap();
-                map.put("type", TradeType.SALE_SSL.getCode());
-                map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
-                map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
-                map.put("time",vipTradeSslSale1.getSaleTime());  //时间
-                map.put("id",vipTradeSslSale1.getId());
-                list.add(map);
-            });
+            if(vipTradeSslSales.size() > 0){
+                vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                    Map map = new HashMap();
+                    map.put("type", TradeType.SALE_SSL.getCode());
+                    map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
+                    map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
+                    map.put("time",vipTradeSslSale1.getSaleTime());  //时间
+                    map.put("id",vipTradeSslSale1.getId());
+                    list.add(map);
+                });
+            }
 
-            vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
-                Map map = new HashMap();
-                map.put("type", TradeType.SALE_HKD.getCode());
-                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-                map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
-                map.put("id",vipTradeHkdSale1.getId());
-                list.add(map);
-            });
+            if(vipTradeHkdSaleList.size() > 0){
+                vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
+                    Map map = new HashMap();
+                    map.put("type", TradeType.SALE_HKD.getCode());
+                    map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                    map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
+                    map.put("id",vipTradeHkdSale1.getId());
+                    list.add(map);
+                });
+            }
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
                     String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
@@ -332,14 +341,17 @@ public class TradeSaleController extends BaseFrontController {
         vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,10");
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
         List list = new ArrayList();
-        vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-            Map map = new HashMap();
-            map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
-            map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
-            map.put("time",vipTradeSslSale1.getSaleTime());  //时间
-            map.put("id",vipTradeSslSale1.getId());
-            list.add(map);
-        });
+        if(vipTradeSslSales.size() > 0){
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map = new HashMap();
+                map.put("number",vipTradeSslSale1.getSaleNumber());  //数量
+                map.put("price",vipTradeSslSale1.getUnitPrice());   //单价
+                map.put("time",vipTradeSslSale1.getSaleTime());  //时间
+                map.put("id",vipTradeSslSale1.getId());
+                list.add(map);
+            });
+        }
+
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
@@ -358,18 +370,24 @@ public class TradeSaleController extends BaseFrontController {
         List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
         List list = new ArrayList();
-        vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-            Map map = new HashMap();
-            map.put("price",vipTradeSslBuy1.getUnitPrice());
-            map.put("number",vipTradeSslBuy1.getBuyNumber());
-            list.add(map);
-        });
-        vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-            Map map = new HashMap();
-            map.put("price",vipTradeSslSale1.getUnitPrice());
-            map.put("number",vipTradeSslSale1.getSaleNumber());
-            list.add(map);
-        });
+        if(vipTradeSslBuys.size() > 0){
+            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
+                Map map = new HashMap();
+                map.put("price",vipTradeSslBuy1.getUnitPrice());
+                map.put("number",vipTradeSslBuy1.getBuyNumber());
+                list.add(map);
+            });
+        }
+
+        if(vipTradeSslSales.size() > 0){
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map = new HashMap();
+                map.put("price",vipTradeSslSale1.getUnitPrice());
+                map.put("number",vipTradeSslSale1.getSaleNumber());
+                list.add(map);
+            });
+        }
+
 
         List list1 = new ArrayList();
         if(list.size() > 10){
@@ -394,14 +412,17 @@ public class TradeSaleController extends BaseFrontController {
         List<VipTradeHkdSale> vipTradeHkdSaleList = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
         List list = new ArrayList();
-        vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
-            map.put("id",vipTradeHkdSale1.getId());
-            map.put("vipId",vipTradeHkdSale1.getVipId());
-            list.add(map);
-        });
+        if(vipTradeHkdSaleList.size() > 0){
+            vipTradeHkdSaleList.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("time",vipTradeHkdSale1.getSaleTime());  //时间
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("vipId",vipTradeHkdSale1.getVipId());
+                list.add(map);
+            });
+        }
+
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
 
     }
@@ -443,38 +464,50 @@ public class TradeSaleController extends BaseFrontController {
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
         List list = new ArrayList();
-        vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-            Map map = new HashMap();
-            //7挂买SSL
-            map.put("type",vipTradeSslBuy1.getBuyType());
-            map.put("number",vipTradeSslBuy1.getBuyNumber());
-            map.put("time",vipTradeSslBuy1.getBuyTime());
-            list.add(map);
-        });
-        vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-            Map map = new HashMap();
-            //6挂卖SSL
-            map.put("type",vipTradeSslSale1.getSaleType());
-            map.put("number",vipTradeSslSale1.getSaleNumber());
-            map.put("time",vipTradeSslSale1.getSaleTime());
-            list.add(map);
-        });
-        vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            //2挂买HKD
-            map.put("type",vipTradeHkdSale1.getSaleType());
-            map.put("number",vipTradeHkdSale1.getSaleNumber());
-            map.put("time",vipTradeHkdSale1.getSaleTime());
-            list.add(map);
-        });
-        vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-            Map map = new HashMap();
-            //3挂卖HKD
-            map.put("type",vipTradeHkdBuy1.getBuyType());
-            map.put("number",vipTradeHkdBuy1.getBuyNumber());
-            map.put("time",vipTradeHkdBuy1.getBuyTime());
-            list.add(map);
-        });
+        if(vipTradeSslBuys.size() > 0){
+            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
+                Map map = new HashMap();
+                //7挂买SSL
+                map.put("type",vipTradeSslBuy1.getBuyType());
+                map.put("number",vipTradeSslBuy1.getBuyNumber());
+                map.put("time",vipTradeSslBuy1.getBuyTime());
+                list.add(map);
+            });
+        }
+
+        if(vipTradeSslSales.size() > 0){
+            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                Map map = new HashMap();
+                //6挂卖SSL
+                map.put("type",vipTradeSslSale1.getSaleType());
+                map.put("number",vipTradeSslSale1.getSaleNumber());
+                map.put("time",vipTradeSslSale1.getSaleTime());
+                list.add(map);
+            });
+        }
+
+        if(vipTradeHkdSales.size() > 0){
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                //2挂买HKD
+                map.put("type",vipTradeHkdSale1.getSaleType());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());
+                map.put("time",vipTradeHkdSale1.getSaleTime());
+                list.add(map);
+            });
+        }
+
+        if(vipTradeHkdBuys.size() > 0){
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map = new HashMap();
+                //3挂卖HKD
+                map.put("type",vipTradeHkdBuy1.getBuyType());
+                map.put("number",vipTradeHkdBuy1.getBuyNumber());
+                map.put("time",vipTradeHkdBuy1.getBuyTime());
+                list.add(map);
+            });
+        }
+
 
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {

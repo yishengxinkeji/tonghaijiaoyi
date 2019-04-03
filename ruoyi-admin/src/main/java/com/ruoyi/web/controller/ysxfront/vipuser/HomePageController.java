@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.DataOutput;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -214,6 +215,8 @@ public class HomePageController extends BaseFrontController {
         map.put("title",project.getProjectTitle());
         map.put("content",project.getProjectContent());
         map.put("unitPrice",project.getUnitPrice());
+        map.put("projectOver",project.getProjectOver());
+        map.put("projectNumber",project.getProjectNumber());
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
@@ -291,12 +294,15 @@ public class HomePageController extends BaseFrontController {
 
         List<TradeExplain> tradeExplains = tradeExplainService.selectTradeExplainList(new TradeExplain());
         List list = new ArrayList();
-        tradeExplains.stream().forEach(tradeExplain1 -> {
-            Map map = new HashMap();
-            map.put("title",tradeExplain1.getTitle());
-            map.put("content",tradeExplain1.getContent());
-            list.add(map);
-        });
+        if(tradeExplains.size() > 0){
+            tradeExplains.stream().forEach(tradeExplain1 -> {
+                Map map = new HashMap();
+                map.put("title",tradeExplain1.getTitle());
+                map.put("content",tradeExplain1.getContent());
+                list.add(map);
+            });
+        }
+
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
@@ -418,6 +424,17 @@ public class HomePageController extends BaseFrontController {
         String unitPrice = project.getUnitPrice();
         String maxNumber = project.getMaxNumber();
         String minNumber = project.getMinNumber();
+        String projectNumber = project.getProjectNumber();  //项目总量
+        double projectOver = Double.parseDouble(project.getProjectOver());
+        if(projectOver == 0){
+            return ResponseResult.responseResult(ResponseEnum.PROJECT_EMPTY);
+        }
+
+        double mul2 = NumberUtil.mul(Double.parseDouble(projectNumber), (projectOver / 100));
+        //剩余的认购量
+        double sub = NumberUtil.sub(mul2,Double.parseDouble(number));
+        double mul1 = NumberUtil.mul(NumberUtil.div(sub,Double.parseDouble(projectNumber), CustomerConstants.ROUND_NUMBER), 100);
+        String percent = NumberUtil.roundStr(mul1, CustomerConstants.ROUND_NUMBER);
         //数字不正确
         if(!Pattern.matches(RegexUtils.INTEGER_REGEX,number) && !Pattern.matches(RegexUtils.DECIMAL_REGEX,number) ){
             return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
@@ -443,15 +460,20 @@ public class HomePageController extends BaseFrontController {
         //更新用户信息
         vipUser.setSslMoney(s);
         vipUser.setHkdMoney(s1);
-        //更新用户信息
-        int i = vipUserService.updateVipUser(vipUser);
-        if(i > 0){
-            VipTrade vipTrade = new VipTrade();
-            vipTrade.setVipTrade(TradeType.BACK_BUY.getCode());     //平台购买
-            vipTrade.setVipId(vipUser.getId());
-            vipTrade.setTradeTime(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM));
-            vipTrade.setTradeNumber(number);
-            vipTradeService.insertVipTrade(vipTrade);
+
+        project.setProjectOver(percent);
+        int i1 = projectService.updateProject(project);
+        if(i1 > 0){
+            //更新用户信息
+            int i = vipUserService.updateVipUser(vipUser);
+            if(i > 0){
+                VipTrade vipTrade = new VipTrade();
+                vipTrade.setVipTrade(TradeType.BACK_BUY.getCode());     //平台购买
+                vipTrade.setVipId(vipUser.getId());
+                vipTrade.setTradeTime(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM));
+                vipTrade.setTradeNumber(number);
+                vipTradeService.insertVipTrade(vipTrade);
+            }
         }
         return ResponseResult.success();
     }

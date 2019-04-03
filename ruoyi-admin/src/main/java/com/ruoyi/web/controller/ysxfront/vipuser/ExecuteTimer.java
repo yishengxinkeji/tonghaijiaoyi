@@ -53,27 +53,37 @@ public class ExecuteTimer {
 
         VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
         vipTradeSslSale.setSaleStatus(TradeStatus.TRADING.getCode());
-        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time asc");
+        vipTradeSslSale.getParams().put("VipTradeSslSale"," order by unit_price asc");
 
         List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
         List<VipTradeSslSale> vipTradeSslSales = new ArrayList<>();
-
         if(vipTradeSslBuys.size() > 0){
-            for (int i = 0; i < 5 ; i++) {
+            for (int i = 0; i < 10 ; i++) {
                 vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
                 for(VipTradeSslBuy vipTradeSslBuy1 : vipTradeSslBuys){
-                        //得到订单的单价
-                        String unitPrice = vipTradeSslBuy1.getUnitPrice();
-                        vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
-
-                        vipTradeSslSales.stream().filter(vipTradeSslSale1 -> {
-                            //卖价需要低于买价
-                            return Double.parseDouble(vipTradeSslSale1.getUnitPrice()) <= Double.parseDouble(unitPrice);
-                        }).forEach(vipTradeSslSale1 -> {
-                            vipTradeSslBuyService.dealTimer(vipTradeSslBuy1,vipTradeSslSale1);
-                            return;
-                        });
+                    //得到订单的单价
+                    String unitPrice = vipTradeSslBuy1.getUnitPrice();
+                    double buyNumber = Double.parseDouble(vipTradeSslBuy1.getBuyNumber());
+                    double number = 0;
+                    vipTradeSslSales = vipTradeSslSaleService.selectVipTradeSaleList(vipTradeSslSale);
+                    if(vipTradeSslSales.size() > 0){
+                        List<VipTradeSslSale> list = new ArrayList();
+                        for (int j = 0; j < vipTradeSslSales.size(); j++) {
+                            if(number > buyNumber){
+                                list.add(vipTradeSslSales.get(j));
+                                break;
+                            }
+                            if(Double.parseDouble(vipTradeSslSales.get(j).getUnitPrice())<= Double.parseDouble(unitPrice)){
+                                number += Double.parseDouble(vipTradeSslSales.get(j).getSaleNumber());
+                                list.add(vipTradeSslSales.get(j));
+                            }
+                        }
+                        vipTradeSslBuyService.dealTimer(vipTradeSslBuy1,list);
+                        /*list.stream().forEach(vipTradeSslSale1->{
+                            vipTradeSslBuyService.dealTimer(vipTradeSslBuy1,list);
+                        });*/
+                    }
                 }
             }
         }

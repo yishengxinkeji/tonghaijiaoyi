@@ -74,9 +74,21 @@ public interface VipTradeSslSaleMapper {
     @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where vip_id=#{id} and to_days(sale_time) = to_days(now())")
     public double selectSslMaxNumberByDay(Integer id);
 
+    /**
+     * 从开始到结束交易明细
+     * @param begin
+     * @param end
+     * @return
+     */
     @Select("select unit_price as number,sale_time as time from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end} and sale_status=2 order by sale_time asc")
     public List<Map<String,String>> selectSale(@Param("begin") DateTime begin, @Param("end") DateTime end);
 
+    /**
+     * 从开始到结束总共交易了多少
+     * @param begin
+     * @param end
+     * @return
+     */
     @Select("select ifNull(sum(charge_money),0) from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end}" )
     int selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
 
@@ -88,4 +100,11 @@ public interface VipTradeSslSaleMapper {
     List<Map<String,String>>  selectTwoLeast();
     @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale)")
     Map<String,String> selecByMaxId();
+
+    /**
+     *  交易中的数据按照单价分组统计数量
+     * @return
+     */
+    @Select("select unit_price,ifnull(round(sum(sale_number),2),0) as sale_number from ysx_vip_trade_ssl_sale where sale_status='1' group by unit_price")
+    List<Map<String,String>> selectSumNumberByUnitPrice();
 }

@@ -77,4 +77,10 @@ public interface IVipTradeSslSaleService
 	 * @return
 	 */
 	Map<String,String> selectByMaxId();
+
+	/**
+	 * 按单价分组统计交易中的数量
+	 * @return
+	 */
+	List<Map<String,String>> selectSumNumberByUnitPrice();
 }

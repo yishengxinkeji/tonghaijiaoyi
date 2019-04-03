@@ -48,6 +48,7 @@ public enum ResponseEnum {
     MIN_BUY("1302","低于规定最低额"),
     IDENTIFY_REGEX("1303","身份证格式不正确"),
     IDCARD_NO_IDENTIFY("1304","身份未认证"),
+    PROJECT_EMPTY("1305","项目已认购完"),
 
 
 

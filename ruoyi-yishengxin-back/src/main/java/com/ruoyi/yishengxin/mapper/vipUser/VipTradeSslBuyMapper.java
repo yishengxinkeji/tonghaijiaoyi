@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 挂买SSL 数据层
@@ -69,4 +70,11 @@ public interface VipTradeSslBuyMapper {
 
     @Select("select ifNull(avg(unit_price),0) from ysx_vip_trade_ssl_buy where buy_time between #{beginOfDay} and #{endOfDay}")
     double selectAvgByDay(@Param("beginOfDay") DateTime beginOfDay,@Param("endOfDay") DateTime endOfDay);
+
+    /**
+     * 按单价分组统计交易中的数量
+     * @return
+     */
+    @Select("select unit_price,sum(buy_number) as buy_number from ysx_vip_trade_ssl_buy where buy_status='1' group by unit_price order by unit_price desc")
+    List<Map<String,String>> selectSumNumberByUnitPrice();
 }

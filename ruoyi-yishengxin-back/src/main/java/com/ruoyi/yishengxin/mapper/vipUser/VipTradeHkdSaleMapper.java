@@ -64,9 +64,20 @@ public interface VipTradeHkdSaleMapper {
      */
 	public int deleteVipTradeHkdSaleByIds(String[] ids);
 
-	@Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where to_days(sale_time) <= to_days(now())")
+	/**
+	 * 该用户今日总共交易了多少
+	 * @param id
+	 * @return
+	 */
+	@Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where vip_id=#{id} and to_days(sale_time) = to_days(now())")
 	double selectHkdMaxNumberByDay(Integer id);
 
+	/**
+	 * 从开始到结束总共交易了多少
+	 * @param begin
+	 * @param end
+	 * @return
+	 */
 	@Select("select ifNull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where sale_time between #{begin} and #{end}" )
 	int selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

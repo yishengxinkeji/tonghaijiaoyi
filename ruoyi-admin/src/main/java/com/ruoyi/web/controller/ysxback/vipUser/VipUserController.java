@@ -7,10 +7,12 @@ import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONObject;
+import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.enums.CustomerLogType;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.CustomerLog;
 import com.ruoyi.yishengxin.service.ICustomerLogService;
@@ -28,6 +30,7 @@ import com.ruoyi.framework.web.base.BaseController;
 import com.ruoyi.common.page.TableDataInfo;
 import com.ruoyi.common.base.AjaxResult;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 会员基本 信息操作处理
@@ -379,5 +382,20 @@ public class VipUserController extends BaseController
 
 
 		return getDataTable(list);
+	}
+
+	@Log(title = "用户身份上传", businessType = BusinessType.UPDATE)
+	@PostMapping("/upload")
+	@ResponseBody
+	public AjaxResult updateAvatar(@RequestParam("file") MultipartFile file) {
+		try {
+			if (!file.isEmpty()) {
+				String avatar = FileUploadUtils.upload(Global.getAvatarPath(), file);
+				return AjaxResult.success(Global.getAvatarPath() + avatar);
+			}
+			return error();
+		} catch (Exception e) {
+			return error(e.getMessage());
+		}
 	}
 }

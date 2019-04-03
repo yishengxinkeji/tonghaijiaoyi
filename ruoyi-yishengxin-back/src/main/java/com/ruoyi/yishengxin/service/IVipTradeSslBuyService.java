@@ -6,6 +6,7 @@ import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslSale;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 挂买SSL 服务层
@@ -75,5 +76,11 @@ public interface IVipTradeSslBuyService
 
     double selectAvgByDay(DateTime beginOfDay, DateTime endOfDay);
 
-    void dealTimer(VipTradeSslBuy vipTradeSslBuy1, VipTradeSslSale vipTradeSslSale1);
+    void dealTimer(VipTradeSslBuy vipTradeSslBuy1,List<VipTradeSslSale> list);
+
+	/**
+	 * 按单价分组统计交易中的数量
+	 * @return
+	 */
+	List<Map<String,String>> selectSumNumberByUnitPrice();
 }

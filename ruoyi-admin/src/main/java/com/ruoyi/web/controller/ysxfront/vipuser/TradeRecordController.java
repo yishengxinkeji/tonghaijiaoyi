@@ -89,8 +89,6 @@ public class TradeRecordController extends BaseFrontController {
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
-
-
     /**
      * 全部交易记录查询
      * @param token
@@ -117,31 +115,36 @@ public class TradeRecordController extends BaseFrontController {
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
         List list = new ArrayList();
-        vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdSale1.getSaleType());
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
-            map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
-            map.put("id",vipTradeHkdSale1.getId());
-            map.put("time",vipTradeHkdSale1.getSaleTime());
-            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
-            map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
-            list.add(map);
-        });
+        if(vipTradeHkdSales.size() > 0){
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdSale1.getSaleType());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
+                map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("time",vipTradeHkdSale1.getSaleTime());
+                map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+                map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
-            map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
-            map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
-            map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
-            map.put("id",vipTradeHkdBuy1.getId());
-            map.put("time",vipTradeHkdBuy1.getBuyTime());
-            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
-            map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
-            list.add(map);
-        });
+        if(vipTradeHkdBuys.size() > 0){
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
+                map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
+                map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
+                map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
+                map.put("id",vipTradeHkdBuy1.getId());
+                map.put("time",vipTradeHkdBuy1.getBuyTime());
+                map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+                map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
+                list.add(map);
+            });
+        }
+
 
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -180,29 +183,34 @@ public class TradeRecordController extends BaseFrontController {
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
         List list = new ArrayList();
-        vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdSale1.getSaleType());
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
-            map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
-            map.put("id",vipTradeHkdSale1.getId());
-            map.put("time",vipTradeHkdSale1.getSaleTime());
-            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
-            list.add(map);
-        });
+        if(vipTradeHkdSales.size() > 0){
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdSale1.getSaleType());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
+                map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("time",vipTradeHkdSale1.getSaleTime());
+                map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
-            map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
-            map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
-            map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
-            map.put("id",vipTradeHkdBuy1.getId());
-            map.put("time",vipTradeHkdBuy1.getBuyTime());
-            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
-            list.add(map);
-        });
+        if(vipTradeHkdBuys.size() > 0){
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
+                map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
+                map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
+                map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
+                map.put("id",vipTradeHkdBuy1.getId());
+                map.put("time",vipTradeHkdBuy1.getBuyTime());
+                map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+                list.add(map);
+            });
+        }
+
 
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -242,30 +250,34 @@ public class TradeRecordController extends BaseFrontController {
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
         List list = new ArrayList();
+        if(vipTradeHkdSales.size() > 0){
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdSale1.getSaleType());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
+                map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("time",vipTradeHkdSale1.getSaleTime());
+                map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdSale1.getSaleType());
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
-            map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
-            map.put("id",vipTradeHkdSale1.getId());
-            map.put("time",vipTradeHkdSale1.getSaleTime());
-            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
-            list.add(map);
-        });
+        if(vipTradeHkdBuys.size() > 0){
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
+                map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
+                map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
+                map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
+                map.put("id",vipTradeHkdBuy1.getId());
+                map.put("time",vipTradeHkdBuy1.getBuyTime());
+                map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
-            map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
-            map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
-            map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
-            map.put("id",vipTradeHkdBuy1.getId());
-            map.put("time",vipTradeHkdBuy1.getBuyTime());
-            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
-            list.add(map);
-        });
 
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -305,32 +317,36 @@ public class TradeRecordController extends BaseFrontController {
         List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
         List list = new ArrayList();
+        if(vipTradeHkdSales.size() > 0){
+            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdSale1.getSaleType());
+                map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
+                map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
+                map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
+                map.put("id",vipTradeHkdSale1.getId());
+                map.put("time",vipTradeHkdSale1.getSaleTime());
+                map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
+                map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdSale1.getSaleType());
-            map.put("number",vipTradeHkdSale1.getSaleNumber());  //数量
-            map.put("total",vipTradeHkdSale1.getSaleTotal());   //总价
-            map.put("status",vipTradeHkdSale1.getSaleStatus()); //交易状态
-            map.put("id",vipTradeHkdSale1.getId());
-            map.put("time",vipTradeHkdSale1.getSaleTime());
-            map.put("isAppeal",vipTradeHkdSale1.getIsAppeal());
-            map.put("failStatus",vipTradeHkdSale1.getTradeFailStatus());
-            list.add(map);
-        });
+        if(vipTradeHkdBuys.size() > 0){
+            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                Map map = new HashMap();
+                map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
+                map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
+                map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
+                map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
+                map.put("id",vipTradeHkdBuy1.getId());
+                map.put("time",vipTradeHkdBuy1.getBuyTime());
+                map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
+                map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
+                list.add(map);
+            });
+        }
 
-        vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-            Map map = new HashMap();
-            map.put("vipTrade",vipTradeHkdBuy1.getBuyType());
-            map.put("number",vipTradeHkdBuy1.getBuyNumber());  //数量
-            map.put("total",vipTradeHkdBuy1.getBuyTotal());   //总价
-            map.put("status",vipTradeHkdBuy1.getBuyStatus()); //交易状态
-            map.put("id",vipTradeHkdBuy1.getId());
-            map.put("time",vipTradeHkdBuy1.getBuyTime());
-            map.put("isAppeal",vipTradeHkdBuy1.getIsAppeal());
-            map.put("failStatus",vipTradeHkdBuy1.getTradeFailStatus());
-            list.add(map);
-        });
 
         Collections.sort(list, new Comparator<Map<String, Object>>() {
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -362,17 +378,18 @@ public class TradeRecordController extends BaseFrontController {
             vipTrade.setVipId(vipUser.getId());
             vipTrade.getParams().put("tradeTime","order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
-
-            vipTrades.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
+            if(vipTrades.size() > 0){
+                vipTrades.stream().forEach(vipTrade1 -> {
+                    Map map1 = new HashMap();
+                    map1.put("vipTrade",vipTrade1.getVipTrade());
+                    map1.put("tradeTime",vipTrade1.getTradeTime());
+                    map1.put("tradeNumber",vipTrade1.getTradeNumber());
+                    map1.put("toVipId",vipTrade1.getToVipId());
+                    map1.put("toVipNickname",vipTrade1.getToVipNickname());
+                    map1.put("toVipAvater",vipTrade1.getToVipAvater());
+                    list.add(map1);
+                });
+            }
 
             VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
             vipTradeSslBuy.setVipId(vipUser.getId());
@@ -400,49 +417,58 @@ public class TradeRecordController extends BaseFrontController {
             vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_status=2 order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
+            if(vipTradeSslSales.size() > 0){
+                vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.SALE_SSL.getCode());    //挂卖ssl
+                    map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
+                    map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
+                    map2.put("toVipId",vipTradeSslSale1.getBuyId());
+                    map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
+                    map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
+                    list.add(map2);
+                });
+            }
 
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_SSL.getCode());    //挂卖ssl
-                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeSslSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
-                list.add(map2);
-            });
-            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_SSL.getCode());    //挂买SSL
-                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeSslBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
-                list.add(map2);
-            });
+            if(vipTradeSslBuys.size() > 0){
+                vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.BUY_SSL.getCode());    //挂买SSL
+                    map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
+                    map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
+                    map2.put("toVipId",vipTradeSslBuy1.getSaleId());
+                    map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
+                    map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
+                    list.add(map2);
+                });
+            }
 
-            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_HKD.getCode());    //挂卖hkd
-                map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeHkdSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
-                list.add(map2);
-            });
+            if(vipTradeHkdSales.size() > 0){
+                vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.SALE_HKD.getCode());    //挂卖hkd
+                    map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
+                    map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
+                    map2.put("toVipId",vipTradeHkdSale1.getBuyId());
+                    map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
+                    map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
+                    list.add(map2);
+                });
+            }
 
-            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_HKD.getCode());    //挂买ssl
-                map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
-                list.add(map2);
-            });
+            if(vipTradeHkdBuys.size() > 0){
+                vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.BUY_HKD.getCode());    //挂买ssl
+                    map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
+                    map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
+                    map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
+                    map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
+                    map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
+                    list.add(map2);
+                });
+            }
+
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -491,27 +517,32 @@ public class TradeRecordController extends BaseFrontController {
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
             List list = new ArrayList();
-            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_SSL.getCode());    //挂买SSL
-                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeSslBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
-                list.add(map2);
-            });
+            if(vipTradeSslBuys.size() > 0){
+                vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.BUY_SSL.getCode());    //挂买SSL
+                    map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
+                    map2.put("tradeNumber",vipTradeSslBuy1.getBuyNumber());
+                    map2.put("toVipId",vipTradeSslBuy1.getSaleId());
+                    map2.put("toVipNickname",vipTradeSslBuy1.getSaleNickname());
+                    map2.put("toVipAvater",vipTradeSslBuy1.getSaleAvater());
+                    list.add(map2);
+                });
+            }
 
-            vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.BUY_HKD.getCode());    //挂买hkd
-                map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
-                map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
-                map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
-                map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
-                map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
-                list.add(map2);
-            });
+            if(vipTradeHkdBuys.size() > 0){
+                vipTradeHkdBuys.stream().forEach(vipTradeHkdBuy1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.BUY_HKD.getCode());    //挂买hkd
+                    map2.put("tradeTime",vipTradeHkdBuy1.getBuyTime());
+                    map2.put("tradeNumber",vipTradeHkdBuy1.getBuyNumber());
+                    map2.put("toVipId",vipTradeHkdBuy1.getSaleId());
+                    map2.put("toVipNickname",vipTradeHkdBuy1.getSaleNickname());
+                    map2.put("toVipAvater",vipTradeHkdBuy1.getSaleAvater());
+                    list.add(map2);
+                });
+            }
+
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -560,27 +591,32 @@ public class TradeRecordController extends BaseFrontController {
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
             List list = new ArrayList();
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_SSL.getCode());    //挂卖ssl
-                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeSslSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
-                list.add(map2);
-            });
+            if(vipTradeSslSales.size() > 0){
+                vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.SALE_SSL.getCode());    //挂卖ssl
+                    map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
+                    map2.put("tradeNumber",vipTradeSslSale1.getSaleNumber());
+                    map2.put("toVipId",vipTradeSslSale1.getBuyId());
+                    map2.put("toVipNickname",vipTradeSslSale1.getBuyNickname());
+                    map2.put("toVipAvater",vipTradeSslSale1.getBuyAvater());
+                    list.add(map2);
+                });
+            }
 
-            vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("vipTrade",TradeType.SALE_HKD.getCode());    //挂卖hkd
-                map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
-                map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
-                map2.put("toVipId",vipTradeHkdSale1.getBuyId());
-                map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
-                map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
-                list.add(map2);
-            });
+            if(vipTradeHkdSales.size() > 0){
+                vipTradeHkdSales.stream().forEach(vipTradeHkdSale1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("vipTrade",TradeType.SALE_HKD.getCode());    //挂卖hkd
+                    map2.put("tradeTime",vipTradeHkdSale1.getSaleTime());
+                    map2.put("tradeNumber",vipTradeHkdSale1.getSaleNumber());
+                    map2.put("toVipId",vipTradeHkdSale1.getBuyId());
+                    map2.put("toVipNickname",vipTradeHkdSale1.getBuyNickname());
+                    map2.put("toVipAvater",vipTradeHkdSale1.getBuyAvater());
+                    list.add(map2);
+                });
+            }
+
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -622,31 +658,36 @@ public class TradeRecordController extends BaseFrontController {
             vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
             vipTrade.getParams().put("tradeTime"," order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
+            if(vipTrades.size() > 0){
+                vipTrades.stream().forEach(vipTrade1 -> {
+                    Map map1 = new HashMap();
+                    map1.put("vipTrade",vipTrade1.getVipTrade());
+                    map1.put("tradeTime",vipTrade1.getTradeTime());
+                    map1.put("tradeNumber",vipTrade1.getTradeNumber());
+                    map1.put("toVipId",vipTrade1.getToVipId());
+                    map1.put("toVipNickname",vipTrade1.getToVipNickname());
+                    map1.put("toVipAvater",vipTrade1.getToVipAvater());
+                    list.add(map1);
+                });
+            }
 
-            vipTrades.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
 
             vipTrade.setVipTrade(TradeType.OUT_SSL.getCode());
             vipTrade.getParams().put("tradeTime","order by trade_time desc");
             List<VipTrade> vipTrades1 = vipTradeService.selectVipTradeList(vipTrade);
-            vipTrades1.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
+            if(vipTrades1.size() > 0){
+                vipTrades1.stream().forEach(vipTrade1 -> {
+                    Map map1 = new HashMap();
+                    map1.put("vipTrade",vipTrade1.getVipTrade());
+                    map1.put("tradeTime",vipTrade1.getTradeTime());
+                    map1.put("tradeNumber",vipTrade1.getTradeNumber());
+                    map1.put("toVipId",vipTrade1.getToVipId());
+                    map1.put("toVipNickname",vipTrade1.getToVipNickname());
+                    map1.put("toVipAvater",vipTrade1.getToVipAvater());
+                    list.add(map1);
+                });
+            }
+
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -686,31 +727,34 @@ public class TradeRecordController extends BaseFrontController {
             vipTrade.setVipTrade(TradeType.IN_HKD.getCode());
             vipTrade.getParams().put("tradeTime","order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
-
-            vipTrades.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
-
+            if(vipTrades.size() > 0){
+                vipTrades.stream().forEach(vipTrade1 -> {
+                    Map map1 = new HashMap();
+                    map1.put("vipTrade",vipTrade1.getVipTrade());
+                    map1.put("tradeTime",vipTrade1.getTradeTime());
+                    map1.put("tradeNumber",vipTrade1.getTradeNumber());
+                    map1.put("toVipId",vipTrade1.getToVipId());
+                    map1.put("toVipNickname",vipTrade1.getToVipNickname());
+                    map1.put("toVipAvater",vipTrade1.getToVipAvater());
+                    list.add(map1);
+                });
+            }
             vipTrade.setVipTrade(TradeType.IN_SSL.getCode());
             vipTrade.getParams().put("tradeTime","order by trade_time desc");
             List<VipTrade> vipTrades1 = vipTradeService.selectVipTradeList(vipTrade);
-            vipTrades1.stream().forEach(vipTrade1 -> {
-                Map map1 = new HashMap();
-                map1.put("vipTrade",vipTrade1.getVipTrade());
-                map1.put("tradeTime",vipTrade1.getTradeTime());
-                map1.put("tradeNumber",vipTrade1.getTradeNumber());
-                map1.put("toVipId",vipTrade1.getToVipId());
-                map1.put("toVipNickname",vipTrade1.getToVipNickname());
-                map1.put("toVipAvater",vipTrade1.getToVipAvater());
-                list.add(map1);
-            });
+            if(vipTrades1.size() > 0){
+                vipTrades1.stream().forEach(vipTrade1 -> {
+                    Map map1 = new HashMap();
+                    map1.put("vipTrade",vipTrade1.getVipTrade());
+                    map1.put("tradeTime",vipTrade1.getTradeTime());
+                    map1.put("tradeNumber",vipTrade1.getTradeNumber());
+                    map1.put("toVipId",vipTrade1.getToVipId());
+                    map1.put("toVipNickname",vipTrade1.getToVipNickname());
+                    map1.put("toVipAvater",vipTrade1.getToVipAvater());
+                    list.add(map1);
+                });
+            }
+
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -892,32 +936,20 @@ public class TradeRecordController extends BaseFrontController {
         try {
             List list = new ArrayList();
 
-            VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
-            vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc limit 0,30");
-
-            List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
             vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc limit 0,30");
 
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
-
-            vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
-                Map map2 = new HashMap();
-                map2.put("number",vipTradeSslSale1.getSaleNumber());
-                map2.put("price",vipTradeSslSale1.getUnitPrice());
-                map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
-                list.add(map2);
-            });
-            vipTradeSslBuys.stream().forEach(vipTradeSslBuy1 -> {
-                Map map2 = new HashMap();
-                map2.put("number",vipTradeSslBuy1.getBuyNumber());
-                map2.put("price",vipTradeSslBuy1.getUnitPrice());
-                map2.put("tradeTime",vipTradeSslBuy1.getBuyTime());
-                list.add(map2);
-            });
+            if(vipTradeSslSales.size() > 0){
+                vipTradeSslSales.stream().forEach(vipTradeSslSale1 -> {
+                    Map map2 = new HashMap();
+                    map2.put("number",vipTradeSslSale1.getSaleNumber());
+                    map2.put("price",vipTradeSslSale1.getUnitPrice());
+                    map2.put("tradeTime",vipTradeSslSale1.getSaleTime());
+                    list.add(map2);
+                });
+            }
 
             Collections.sort(list, new Comparator<Map<String, Object>>() {
                 public int compare(Map<String, Object> o1, Map<String, Object> o2) {
@@ -1042,15 +1074,18 @@ public class TradeRecordController extends BaseFrontController {
         if(list.size() > 1000){
             list = list.subList(list.size()-1001,list.size()-1);
         }
-        list.stream().forEach(map -> {
-            List<String> list1 = new ArrayList();
-            Map map1 = new HashMap();
-            map1.put("name",map.get("time"));
-            list1.add(0,map.get("time"));
-            list1.add(1,map.get("number"));
-            map1.put("value",list1);
-            n_list.add(map1);
-        });
+        if(list.size() > 0){
+            list.stream().forEach(map -> {
+                List<String> list1 = new ArrayList();
+                Map map1 = new HashMap();
+                map1.put("name",map.get("time"));
+                list1.add(0,map.get("time"));
+                list1.add(1,map.get("number"));
+                map1.put("value",list1);
+                n_list.add(map1);
+            });
+        }
+
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
     }
 
@@ -1068,15 +1103,18 @@ public class TradeRecordController extends BaseFrontController {
         List<Map<String,String>> list = vipTradeSaleService.selectSale(DateUtil.parse(begin),DateUtil.parse(now));
 
         List n_list = new LinkedList();
-        list.stream().forEach(map -> {
-            List<String> list1 = new ArrayList();
-            Map map1 = new HashMap();
-            map1.put("name",map.get("time"));
-            list1.add(0,map.get("time"));
-            list1.add(1,map.get("number"));
-            map1.put("value",list1);
-            n_list.add(map1);
-        });
+        if(list.size() > 0){
+            list.stream().forEach(map -> {
+                List<String> list1 = new ArrayList();
+                Map map1 = new HashMap();
+                map1.put("name",map.get("time"));
+                list1.add(0,map.get("time"));
+                list1.add(1,map.get("number"));
+                map1.put("value",list1);
+                n_list.add(map1);
+            });
+        }
+
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,n_list);
     }
 

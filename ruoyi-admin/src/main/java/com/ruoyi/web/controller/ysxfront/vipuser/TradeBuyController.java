@@ -11,7 +11,9 @@ import com.ruoyi.common.enums.TradeStatus;
 import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
 import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.RegexUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
 import com.ruoyi.yishengxin.domain.vipUser.*;
@@ -112,7 +114,7 @@ public class TradeBuyController extends BaseFrontController {
                                      @RequestParam(value = "type",defaultValue = "") String type){
         VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
 
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by unit_price asc limit 0,10");
+        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by unit_price desc limit 0,10");
         vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
         List list = new ArrayList();
         List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
@@ -124,22 +126,39 @@ public class TradeBuyController extends BaseFrontController {
             }
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-
+            if(vipTradeSslBuys.size() > 0){
+                vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
+                    Map map = new HashMap();
+                    map.put("type",TradeType.BUY_SSL.getCode());
+                    map.put("number",vipTradeBuy1.getBuyNumber());  //数量
+                    map.put("price",vipTradeBuy1.getUnitPrice());   //单价
+                    map.put("time",vipTradeBuy1.getBuyTime());  //时间
+                    map.put("id", vipTradeBuy1.getId());
+                    list.add(map);
+                });
+            }
         }else if(!type.equals("")){
             //查的是列表
-            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+            //交易中的数据按照单价分组统计数量
+            List<Map<String,String>> list1 = vipTradeBuyService.selectSumNumberByUnitPrice();
+            if(list1.size() > 0){
+                list1.stream().forEach(map1 -> {
+                    Map map = new HashMap();
+                    map.put("type",TradeType.BUY_SSL.getCode());
+                    map.put("number",map1.get("buy_number"));  //数量
+                    map.put("price",map1.get("unit_price"));   //单价
+                    list.add(map);
+                });
+            }
         }
 
-        vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
-            Map map = new HashMap();
-            map.put("type",TradeType.BUY_SSL.getCode());
-            map.put("number",vipTradeBuy1.getBuyNumber());  //数量
-            map.put("price",vipTradeBuy1.getUnitPrice());   //单价
-            map.put("time",vipTradeBuy1.getBuyTime());  //时间
-            map.put("id",vipTradeBuy1.getId());
-            list.add(map);
-        });
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        List list1 = new ArrayList();
+        if(list.size() > 10){
+            list1 = list.subList(0, 10);
+        }else {
+            list1 = list;
+        }
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
 

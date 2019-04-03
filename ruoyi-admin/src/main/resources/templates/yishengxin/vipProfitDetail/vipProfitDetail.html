@@ -21,7 +21,20 @@
 					</div>
 				</form>
 			</div>
-			
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+								&times;
+							</button>
+						</div>
+						<div class="modal-body">
+							<div id="imgshow"></div>
+						</div>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal -->
+			</div>
 	        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
 				<!--<a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="yishengxin:vipProfitDetail:add">
 					<i class="fa fa-plus"></i> 添加
@@ -75,7 +88,7 @@
 					title : '会员头像',
 					align : 'center',
 					formatter: function(value, row, index) {
-						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+						return "<img src='"+value+"' style='width: 50px;height: 50px;' onclick=\"showMaxImg(this)\">";
 					}
 				},
 				{
@@ -106,6 +119,12 @@
             };
             $.table.init(options);
         });
+
+		function showMaxImg(obj){
+			var src=$(obj).attr("src");
+			$("#myModal").find("#imgshow").html("<img src='"+src+"' class='carousel-inner img-responsive img-rounded' data-dismiss='modal'>");
+			$("#myModal").modal('show');
+		}
     </script>
 </body>
 </html>

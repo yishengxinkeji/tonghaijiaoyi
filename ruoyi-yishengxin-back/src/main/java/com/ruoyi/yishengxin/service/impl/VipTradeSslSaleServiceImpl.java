@@ -113,6 +113,8 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     public int saleSsl(VipUser vipUser, String number, String price) throws Exception{
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
+        double sslMoney = Double.parseDouble(vipUser1.getSslMoney());       //客户当前的ssl
+
         double ssl = Double.parseDouble(vipUser1.getSslMoney());
         double sslCharge = 0.00;
         double maxTradeDay = 0.00; //每天最大交易量
@@ -123,8 +125,8 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         List<Trade> trades = tradeMapper.selectTradeList(new Trade());
         if (trades.size() > 0) {
             sslCharge = Double.parseDouble(trades.get(0).getSslCharge());
-            maxTradeDay = Double.parseDouble(trades.get(0).getMaxSslTradeDay());
-            maxTradeTime = Double.parseDouble(trades.get(0).getMaxSslTradeTime());
+            maxTradeDay = NumberUtil.mul(sslMoney,Double.parseDouble(trades.get(0).getMaxSslTradeDay())/100) ;
+            maxTradeTime = NumberUtil.mul(sslMoney,Double.parseDouble(trades.get(0).getMaxSslTradeTime())/100);
             maxPrice = Double.parseDouble(trades.get(0).getHigh());
             minPrice = Double.parseDouble(trades.get(0).getLow());
         }
@@ -228,5 +230,11 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     @Override
     public Map<String,String> selectByMaxId() {
         return vipTradeSslSaleMapper.selecByMaxId();
+    }
+
+    //交易中的数据按照单价分组统计数量
+    @Override
+    public List<Map<String,String>> selectSumNumberByUnitPrice() {
+        return vipTradeSslSaleMapper.selectSumNumberByUnitPrice();
     }
 }

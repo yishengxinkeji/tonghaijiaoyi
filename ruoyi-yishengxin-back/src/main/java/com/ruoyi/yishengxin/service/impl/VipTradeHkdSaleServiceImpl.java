@@ -115,6 +115,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
     public int saleHkd(VipUser vipUser, String number, VipAccount vipAccount) {
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
+
+        double hkdMoney = Double.parseDouble(vipUser1.getHkdMoney());
         double hkd = Double.parseDouble(vipUser1.getHkdMoney());
         double hkdCharge = 0.00;
         double maxTradeDay = 0.00; //每天最大交易量
@@ -123,8 +125,8 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         List<Trade> trades = tradeMapper.selectTradeList(new Trade());
         if (trades.size() > 0) {
             hkdCharge = Double.parseDouble(trades.get(0).getHkdCharge());
-            maxTradeDay = Double.parseDouble(trades.get(0).getMaxHdkTradeDay());
-            maxTradeTime = Double.parseDouble(trades.get(0).getMaxHdkTradeTime());
+            maxTradeDay = NumberUtil.mul(hkdMoney,Double.parseDouble(trades.get(0).getMaxHdkTradeDay())/100);
+            maxTradeTime = NumberUtil.mul(hkdMoney,Double.parseDouble(trades.get(0).getMaxHdkTradeTime())/100);
         }
 
         if (Double.parseDouble(number) > hkd) {
