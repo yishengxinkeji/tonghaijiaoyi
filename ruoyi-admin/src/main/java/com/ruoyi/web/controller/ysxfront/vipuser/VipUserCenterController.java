@@ -189,6 +189,7 @@ public class VipUserCenterController extends BaseFrontController {
             }
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -311,6 +312,7 @@ public class VipUserCenterController extends BaseFrontController {
             }
             return ResponseResult.error();
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -345,6 +347,7 @@ public class VipUserCenterController extends BaseFrontController {
             RedisUtils.setJson(token,vipUser,Long.parseLong(Global.getConfig("spring.redis.expireTime")));
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         } catch (Exception e) {
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -363,39 +366,43 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            //查询该会员下的一级会员
+            VipUser oneUser = new VipUser();
+            oneUser.setParentCode(vipUser.getRecommendCode());
 
-        //查询该会员下的一级会员
-        VipUser oneUser = new VipUser();
-        oneUser.setParentCode(vipUser.getRecommendCode());
+            //一,二级会员列表
+            List<VipUser> list1 = vipUserService.selectUserByParentCode(oneUser);
+            List<VipUser> list2 = vipUserService.selectUserByGrandParentCode(oneUser);
 
-        //一,二级会员列表
-        List<VipUser> list1 = vipUserService.selectUserByParentCode(oneUser);
-        List<VipUser> list2 = vipUserService.selectUserByGrandParentCode(oneUser);
+            List<Map> list_map1 = new ArrayList<>();
+            List<Map> list_map2 = new ArrayList<>();
+            for (VipUser user : list1) {
+                Map userMap = new HashMap();
+                userMap.put("id",user.getId());
+                userMap.put("phone",user.getPhone());
+                userMap.put("avater",user.getAvater());
+                userMap.put("nickname",user.getNickname());
+                userMap.put("createTime",user.getCreateTime());
+                list_map1.add(userMap);
+            }
+            for (VipUser user : list2) {
+                Map userMap = new HashMap();
+                userMap.put("id",user.getId());
+                userMap.put("phone",user.getPhone());
+                userMap.put("avater",user.getAvater());
+                userMap.put("nickname",user.getNickname());
+                userMap.put("createTime",user.getCreateTime());
+                list_map2.add(userMap);
+            }
 
-        List<Map> list_map1 = new ArrayList<>();
-        List<Map> list_map2 = new ArrayList<>();
-        for (VipUser user : list1) {
-            Map userMap = new HashMap();
-            userMap.put("id",user.getId());
-            userMap.put("phone",user.getPhone());
-            userMap.put("avater",user.getAvater());
-            userMap.put("nickname",user.getNickname());
-            userMap.put("createTime",user.getCreateTime());
-            list_map1.add(userMap);
+            map.put("one",list_map1);
+            map.put("two",list_map2);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
-        for (VipUser user : list2) {
-            Map userMap = new HashMap();
-            userMap.put("id",user.getId());
-            userMap.put("phone",user.getPhone());
-            userMap.put("avater",user.getAvater());
-            userMap.put("nickname",user.getNickname());
-            userMap.put("createTime",user.getCreateTime());
-            list_map2.add(userMap);
-        }
-
-        map.put("one",list_map1);
-        map.put("two",list_map2);
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
 
@@ -420,6 +427,7 @@ public class VipUserCenterController extends BaseFrontController {
             List<VipProfitDetail> collect = vipProfitDetailStream.collect(Collectors.toList());
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,collect);
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
 
@@ -467,6 +475,7 @@ public class VipUserCenterController extends BaseFrontController {
 
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
 
@@ -495,6 +504,7 @@ public class VipUserCenterController extends BaseFrontController {
             vipAddressService.insertVipAddress(vipAddress);
             return ResponseResult.success();
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -512,28 +522,32 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            VipAddress vipAddress = new VipAddress();
+            vipAddress.setVipId(vipUser.getId());
+            vipAddress.setIsDefault(CustomerConstants.YES);
+            List<VipAddress> vipAddresses = vipAddressService.selectVipAddressList(vipAddress);
+            if(vipAddresses.size() == 0){
+                return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
+            }
 
-        VipAddress vipAddress = new VipAddress();
-        vipAddress.setVipId(vipUser.getId());
-        vipAddress.setIsDefault(CustomerConstants.YES);
-        List<VipAddress> vipAddresses = vipAddressService.selectVipAddressList(vipAddress);
-        if(vipAddresses.size() == 0){
-            return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
+            vipAddress = vipAddresses.get(0);
+            Map map = new HashMap();
+            map.put("id",vipAddress.getId());
+            map.put("vipId",vipAddress.getVipId());
+            map.put("phone",vipAddress.getPhone());
+            map.put("receivUser",vipAddress.getReceivUser());
+            map.put("addressDetail",vipAddress.getAddressDetail());
+            map.put("isDefault",vipAddress.getIsDefault());
+            map.put("province",vipAddress.getProvince());
+            map.put("city",vipAddress.getCity());
+            map.put("district",vipAddress.getDistrict());
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
-
-        vipAddress = vipAddresses.get(0);
-        Map map = new HashMap();
-        map.put("id",vipAddress.getId());
-        map.put("vipId",vipAddress.getVipId());
-        map.put("phone",vipAddress.getPhone());
-        map.put("receivUser",vipAddress.getReceivUser());
-        map.put("addressDetail",vipAddress.getAddressDetail());
-        map.put("isDefault",vipAddress.getIsDefault());
-        map.put("province",vipAddress.getProvince());
-        map.put("city",vipAddress.getCity());
-        map.put("district",vipAddress.getDistrict());
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
     /**
@@ -550,21 +564,26 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        try{
+            VipAddress address = vipAddressService.selectVipAddressById(Integer.parseInt(id));
 
-        VipAddress address = vipAddressService.selectVipAddressById(Integer.parseInt(id));
+            Map map = new HashMap();
+            map.put("id",address.getId());
+            map.put("vipId",address.getVipId());
+            map.put("phone",address.getPhone());
+            map.put("receivUser",address.getReceivUser());
+            map.put("addressDetail",address.getAddressDetail());
+            map.put("isDefault",address.getIsDefault());
+            map.put("province",address.getProvince());
+            map.put("city",address.getCity());
+            map.put("district",address.getDistrict());
 
-        Map map = new HashMap();
-        map.put("id",address.getId());
-        map.put("vipId",address.getVipId());
-        map.put("phone",address.getPhone());
-        map.put("receivUser",address.getReceivUser());
-        map.put("addressDetail",address.getAddressDetail());
-        map.put("isDefault",address.getIsDefault());
-        map.put("province",address.getProvince());
-        map.put("city",address.getCity());
-        map.put("district",address.getDistrict());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
     /**
@@ -589,6 +608,7 @@ public class VipUserCenterController extends BaseFrontController {
 
             vipAddressService.updateVipAddress(vipAddress);
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
         return ResponseResult.success();
@@ -618,6 +638,7 @@ public class VipUserCenterController extends BaseFrontController {
             }
             return ResponseResult.success();
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
     }
@@ -640,6 +661,7 @@ public class VipUserCenterController extends BaseFrontController {
             vipAddressService.deleteVipAddressByIds(id);
             return ResponseResult.success();
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
 
@@ -659,26 +681,31 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            VipAccount vipAccount = new VipAccount();
+            vipAccount.setVipId(vipUser.getId());
+            List<VipAccount> vipAccounts = vipAccountService.selectVipAccountList(vipAccount);
 
-        VipAccount vipAccount = new VipAccount();
-        vipAccount.setVipId(vipUser.getId());
-        List<VipAccount> vipAccounts = vipAccountService.selectVipAccountList(vipAccount);
-
-        List list = new ArrayList();
-        if(vipAccounts.size() > 0){
-            vipAccounts.stream().forEach(account -> {
-                Map map = new HashMap();
-                map.put("id",account.getId());
-                map.put("vipId",account.getVipId());
-                map.put("accountType",account.getAccountType());
-                map.put("accountName",account.getAccountName());
-                map.put("accountNumber",account.getAccountNumber());
-                map.put("accountImg",account.getAccountImg());
-                map.put("isDefault",account.getIsDefault());
-                list.add(map);
-            });
+            List list = new ArrayList();
+            if(vipAccounts.size() > 0){
+                vipAccounts.stream().forEach(account -> {
+                    Map map = new HashMap();
+                    map.put("id",account.getId());
+                    map.put("vipId",account.getVipId());
+                    map.put("accountType",account.getAccountType());
+                    map.put("accountName",account.getAccountName());
+                    map.put("accountNumber",account.getAccountNumber());
+                    map.put("accountImg",account.getAccountImg());
+                    map.put("isDefault",account.getIsDefault());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+
     }
 
     /**
@@ -701,6 +728,7 @@ public class VipUserCenterController extends BaseFrontController {
             vipAccountService.insertVipAccount(account);
             return ResponseResult.responseResult(ResponseEnum.SUCCESS);
         }catch (Exception e){
+            log.error(e.getMessage());
             return ResponseResult.error();
         }
 
@@ -719,17 +747,22 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            VipAccount account = vipAccountService.selectVipAccountById(Integer.parseInt(id));
 
-        VipAccount account = vipAccountService.selectVipAccountById(Integer.parseInt(id));
+            Map map = new HashMap();
+            map.put("id",account.getId());
+            map.put("vipId",account.getVipId());
+            map.put("accountType",account.getAccountType());
+            map.put("accountName",account.getAccountName());
+            map.put("accountNumber",account.getAccountNumber());
+            map.put("accountImg",account.getAccountImg());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
 
-        Map map = new HashMap();
-        map.put("id",account.getId());
-        map.put("vipId",account.getVipId());
-        map.put("accountType",account.getAccountType());
-        map.put("accountName",account.getAccountName());
-        map.put("accountNumber",account.getAccountNumber());
-        map.put("accountImg",account.getAccountImg());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
     }
 
 
@@ -752,6 +785,7 @@ public class VipUserCenterController extends BaseFrontController {
             }
 
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -771,9 +805,14 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            vipAccountService.deleteVipAccountByIds(id);
+            return ResponseResult.success();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
 
-        vipAccountService.deleteVipAccountByIds(id);
-        return ResponseResult.success();
     }
 
     /**
@@ -825,9 +864,13 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
-        if(vipAccountService.updateDefaultAccount(vipUser.getId(),Integer.parseInt(id)) > 0){
-            return ResponseResult.success();
+        try{
+            if(vipAccountService.updateDefaultAccount(vipUser.getId(),Integer.parseInt(id)) > 0){
+                return ResponseResult.success();
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
         return ResponseResult.error();
     }
@@ -879,22 +922,28 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        VipAppeal vipAppeal = new VipAppeal();
-        vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
-        vipAppeal.getParams().put("VipAppeal"," order by id asc");
-        List<VipAppeal> vipAppeals = appealService.selectVipAppealList(vipAppeal);
-        List list = new ArrayList();
-        if(vipAppeals.size() > 0){
-            vipAppeals.stream().forEach(vipAppeal1 -> {
-                Map map = new HashMap();
-                map.put("time",vipAppeal1.getAppealTime());
-                map.put("status",vipAppeal1.getAppealStatus());
-                map.put("content",vipAppeal1.getContent());
-                list.add(map);
-            });
-        }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        try{
+            VipAppeal vipAppeal = new VipAppeal();
+            vipAppeal.setAppealVipId(String.valueOf(vipUser.getId()));
+            vipAppeal.getParams().put("VipAppeal"," order by id asc");
+            List<VipAppeal> vipAppeals = appealService.selectVipAppealList(vipAppeal);
+            List list = new ArrayList();
+            if(vipAppeals.size() > 0){
+                vipAppeals.stream().forEach(vipAppeal1 -> {
+                    Map map = new HashMap();
+                    map.put("time",vipAppeal1.getAppealTime());
+                    map.put("status",vipAppeal1.getAppealStatus());
+                    map.put("content",vipAppeal1.getContent());
+                    list.add(map);
+                });
+            }
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
     /**
@@ -908,35 +957,39 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            VipExchange exchange = new VipExchange();
+            exchange.setVipId(vipUser.getId());
+            exchange.getParams().put("exchange"," order by create_time desc");
+            List<VipExchange> vipExchanges = vipExchangeService.selectVipExchangeList(exchange);
+            List list = new ArrayList();
+            if(vipExchanges.size() > 0){
+                vipExchanges.stream().forEach(vipExchange -> {
+                    Map map = new HashMap();
+                    map.put("exchangeAmount",vipExchange.getExchangeAmount());
+                    map.put("exchangeCharge",vipExchange.getExchangeCharge());
+                    map.put("exchangeMoney",vipExchange.getExchangeMoney());
+                    map.put("exchangeAccount",vipExchange.getExchangeAccount());
+                    map.put("exchangeStatus",vipExchange.getExchangeStatus());
+                    map.put("exchangeTime",vipExchange.getCreateTime());
+                    if(vipExchange.getExchangeStatus().equals(CustomerConstants.EXCHANGE_BUY_STATUS_DEAL)){
+                        map.put("exchangeDetail",vipExchange.getExchangeDetail());
+                    }
+                    list.add(map);
+                });
+            }
 
-        VipExchange exchange = new VipExchange();
-        exchange.setVipId(vipUser.getId());
-        exchange.getParams().put("exchange"," order by create_time desc");
-        List<VipExchange> vipExchanges = vipExchangeService.selectVipExchangeList(exchange);
-        List list = new ArrayList();
-        if(vipExchanges.size() > 0){
-            vipExchanges.stream().forEach(vipExchange -> {
-                Map map = new HashMap();
-                map.put("exchangeAmount",vipExchange.getExchangeAmount());
-                map.put("exchangeCharge",vipExchange.getExchangeCharge());
-                map.put("exchangeMoney",vipExchange.getExchangeMoney());
-                map.put("exchangeAccount",vipExchange.getExchangeAccount());
-                map.put("exchangeStatus",vipExchange.getExchangeStatus());
-                map.put("exchangeTime",vipExchange.getCreateTime());
-                if(vipExchange.getExchangeStatus().equals(CustomerConstants.EXCHANGE_BUY_STATUS_DEAL)){
-                    map.put("exchangeDetail",vipExchange.getExchangeDetail());
-                }
-                list.add(map);
-            });
+            Map map = new HashMap();
+            List<Trade> trades = tradeService.selectTradeList(new Trade());
+
+            if(trades.size() > 0){
+                map.put("charge",trades.get(0).getHkdCharge());
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
-
-        Map map = new HashMap();
-        List<Trade> trades = tradeService.selectTradeList(new Trade());
-
-        if(trades.size() > 0){
-            map.put("charge",trades.get(0).getHkdCharge());
-        }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
     /**
@@ -952,7 +1005,6 @@ public class VipUserCenterController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
         if(vipUser.getIsMark().equals(CustomerConstants.NO)){
             return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
@@ -1173,15 +1225,21 @@ public class VipUserCenterController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.IDENTIFY_REGEX);
             }
         }
-        vipUser1.setIsMark(CustomerConstants.YES);
-        vipUser1.setIdCard(idCard);
-        vipUser1.setRealName(realName);
-        vipUser1.setFrontImg(frontImg);
-        vipUser1.setBackImg(backImg);
+        try{
+            vipUser1.setIsMark(CustomerConstants.YES);
+            vipUser1.setIdCard(idCard);
+            vipUser1.setRealName(realName);
+            vipUser1.setFrontImg(frontImg);
+            vipUser1.setBackImg(backImg);
 
-        vipUserService.updateVipUser(vipUser1);
-        RedisUtils.setJson(token,vipUser1, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
-        return ResponseResult.success();
+            vipUserService.updateVipUser(vipUser1);
+            RedisUtils.setJson(token,vipUser1, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
+            return ResponseResult.success();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
+
     }
 
     /**et
@@ -1197,13 +1255,18 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        Map map = new HashMap();
-        map.put("idCard",vipUser1.getIdCard());
-        map.put("realName",vipUser1.getRealName());
-        map.put("frontImg",vipUser1.getFrontImg());
-        map.put("backImg",vipUser1.getBackImg());
-        map.put("isMark",vipUser1.getIsMark());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        try{
+            Map map = new HashMap();
+            map.put("idCard",vipUser1.getIdCard());
+            map.put("realName",vipUser1.getRealName());
+            map.put("frontImg",vipUser1.getFrontImg());
+            map.put("backImg",vipUser1.getBackImg());
+            map.put("isMark",vipUser1.getIsMark());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
 }

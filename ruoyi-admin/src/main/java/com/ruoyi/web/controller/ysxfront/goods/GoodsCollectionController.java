@@ -44,34 +44,40 @@ public class GoodsCollectionController extends BaseFrontController {
     @PostMapping("/list")
     @ResponseBody
     public ResponseResult list(@RequestHeader(value = "token")String token) {
-        //校验传参
-        if (null == token || "".equals(token)) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
 
-        if (null == vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        try{
+            //校验传参
+            if (null == token || "".equals(token)) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+            }
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
+
+            if (null == vipUser) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+            GoodsCollection goodsCollection = new GoodsCollection();
+            goodsCollection.setUid(vipUser.getId());
+            //查询列表
+            List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
+            if (goodsCollections.size() == 0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsCollections);
+            }
+            List<GoodsCollectionVo> goodsCollectionVos = new ArrayList<>();
+            for (int i = 0; i < goodsCollections.size(); i++) {
+                GoodsCollectionVo goodsCollectionVo = new GoodsCollectionVo();
+                Integer gid = goodsCollections.get(i).getGid();
+                Goods goods = goodsService.selectGoodsById(gid);
+                Integer id = goodsCollections.get(i).getId();
+                goodsCollectionVo.setGoodsCollectionId(id);
+                goodsCollectionVo.setGoods(goods);
+                goodsCollectionVos.add(goodsCollectionVo);
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsCollectionVos);
+        }catch (Exception e){
+            return ResponseResult.error();
         }
-        GoodsCollection goodsCollection = new GoodsCollection();
-        goodsCollection.setUid(vipUser.getId());
-        //查询列表
-        List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
-        if (goodsCollections.size() == 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsCollections);
-        }
-        List<GoodsCollectionVo> goodsCollectionVos = new ArrayList<>();
-        for (int i = 0; i < goodsCollections.size(); i++) {
-            GoodsCollectionVo goodsCollectionVo = new GoodsCollectionVo();
-            Integer gid = goodsCollections.get(i).getGid();
-            Goods goods = goodsService.selectGoodsById(gid);
-            Integer id = goodsCollections.get(i).getId();
-            goodsCollectionVo.setGoodsCollectionId(id);
-            goodsCollectionVo.setGoods(goods);
-            goodsCollectionVos.add(goodsCollectionVo);
-        }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsCollectionVos);
+
     }
 
     /**
@@ -80,19 +86,18 @@ public class GoodsCollectionController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token")String token, int gid) {
-        // 校验登录状态
+        try{
+            //校验传参
+            if (null == token || "".equals(token) || gid < 0) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+            }
+            VipUser vipUser = userExist(token);
 
-        //校验传参
-        if (null == token || "".equals(token) || gid < 0) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-        VipUser vipUser = userExist(token);
+            if (null == vipUser) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
 
-        if (null == vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        GoodsCollection goodsCollection = new GoodsCollection();
+            GoodsCollection goodsCollection = new GoodsCollection();
 
             GoodsCollection goodsCollection1 = new GoodsCollection();
             goodsCollection1.setUid(vipUser.getId());
@@ -101,20 +106,24 @@ public class GoodsCollectionController extends BaseFrontController {
             if (goodsCollections1.size() >0) {
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS);
             }
-        goodsCollection.setGid(gid);
-        goodsCollection.setUid(vipUser.getId());
-        List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
-        if(goodsCollections.size() > 0){
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            goodsCollection.setGid(gid);
+            goodsCollection.setUid(vipUser.getId());
+            List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
+            if(goodsCollections.size() > 0){
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+
+            goodsCollection.setCreateTime(new Date());
+            //添加收藏
+            int i = goodsCollectionService.insertGoodsCollection(goodsCollection);
+            if (i > 0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_ADD);
+        }catch (Exception e){
+            return ResponseResult.error();
         }
 
-        goodsCollection.setCreateTime(new Date());
-        //添加收藏
-        int i = goodsCollectionService.insertGoodsCollection(goodsCollection);
-        if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-        }
-        return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_ADD);
     }
 
 
@@ -124,32 +133,31 @@ public class GoodsCollectionController extends BaseFrontController {
     @PostMapping("/remove")
     @ResponseBody
     public ResponseResult remove(@RequestHeader("token")String token, String ids) {
-
-        String[] ids1 =ids.split("\\.");
-        //校验传参
-        if (null == ids || "".equals(token) || null == token) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
-
-        if (null == vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        for (int i = 0; i < ids1.length; i++) {
-            String id = ids1[i];
-            int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
-            if (i1 == 0) {
-                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+        try{
+            String[] ids1 =ids.split("\\.");
+            //校验传参
+            if (null == ids || "".equals(token) || null == token) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
             }
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
+            if (null == vipUser) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+            for (int i = 0; i < ids1.length; i++) {
+                String id = ids1[i];
+                int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
+                if (i1 == 0) {
+                    return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+                }
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }catch (Exception e){
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 
     }
-    //public int deleteGoodsCollectionByGid(Integer uid, Integer gid);
 
     /**
      * 删除商品收藏
@@ -157,29 +165,30 @@ public class GoodsCollectionController extends BaseFrontController {
     @PostMapping("/deleteGoodsCollectionByGid")
     @ResponseBody
     public ResponseResult deleteGoodsCollectionByGid(@RequestHeader("token")String token, Integer gid) {
+        try{
+            //校验传参
+            if ( null == token || "".equals(token)) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+            }
 
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
 
-        //校验传参
-        if ( null == token || "".equals(token)) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
+            if (null == vipUser) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
 
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
+            Integer id = vipUser.getId();
 
-        if (null == vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        Integer id = vipUser.getId();
-
-        int i1 = goodsCollectionService.deleteGoodsCollectionByGid(id,gid);
+            int i1 = goodsCollectionService.deleteGoodsCollectionByGid(id,gid);
             if (i1 == 0) {
                 return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
             }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }catch (Exception e){
+            return ResponseResult.error();
+        }
 
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 
     }
 
@@ -189,31 +198,35 @@ public class GoodsCollectionController extends BaseFrontController {
     @PostMapping("/removeCollection")
     @ResponseBody
     public ResponseResult removeCollection(@RequestHeader("token")String token, String ids) {
-
-        String[] ids1 =ids.split("\\.");
-        //校验传参
-        if (null == ids || "".equals(token) || null == token) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
-
-        if (vipUser == null) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        Integer id1 = vipUser.getId();
-
-        for (int i = 0; i < ids1.length; i++) {
-            String id = ids1[i];
-            int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
-            if (i1 == 0) {
-                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+        try{
+            String[] ids1 =ids.split("\\.");
+            //校验传参
+            if (null == ids || "".equals(token) || null == token) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
             }
+
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
+
+            if (vipUser == null) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            Integer id1 = vipUser.getId();
+
+            for (int i = 0; i < ids1.length; i++) {
+                String id = ids1[i];
+                int i1 = goodsCollectionService.deleteGoodsCollectionByIds(id);
+                if (i1 == 0) {
+                    return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_DELECT);
+                }
+            }
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }catch (Exception e){
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 
     }
 

@@ -1,21 +1,16 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
-import cn.hutool.core.codec.Base64Encoder;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.extra.qrcode.QrCodeUtil;
-import cn.hutool.http.useragent.UserAgentUtil;
 import com.ruoyi.common.base.ResponseResult;
 import com.ruoyi.common.config.Global;
 import com.ruoyi.common.constant.CustomerConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.enums.ResponseEnum;
-import com.ruoyi.common.json.JSON;
 import com.ruoyi.common.utils.BaiduDwz;
-import com.ruoyi.common.utils.IpUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.util.JwtUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
@@ -24,11 +19,11 @@ import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGiftService;
 import com.ruoyi.yishengxin.service.IVipUserService;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
@@ -39,9 +34,10 @@ import java.util.regex.Pattern;
 @RequestMapping("/front/vipUser")
 public class VipUserLoginController extends BaseFrontController {
 
+    public static final Logger logger = LoggerFactory.getLogger(VipUserLoginController.class);
+
     @Autowired
     private IVipUserService vipUserService;
-
     @Autowired
     private IGiftService giftService;
 
@@ -59,82 +55,88 @@ public class VipUserLoginController extends BaseFrontController {
     public ResponseResult register(@RequestParam("phone") String phone,
                                    @RequestParam("verification") String verification,
                                    @RequestParam("password") String password,
-                                   @RequestParam(value = "inviCode",required = false) String inviCode){
+                                   @RequestParam(value = "inviCode",required = false) String inviCode) {
 
-        //跳过验证码环节
-        //TODO
+        try {
+            //跳过验证码环节
+            //TODO
 
 
-        //手机号码不正确
-        if(!pattern.matcher(phone).matches()){
-            return ResponseResult.responseResult(ResponseEnum.PHONE_ERROR);
-        }
+            //手机号码不正确
+            if (!pattern.matcher(phone).matches()) {
+                return ResponseResult.responseResult(ResponseEnum.PHONE_ERROR);
+            }
 
-        VipUser vipUser = new VipUser();
+            VipUser vipUser = new VipUser();
 
-        vipUser.setPhone(phone);
-        List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser);
-        if(vipUsers.size() > 0){
-            //号码已经注册
-            return ResponseResult.responseResult(ResponseEnum.PHONE_EXIST_ERROR);
-        }
+            vipUser.setPhone(phone);
+            List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser);
+            if (vipUsers.size() > 0) {
+                //号码已经注册
+                return ResponseResult.responseResult(ResponseEnum.PHONE_EXIST_ERROR);
+            }
 
-        VipUser new_User = new VipUser();
-        new_User.setPhone(phone);
-        String salt = ShiroUtils.randomSalt();
-        new_User.setSalt(salt);
-        new_User.setAvater("/img/default_avater.png");
-        new_User.setNickname("新用户");
-        new_User.setIsMark(CustomerConstants.NO);   //未认证
-        String loginPassword= DigestUtils.md5Hex(password + salt);
-        new_User.setLoginPassword(loginPassword);
-        //推荐码
-        String exten = StringUtils.get8UUID();
-        new_User.setRecommendCode(exten);
+            VipUser new_User = new VipUser();
+            new_User.setPhone(phone);
+            String salt = ShiroUtils.randomSalt();
+            new_User.setSalt(salt);
+            new_User.setAvater("/img/default_avater.png");
+            new_User.setNickname("新用户");
+            new_User.setIsMark(CustomerConstants.NO);   //未认证
+            String loginPassword = DigestUtils.md5Hex(password + salt);
+            new_User.setLoginPassword(loginPassword);
+            //推荐码
+            String exten = StringUtils.get8UUID();
+            new_User.setRecommendCode(exten);
 
-        if(!FileUtil.exist(Global.getFrontPath())){
-            FileUtil.mkdir(Global.getFrontPath());
-        }
-        //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
-        String qrUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + exten);
-        File file = QrCodeUtil.generate(qrUrl, 300, 300, FileUtil.file(Global.getFrontPath() + exten+".jpg"));
-        new_User.setExtensionCode(Global.getFrontPath()+file.getName());
+            if (!FileUtil.exist(Global.getFrontPath())) {
+                FileUtil.mkdir(Global.getFrontPath());
+            }
+            //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
+            String qrUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + exten);
+            File file = QrCodeUtil.generate(qrUrl, 300, 300, FileUtil.file(Global.getFrontPath() + exten + ".jpg"));
+            new_User.setExtensionCode(Global.getFrontPath() + file.getName());
 
-        //钱包地址
-        new_User.setMoneyCode(IdUtil.simpleUUID());
-        //邀请链接,链接8080端口,指向pc端
-        String pcUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.inviLink") + "?invicode=" + exten);
-        new_User.setInviteLink(pcUrl);
+            //钱包地址
+            new_User.setMoneyCode(IdUtil.simpleUUID());
+            //邀请链接,链接8080端口,指向pc端
+            String pcUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.inviLink") + "?invicode=" + exten);
+            new_User.setInviteLink(pcUrl);
 
-        new_User.setHkdMoney("0");
-        new_User.setSslMoney("0");
-        //未领取新人礼包
-        new_User.setNewReceive(CustomerConstants.NO);
+            new_User.setHkdMoney("0");
+            new_User.setSslMoney("0");
+            //未领取新人礼包
+            new_User.setNewReceive(CustomerConstants.NO);
 
-        if(inviCode != null && !inviCode.isEmpty()) {
-            vipUser.setPhone("");
-            vipUser.setRecommendCode(inviCode);
-            List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
-            if(userList.size() > 0){
-                String isFrozen = userList.get(0).getIsFrozen();
-                if(isFrozen.equals(CustomerConstants.YES)){
-                    return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+            if (inviCode != null && !inviCode.isEmpty()) {
+                vipUser.setPhone("");
+                vipUser.setRecommendCode(inviCode);
+                List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
+                if (userList.size() > 0) {
+                    String isFrozen = userList.get(0).getIsFrozen();
+                    if (isFrozen.equals(CustomerConstants.YES)) {
+                        return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+                    }
+
+                    //父级邀请码
+                    new_User.setParentCode(userList.get(0).getRecommendCode());
+                } else {
+                    new_User.setParentCode("-1");
                 }
-
-                //父级邀请码
-                new_User.setParentCode(userList.get(0).getRecommendCode());
-            }else {
+            } else {
                 new_User.setParentCode("-1");
             }
-        }else {
-            new_User.setParentCode("-1");
+            new_User.setIsFrozen(CustomerConstants.NO);
+            new_User.setMaxTradeDay("-1");
+
+            vipUserService.insertVipUser(new_User);
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        new_User.setIsFrozen(CustomerConstants.NO);
-        new_User.setMaxTradeDay("-1");
 
-        vipUserService.insertVipUser(new_User);
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
 
     }
 
@@ -155,30 +157,36 @@ public class VipUserLoginController extends BaseFrontController {
                                          @RequestParam("confirm") String confirm,
                                          @RequestParam("type") String type){
 
-        //跳过验证码环节
-        //TODO
+        try{
+            //跳过验证码环节
+            //TODO
 
-        if(!password.equals(confirm)){
-            return ResponseResult.responseResult(ResponseEnum.PHONE_DIFFERENT_ERROR);
+            if(!password.equals(confirm)){
+                return ResponseResult.responseResult(ResponseEnum.PHONE_DIFFERENT_ERROR);
+            }
+
+
+            VipUser vipUser = new VipUser();
+            vipUser.setPhone(phone);
+            List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
+            if(userList.size() == 0){
+                //密码不存在
+                return ResponseResult.responseResult(ResponseEnum.PHONE_NOTEXIST_ERROR);
+            }
+
+            String newpassword= DigestUtils.md5Hex(password + userList.get(0).getSalt());
+            if(type.equalsIgnoreCase("login")){
+                vipUser.setLoginPassword(newpassword);
+            }else if(type.equalsIgnoreCase("trade")){
+                vipUser.setTradePassword(newpassword);
+            }
+            vipUserService.updateVipUser(vipUser);
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
 
-
-        VipUser vipUser = new VipUser();
-        vipUser.setPhone(phone);
-        List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
-        if(userList.size() == 0){
-            //密码不存在
-            return ResponseResult.responseResult(ResponseEnum.PHONE_NOTEXIST_ERROR);
-        }
-
-        String newpassword= DigestUtils.md5Hex(password + userList.get(0).getSalt());
-        if(type.equalsIgnoreCase("login")){
-            vipUser.setLoginPassword(newpassword);
-        }else if(type.equalsIgnoreCase("trade")){
-            vipUser.setTradePassword(newpassword);
-        }
-        vipUserService.updateVipUser(vipUser);
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
     }
 
 
@@ -216,6 +224,7 @@ public class VipUserLoginController extends BaseFrontController {
             RedisUtils.setJson(token,userList.get(0), Long.parseLong(Global.getConfig("spring.redis.expireTime")));
 
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.responseResult(ResponseEnum.FAIL);
         }
@@ -237,6 +246,7 @@ public class VipUserLoginController extends BaseFrontController {
             }
             RedisUtils.del(token);
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.responseResult(ResponseEnum.FAIL);
         }
@@ -277,6 +287,7 @@ public class VipUserLoginController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
             }
         } catch (Exception e){
+            logger.error(e.getMessage());
             return ResponseResult.responseResult(ResponseEnum.FAIL);
         }
         //后台没有配置礼包
@@ -323,6 +334,7 @@ public class VipUserLoginController extends BaseFrontController {
             vipUserService.newReceiveGift(vipUser,giftType,giftNumber);
             RedisUtils.setJson(token,vipUser, Long.parseLong(Global.getConfig("spring.redis.expireTime")));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error("领取失败");
         }

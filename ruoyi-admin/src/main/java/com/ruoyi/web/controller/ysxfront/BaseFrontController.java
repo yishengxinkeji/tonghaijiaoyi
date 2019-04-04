@@ -62,7 +62,6 @@ public class BaseFrontController extends BaseController {
             //头像格式不支持
             return null;
         }
-
         String avatar = FileUploadUtils.upload(Global.getFrontPath(), file,filetype);
         return avatar;
     }

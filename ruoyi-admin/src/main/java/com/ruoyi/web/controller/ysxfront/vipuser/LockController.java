@@ -19,6 +19,8 @@ import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.ITradeService;
 import com.ruoyi.yishengxin.service.IVipLockService;
 import com.ruoyi.yishengxin.service.IVipUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,7 @@ import java.util.*;
 @RestController
 @RequestMapping("front/lock")
 public class LockController extends BaseFrontController {
+    public static final Logger logger = LoggerFactory.getLogger(HomePageController.class);
 
     @Autowired
     private ITradeService tradeService;
@@ -45,14 +48,21 @@ public class LockController extends BaseFrontController {
     @GetMapping("/toLock")
     public ResponseResult toLock(){
 
-        List<Trade> trades = tradeService.selectTradeList(new Trade());
-        Trade trade = trades.get(0);
-        Map map = new HashMap();
-        map.put("one",trade.getOneRate());
-        map.put("three",trade.getThreeRate());
-        map.put("six",trade.getSixRate());
-        map.put("twelve",trade.getTwelveRate());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        List<Trade> trades = null;
+        try {
+            trades = tradeService.selectTradeList(new Trade());
+            Trade trade = trades.get(0);
+            Map map = new HashMap();
+            map.put("one",trade.getOneRate());
+            map.put("three",trade.getThreeRate());
+            map.put("six",trade.getSixRate());
+            map.put("twelve",trade.getTwelveRate());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
+
     }
 
     /**
@@ -64,31 +74,37 @@ public class LockController extends BaseFrontController {
     @PostMapping("/locking")
     public ResponseResult locking(@RequestHeader("token") String token,@RequestParam(value = "type",required = false) String type){
 
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        try{
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            VipLock vipLock = new VipLock();
+            vipLock.setLockStatus(LockStatus.LOCKING.getCode());
+            if(type != null && !type.equals("")){
+                vipLock.setLockType(type);
+            }
+            vipLock.setVipId(vipUser.getId());
+
+            List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
+            List list = new ArrayList();
+            if(vipLocks.size() > 0){
+                vipLocks.stream().forEach(vipLock1 -> {
+                    Map map = new HashMap();
+                    map.put("time",vipLock1.getLockTime());
+                    map.put("number",vipLock1.getLockNumber());
+                    map.put("profit",NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber())));
+                    map.put("id",vipLock1.getId());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
 
-        VipLock vipLock = new VipLock();
-        vipLock.setLockStatus(LockStatus.LOCKING.getCode());
-        if(type != null && !type.equals("")){
-            vipLock.setLockType(type);
-        }
-        vipLock.setVipId(vipUser.getId());
-
-        List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
-        List list = new ArrayList();
-        if(vipLocks.size() > 0){
-            vipLocks.stream().forEach(vipLock1 -> {
-                Map map = new HashMap();
-                map.put("time",vipLock1.getLockTime());
-                map.put("number",vipLock1.getLockNumber());
-                map.put("profit",NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber())));
-                map.put("id",vipLock1.getId());
-                list.add(map);
-            });
-        }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
     /**
@@ -100,40 +116,46 @@ public class LockController extends BaseFrontController {
     @PostMapping("/lockProfit")
     public ResponseResult lockProfit(@RequestHeader("token") String token,@RequestParam(value = "type",required = false) String type){
 
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+        try{
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            VipLock vipLock = new VipLock();
+            vipLock.setVipId(vipUser.getId());
+            if(type != null && !type.equals("")){
+                vipLock.setLockType(type);
+            }
+            vipLock.getParams().put("VipLock"," and lock_status=2 or lock_status=3 order by lock_time desc");
+            List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
+            List list = new ArrayList();
+
+            if(vipLocks.size() > 0){
+                vipLocks.stream().forEach(vipLock1 -> {
+                    Map map = new HashMap();
+                    map.put("time",vipLock1.getLockTime());
+                    map.put("number",vipLock1.getLockNumber());
+                    map.put("deduct",vipLock1.getDeduct());
+                    String deduct = vipLock1.getDeduct();
+                    if(deduct.equals("0")){
+                        map.put("profit",vipLock1.getLockProfit());
+                    }else {
+                        String number = NumberUtil.roundStr(NumberUtil.add(Double.parseDouble(vipLock1.getLockNumber()),Double.parseDouble(deduct)),CustomerConstants.ROUND_NUMBER);
+                        map.put("profit",number);
+                    }
+
+                    map.put("status",vipLock1.getLockStatus());
+
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
 
-        VipLock vipLock = new VipLock();
-        vipLock.setVipId(vipUser.getId());
-        if(type != null && !type.equals("")){
-            vipLock.setLockType(type);
-        }
-        vipLock.getParams().put("VipLock"," and lock_status=2 or lock_status=3 order by lock_time desc");
-        List<VipLock> vipLocks = vipLockService.selectVipLockList(vipLock);
-        List list = new ArrayList();
-
-        if(vipLocks.size() > 0){
-            vipLocks.stream().forEach(vipLock1 -> {
-                Map map = new HashMap();
-                map.put("time",vipLock1.getLockTime());
-                map.put("number",vipLock1.getLockNumber());
-                map.put("deduct",vipLock1.getDeduct());
-                String deduct = vipLock1.getDeduct();
-                if(deduct.equals("0")){
-                    map.put("profit",vipLock1.getLockProfit());
-                }else {
-                    String number = NumberUtil.roundStr(NumberUtil.add(Double.parseDouble(vipLock1.getLockNumber()),Double.parseDouble(deduct)),CustomerConstants.ROUND_NUMBER);
-                    map.put("profit",number);
-                }
-
-                map.put("status",vipLock1.getLockStatus());
-
-                list.add(map);
-            });
-        }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
 
@@ -225,6 +247,7 @@ public class LockController extends BaseFrontController {
             return ResponseResult.success();
 
         }catch (Exception e){
+            logger.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -261,6 +284,7 @@ public class LockController extends BaseFrontController {
             return ResponseResult.error();
         }catch (Exception e){
             e.printStackTrace();
+            logger.error(e.getMessage());
             return ResponseResult.error();
         }
 

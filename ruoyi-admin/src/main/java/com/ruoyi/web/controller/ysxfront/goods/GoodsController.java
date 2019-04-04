@@ -81,43 +81,48 @@ public class GoodsController extends BaseFrontController {
     @ResponseBody
     public ResponseResult list(@RequestHeader(value = "token",required = false,defaultValue = "")String token) {
 
+        try{
+            Goods goods = new Goods();
+            goods.setStandUpAndDown("上架");
 
-        Goods goods = new Goods();
-        goods.setStandUpAndDown("上架");
+            List<Goods> list = goodsService.selectGoodsList(goods);
+            for (int i = 0; i < list.size(); i++) {
+                Goods goods1 = list.get(i);
 
-        List<Goods> list = goodsService.selectGoodsList(goods);
-        for (int i = 0; i < list.size(); i++) {
-            Goods goods1 = list.get(i);
-
-            //校验传参
-            if (null == token || "".equals(token)) {
-                goods1.setCollectionStatus(0);
-                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
-            }
-            // 校验登录状态
-            VipUser vipUser = userExist(token);
-
-            if (null == vipUser ) {
-                goods1.setCollectionStatus(0);
-                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
-
-            }else {
-
-                Integer id = goods1.getId();
-                Integer id1 = vipUser.getId();
-                GoodsCollection goodsCollection = new GoodsCollection();
-                goodsCollection.setUid(id);
-                goodsCollection.setUid(id1);
-                List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
-                goods1.setCollectionStatus(0);
-                if (goodsCollections.size()>0){
-                    goods1.setCollectionStatus(1);
+                //校验传参
+                if (null == token || "".equals(token)) {
+                    goods1.setCollectionStatus(0);
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
                 }
-                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+                // 校验登录状态
+                VipUser vipUser = userExist(token);
+
+                if (null == vipUser ) {
+                    goods1.setCollectionStatus(0);
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+
+                }else {
+
+                    Integer id = goods1.getId();
+                    Integer id1 = vipUser.getId();
+                    GoodsCollection goodsCollection = new GoodsCollection();
+                    goodsCollection.setUid(id);
+                    goodsCollection.setUid(id1);
+                    List<GoodsCollection> goodsCollections = goodsCollectionService.selectGoodsCollectionList(goodsCollection);
+                    goods1.setCollectionStatus(0);
+                    if (goodsCollections.size()>0){
+                        goods1.setCollectionStatus(1);
+                    }
+                    return ResponseResult.responseResult(ResponseEnum.SUCCESS,goods1);
+                }
             }
+
+            return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-      
-       return ResponseResult.responseResult(ResponseEnum.GOODS_SELECTERROR);
+
     }
 
     /**
@@ -135,10 +140,10 @@ public class GoodsController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(Goods goods, MultipartFile goodsMainFigure1, MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture)  {
-            goods.setGoodsSoldNumber(0);
+        goods.setGoodsSoldNumber(0);
         String id1 = Uuid.getId();
         //主图片存放路径，
-        String images1 = "e:/" + id1 ;
+        String images1 = Global.getFrontPath() + id1 ;
 
         try {
             goodsMainFigure1.transferTo(new File(images1));
@@ -178,7 +183,7 @@ public class GoodsController extends BaseFrontController {
                 //生成唯一标识
                 String id = Uuid.getId();
                 //图片存放路径，第一个是主图，其余的是轮播图
-                String images = "e:/" + id + ",";
+                String images = Global.getFrontPath() + id + ",";
 
                 try {
                     goodsOfDetailsPicture[i].transferTo(new File(images));
@@ -214,69 +219,74 @@ public class GoodsController extends BaseFrontController {
     @PostMapping("/edit")
     @ResponseBody
     public ResponseResult editSave(Goods goods, MultipartFile goodsMainFigure1,MultipartFile[] goodsSlideShow1, MultipartFile[] goodsOfDetailsPicture) {
+        try{
+            String id1 = Uuid.getId();
+            //主图片存放路径，
+            String images1 = Global.getFrontPath() + id1 ;
 
-        String id1 = Uuid.getId();
-        //主图片存放路径，
-        String images1 = "e:/" + id1 ;
-
-        try {
-            goodsMainFigure1.transferTo(new File(images1));
-        } catch (IOException e) {
-            return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
-        }
-        goods.setGoodsMainFigure(images1);
-        //轮播图路径
-        String goodsSlideShowPath = "";
-
-        if (goodsSlideShow1.length == 0) {
-            goods.setGoodsSlideShow("");
-        } else {
-            for (int i = 0; i < goodsSlideShow1.length; i++) {
-                //生成唯一标识
-                String id = Uuid.getId();
-                //图片存放路径，
-                String images = "e:/" + id + ",";
-
-                try {
-                    goodsSlideShow1[i].transferTo(new File(images));
-                } catch (IOException e) {
-                    return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
-                }
-                goodsSlideShowPath = goodsSlideShowPath + images;
+            try {
+                goodsMainFigure1.transferTo(new File(images1));
+            } catch (IOException e) {
+                return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
             }
-        }
+            goods.setGoodsMainFigure(images1);
+            //轮播图路径
+            String goodsSlideShowPath = "";
 
-        goods.setGoodsSlideShow(goodsSlideShowPath);
+            if (goodsSlideShow1.length == 0) {
+                goods.setGoodsSlideShow("");
+            } else {
+                for (int i = 0; i < goodsSlideShow1.length; i++) {
+                    //生成唯一标识
+                    String id = Uuid.getId();
+                    //图片存放路径，
+                    String images = Global.getFrontPath() + id + ",";
 
-        //详情图路径
-        String goodsOfDetailsPicturePath = "";
-        if (goodsOfDetailsPicture.length == 0) {
-
-        } else {
-            for (int i = 0; i < goodsOfDetailsPicture.length; i++) {
-                //生成唯一标识
-                String id = Uuid.getId();
-                //图片存放路径，第一个是主图，其余的是轮播图
-                String images = "e:/" + id + ",";
-
-                try {
-                    goodsOfDetailsPicture[i].transferTo(new File(images));
-                } catch (IOException e) {
-                    return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                    try {
+                        goodsSlideShow1[i].transferTo(new File(images));
+                    } catch (IOException e) {
+                        return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                    }
+                    goodsSlideShowPath = goodsSlideShowPath + images;
                 }
-                goodsOfDetailsPicturePath = goodsOfDetailsPicturePath + images;
             }
+
+            goods.setGoodsSlideShow(goodsSlideShowPath);
+
+            //详情图路径
+            String goodsOfDetailsPicturePath = "";
+            if (goodsOfDetailsPicture.length == 0) {
+
+            } else {
+                for (int i = 0; i < goodsOfDetailsPicture.length; i++) {
+                    //生成唯一标识
+                    String id = Uuid.getId();
+                    //图片存放路径，第一个是主图，其余的是轮播图
+                    String images = Global.getFrontPath() + id + ",";
+
+                    try {
+                        goodsOfDetailsPicture[i].transferTo(new File(images));
+                    } catch (IOException e) {
+                        return ResponseResult.responseResult(ResponseEnum.GOODS_PICTURE_ADDERROR);
+                    }
+                    goodsOfDetailsPicturePath = goodsOfDetailsPicturePath + images;
+                }
+            }
+            goods.setGoodsDetailsPicture(goodsOfDetailsPicturePath);
+
+            goods.setUpdateTime(new Date());
+            int i = goodsService.updateGoods(goods);
+
+            if (i > 0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+
+            return ResponseResult.responseResult(ResponseEnum.GOODS_UPLOADERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-        goods.setGoodsDetailsPicture(goodsOfDetailsPicturePath);
 
-        goods.setUpdateTime(new Date());
-        int i = goodsService.updateGoods(goods);
-
-        if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-        }
-
-        return ResponseResult.responseResult(ResponseEnum.GOODS_UPLOADERROR);
     }
 
     /**

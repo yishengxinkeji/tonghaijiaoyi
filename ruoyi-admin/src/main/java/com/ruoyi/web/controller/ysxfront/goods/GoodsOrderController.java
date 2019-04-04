@@ -15,6 +15,7 @@ import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IGoodsSalesreturnService;
 import com.ruoyi.yishengxin.service.IGoodsService;
 import com.ruoyi.yishengxin.service.IVipAddressService;
+import net.sf.ehcache.hibernate.strategy.ReadOnlyEhcacheCollectionRegionAccessStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -53,53 +54,59 @@ public class GoodsOrderController extends BaseFrontController {
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token")String token, GoodsOrder goodsOrder) {
 
-        //校验传参
-        if (null == token || "".equals(token) || null == goodsOrder) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+        try{
+            //校验传参
+            if (null == token || "".equals(token) || null == goodsOrder) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+            }
+            // 校验登录状态
+            VipUser vipUser = userExist(token);
+
+            if (null==vipUser) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
+
+            String isFrozen = vipUser.getIsFrozen();
+            if (isFrozen.equals("Y")){
+                return ResponseResult.responseResult(ResponseEnum.USER_ISFROZEN);
+            }
+            //生成订单号
+            String orderIdByTime = Order.getOrderIdByTime();
+            goodsOrder.setOrderNumber(orderIdByTime);
+            goodsOrder.setGoodsStatus("待付款");
+            goodsOrder.setCreateTime(new Date());
+            goodsOrder.setUid(vipUser.getId());
+            VipAddress vipAddress = vipAddressService.selectVipAddressById(goodsOrder.getShippingAddress());
+            String phone = vipAddress.getPhone();
+            String receivUser = vipAddress.getReceivUser();
+            String addressDetail = vipAddress.getAddressDetail();
+            String province = vipAddress.getProvince();
+            String city = vipAddress.getCity();
+            String district = vipAddress.getDistrict();
+            String address = receivUser+ " - "+ phone+" - "+province +" - "+city +" - " +district + " - " +addressDetail;
+            goodsOrder.setRemark(address);
+
+            int i = goodsOrderService.insertGoodsOrder(goodsOrder);
+
+            if (i > 0) {
+                String goodsName = goodsOrder.getGoodsName();
+                Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
+                Integer goodsSoldNumber = goods.getGoodsSoldNumber();
+                goods.setGoodsSoldNumber(goodsSoldNumber + 1);
+                goodsService.updateGoods(goods);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,i);
+            }
+
+            return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_ADDERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-        // 校验登录状态
-        VipUser vipUser = userExist(token);
 
-        if (null==vipUser) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
-        String isFrozen = vipUser.getIsFrozen();
-        if (isFrozen.equals("Y")){
-            return ResponseResult.responseResult(ResponseEnum.USER_ISFROZEN);
-        }
-        //生成订单号
-        String orderIdByTime = Order.getOrderIdByTime();
-        goodsOrder.setOrderNumber(orderIdByTime);
-        goodsOrder.setGoodsStatus("待付款");
-        goodsOrder.setCreateTime(new Date());
-        goodsOrder.setUid(vipUser.getId());
-        VipAddress vipAddress = vipAddressService.selectVipAddressById(goodsOrder.getShippingAddress());
-        String phone = vipAddress.getPhone();
-        String receivUser = vipAddress.getReceivUser();
-        String addressDetail = vipAddress.getAddressDetail();
-        String province = vipAddress.getProvince();
-        String city = vipAddress.getCity();
-        String district = vipAddress.getDistrict();
-        String address = receivUser+ " - "+ phone+" - "+province +" - "+city +" - " +district + " - " +addressDetail;
-        goodsOrder.setRemark(address);
-
-        int i = goodsOrderService.insertGoodsOrder(goodsOrder);
-
-        if (i > 0) {
-            String goodsName = goodsOrder.getGoodsName();
-            Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
-            Integer goodsSoldNumber = goods.getGoodsSoldNumber();
-            goods.setGoodsSoldNumber(goodsSoldNumber + 1);
-            goodsService.updateGoods(goods);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,i);
-        }
-
-        return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_ADDERROR);
     }
 
     /**
@@ -120,15 +127,20 @@ public class GoodsOrderController extends BaseFrontController {
         if (null == vipUser) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
+        try{
+            GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(oid);
+            goodsOrder.setGoodsStatus("删除交易");
+            int i = goodsOrderService.updateGoodsOrder(goodsOrder);
+            if (i > 0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
 
-        GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(oid);
-        goodsOrder.setGoodsStatus("删除交易");
-        int i = goodsOrderService.updateGoodsOrder(goodsOrder);
-        if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_REMOVEERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_REMOVEERROR);
     }
 
 
@@ -159,57 +171,31 @@ public class GoodsOrderController extends BaseFrontController {
         if (null == vipUser ) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        if(null != goodsOrder.getId()){
+        try{
+            if(null != goodsOrder.getId()){
+                goodsOrder.setUid(vipUser.getId());
+                GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(goodsOrder.getId());
+                String remark = goodsOrder1.getRemark();
+                String[] split = remark.split(" - ");
+                VipAddress vipAddress = new VipAddress ();
+
+                vipAddress.setReceivUser(split[0]);
+                vipAddress.setPhone(split[1]);
+                vipAddress.setProvince(split[2]);
+                vipAddress.setCity(split[3]);
+                vipAddress.setDistrict(split[4]);
+                vipAddress.setAddressDetail(split[5]);
+
+                OraderVo oraderVo = new OraderVo();
+                oraderVo.setGoodsOrder(goodsOrder1);
+                oraderVo.setVipAddress(vipAddress);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,oraderVo);
+            }
+
             goodsOrder.setUid(vipUser.getId());
-            GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(goodsOrder.getId());
-            String remark = goodsOrder1.getRemark();
-            String[] split = remark.split(" - ");
-            VipAddress vipAddress = new VipAddress ();
 
-            vipAddress.setReceivUser(split[0]);
-            vipAddress.setPhone(split[1]);
-            vipAddress.setProvince(split[2]);
-            vipAddress.setCity(split[3]);
-            vipAddress.setDistrict(split[4]);
-            vipAddress.setAddressDetail(split[5]);
+            List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
 
-            OraderVo oraderVo = new OraderVo();
-            oraderVo.setGoodsOrder(goodsOrder1);
-            oraderVo.setVipAddress(vipAddress);
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,oraderVo);
-        }
-
-        goodsOrder.setUid(vipUser.getId());
-
-        List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
-
-        if (goodsOrders.size()  > 0) {
-            for (int i = 0; i < goodsOrders.size(); i++) {
-                if (goodsOrders.get(i).getGoodsStatus().equals("删除交易")){
-                    goodsOrders.remove(goodsOrders.get(i));
-                }
-            }
-        }
-
-        if(null != goodsOrder && null != goodsOrder.getGoodsStatus() ){
-            if (goodsOrder.getGoodsStatus().equals("退款/售后")){
-                goodsOrder.setGoodsStatus("交易完成");
-                List<GoodsOrder> goodsOrders1 = goodsOrderService.selectGoodsOrderList(goodsOrder);
-                for (int i = 0; i <goodsOrders1.size() ; i++) {
-                    goodsOrders.add( goodsOrders1.get(i));
-                }
-            }
-        }
-
-        if(goodsOrders.size() > 0){
-            for (int i = 0; i < goodsOrders.size(); i++) {
-                if (goodsOrders.get(i).getGoodsStatus().equals("退款/售后")) {
-                    String orderNumber = goodsOrders.get(i).getOrderNumber();
-                    GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
-                    String refundStatus = goodsSalesreturn.getRefundStatus();
-                    goodsOrders.get(i).setGoodsStatus(refundStatus);
-                }
-            }
             if (goodsOrders.size()  > 0) {
                 for (int i = 0; i < goodsOrders.size(); i++) {
                     if (goodsOrders.get(i).getGoodsStatus().equals("删除交易")){
@@ -218,20 +204,48 @@ public class GoodsOrderController extends BaseFrontController {
                 }
             }
 
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
-        }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
+            if(null != goodsOrder && null != goodsOrder.getGoodsStatus() ){
+                if (goodsOrder.getGoodsStatus().equals("退款/售后")){
+                    goodsOrder.setGoodsStatus("交易完成");
+                    List<GoodsOrder> goodsOrders1 = goodsOrderService.selectGoodsOrderList(goodsOrder);
+                    for (int i = 0; i <goodsOrders1.size() ; i++) {
+                        goodsOrders.add( goodsOrders1.get(i));
+                    }
+                }
+            }
 
+            if(goodsOrders.size() > 0){
+                for (int i = 0; i < goodsOrders.size(); i++) {
+                    if (goodsOrders.get(i).getGoodsStatus().equals("退款/售后")) {
+                        String orderNumber = goodsOrders.get(i).getOrderNumber();
+                        GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+                        String refundStatus = goodsSalesreturn.getRefundStatus();
+                        goodsOrders.get(i).setGoodsStatus(refundStatus);
+                    }
+                }
+                if (goodsOrders.size()  > 0) {
+                    for (int i = 0; i < goodsOrders.size(); i++) {
+                        if (goodsOrders.get(i).getGoodsStatus().equals("删除交易")){
+                            goodsOrders.remove(goodsOrders.get(i));
+                        }
+                    }
+                }
+
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
     }
     @PostMapping("/selectOraderStatus")
     @ResponseBody
     public ResponseResult selectOrader( GoodsOrder goodsOrder) {
-
         //校验传参
         List<GoodsOrder> goodsOrders = goodsOrderService.selectGoodsOrderList(goodsOrder);
 
         return ResponseResult.responseResult(ResponseEnum.SUCCESS,goodsOrders);
-
     }
 
 
@@ -244,9 +258,6 @@ public class GoodsOrderController extends BaseFrontController {
     @PostMapping("/uploadOrader")
     @ResponseBody
     public ResponseResult uploadOrader(GoodsOrder goodsOrder) {
-
-
-
         return null;
     }
 
@@ -259,17 +270,23 @@ public class GoodsOrderController extends BaseFrontController {
     @PostMapping("/deliveryOrader")
     @ResponseBody
     public ResponseResult deliveryOrader(GoodsOrder goodsOrder) {
-        Integer id = goodsOrder.getId();
-        GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
-        goodsOrder1.setCourierCompany(goodsOrder.getCourierCompany());
-        goodsOrder1.setCourierNumber(goodsOrder.getCourierNumber());
-        goodsOrder1.setGoodsStatus("待收货");
-        int i = goodsOrderService.updateGoodsOrder(goodsOrder1);
-        if (i > 0 ) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        try{
+            Integer id = goodsOrder.getId();
+            GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
+            goodsOrder1.setCourierCompany(goodsOrder.getCourierCompany());
+            goodsOrder1.setCourierNumber(goodsOrder.getCourierNumber());
+            goodsOrder1.setGoodsStatus("待收货");
+            int i = goodsOrderService.updateGoodsOrder(goodsOrder1);
+            if (i > 0 ) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+
+            return ResponseResult.responseResult(ResponseEnum. GOODS_DELIVERYERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum. GOODS_DELIVERYERROR);
     }
 
     /**
@@ -292,15 +309,20 @@ public class GoodsOrderController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
-        Integer id = goodsOrder.getId();
-        GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
-        goodsOrder1.setGoodsStatus("待评价");
-        int i = goodsOrderService.updateGoodsOrder(goodsOrder1);
-        if (i > 0 ) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-        }
+        try{
+            Integer id = goodsOrder.getId();
+            GoodsOrder goodsOrder1 = goodsOrderService.selectGoodsOrderById(id);
+            goodsOrder1.setGoodsStatus("待评价");
+            int i = goodsOrderService.updateGoodsOrder(goodsOrder1);
+            if (i > 0 ) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
 
-        return ResponseResult.responseResult(ResponseEnum. GOODS_DELIVERYERROR);
+            return ResponseResult.responseResult(ResponseEnum. GOODS_DELIVERYERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
     }
 
 
@@ -389,11 +411,7 @@ public class GoodsOrderController extends BaseFrontController {
 
         if(null == day && month != null ) {
 
-
         }
-
-
-
       return null;
     }
 }

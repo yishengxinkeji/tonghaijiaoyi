@@ -112,53 +112,58 @@ public class TradeBuyController extends BaseFrontController {
     @PostMapping("/buySslList")
     public ResponseResult buySslList(@RequestHeader(value = "token") String token,
                                      @RequestParam(value = "type",defaultValue = "") String type){
-        VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
+        try{
+            VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
 
-        vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by unit_price desc limit 0,10");
-        vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
-        List list = new ArrayList();
-        List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
-        if("".equals(type)){
-            //查的是个人
-            VipUser vipUser = userExist(token);
-            if(vipUser == null){
-                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by unit_price desc limit 0,10");
+            vipTradeSslBuy.setBuyStatus(TradeStatus.TRADING.getCode());
+            List list = new ArrayList();
+            List<VipTradeSslBuy> vipTradeSslBuys = new ArrayList<>();
+            if("".equals(type)){
+                //查的是个人
+                VipUser vipUser = userExist(token);
+                if(vipUser == null){
+                    return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+                }
+                vipTradeSslBuy.setVipId(vipUser.getId());
+                vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
+                if(vipTradeSslBuys.size() > 0){
+                    vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
+                        Map map = new HashMap();
+                        map.put("type",TradeType.BUY_SSL.getCode());
+                        map.put("number",vipTradeBuy1.getBuyNumber());  //数量
+                        map.put("price",vipTradeBuy1.getUnitPrice());   //单价
+                        map.put("time",vipTradeBuy1.getBuyTime());  //时间
+                        map.put("id", vipTradeBuy1.getId());
+                        list.add(map);
+                    });
+                }
+            }else if(!type.equals("")){
+                //查的是列表
+                //交易中的数据按照单价分组统计数量
+                List<Map<String,String>> list1 = vipTradeBuyService.selectSumNumberByUnitPrice();
+                if(list1.size() > 0){
+                    list1.stream().forEach(map1 -> {
+                        Map map = new HashMap();
+                        map.put("type",TradeType.BUY_SSL.getCode());
+                        map.put("number",map1.get("buy_number"));  //数量
+                        map.put("price",map1.get("unit_price"));   //单价
+                        list.add(map);
+                    });
+                }
             }
-            vipTradeSslBuy.setVipId(vipUser.getId());
-            vipTradeSslBuys = vipTradeBuyService.selectVipTradeBuyList(vipTradeSslBuy);
-            if(vipTradeSslBuys.size() > 0){
-                vipTradeSslBuys.stream().forEach(vipTradeBuy1 -> {
-                    Map map = new HashMap();
-                    map.put("type",TradeType.BUY_SSL.getCode());
-                    map.put("number",vipTradeBuy1.getBuyNumber());  //数量
-                    map.put("price",vipTradeBuy1.getUnitPrice());   //单价
-                    map.put("time",vipTradeBuy1.getBuyTime());  //时间
-                    map.put("id", vipTradeBuy1.getId());
-                    list.add(map);
-                });
-            }
-        }else if(!type.equals("")){
-            //查的是列表
-            //交易中的数据按照单价分组统计数量
-            List<Map<String,String>> list1 = vipTradeBuyService.selectSumNumberByUnitPrice();
-            if(list1.size() > 0){
-                list1.stream().forEach(map1 -> {
-                    Map map = new HashMap();
-                    map.put("type",TradeType.BUY_SSL.getCode());
-                    map.put("number",map1.get("buy_number"));  //数量
-                    map.put("price",map1.get("unit_price"));   //单价
-                    list.add(map);
-                });
-            }
-        }
 
-        List list1 = new ArrayList();
-        if(list.size() > 10){
-            list1 = list.subList(0, 10);
-        }else {
-            list1 = list;
+            List list1 = new ArrayList();
+            if(list.size() > 10){
+                list1 = list.subList(0, 10);
+            }else {
+                list1 = list;
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list1);
     }
 
 
@@ -171,6 +176,9 @@ public class TradeBuyController extends BaseFrontController {
     @PostMapping("/cancelBuy")
     public ResponseResult cancelBuy(@RequestHeader("token") String token,@RequestParam("id") String id){
 
+        try{}catch (Exception e){
+
+        }
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -206,7 +214,6 @@ public class TradeBuyController extends BaseFrontController {
                                  @RequestParam("id") String id,
                                  @RequestParam("number") String number,
                                  @RequestParam("tradeWord") String tradeWord){
-
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -287,6 +294,7 @@ public class TradeBuyController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
 
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
@@ -358,6 +366,7 @@ public class TradeBuyController extends BaseFrontController {
             RedisUtils.set(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo(),vipTradeHkdBuy1.getBuyNo(),120);
             return ResponseResult.success();
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }

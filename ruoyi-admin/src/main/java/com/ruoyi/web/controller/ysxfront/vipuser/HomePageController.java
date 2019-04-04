@@ -11,16 +11,20 @@ import com.ruoyi.common.enums.TradeType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.web.core.config.Redis.RedisKeyExpirationListener;
 import com.ruoyi.yishengxin.domain.*;
 import com.ruoyi.yishengxin.domain.vipUser.VipTrade;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.DataOutput;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 
 /**
@@ -29,6 +33,7 @@ import java.util.regex.Pattern;
 @RestController
 @RequestMapping("/front/homePage")
 public class HomePageController extends BaseFrontController {
+    public static final Logger logger = LoggerFactory.getLogger(HomePageController.class);
 
     @Autowired
     private IRotationService rotationService;
@@ -59,21 +64,27 @@ public class HomePageController extends BaseFrontController {
      */
     @GetMapping("/rotation")
     public ResponseResult rotation(){
-        Rotation rotation = new Rotation();
-        rotation.setIsShow(CustomerConstants.YES);
-        List<Rotation> rotations = rotationService.selectRotationList(rotation);
+        try{
+            Rotation rotation = new Rotation();
+            rotation.setIsShow(CustomerConstants.YES);
+            List<Rotation> rotations = rotationService.selectRotationList(rotation);
 
-        List list = new ArrayList();
-        if(rotations.size() > 0){
-            rotations.stream().forEach(rotation1 -> {
-                Map map = new HashMap();
-                map.put("address",rotation1.getPicDetail());
-                map.put("pcLink",rotation1.getPicLink());
-                map.put("mobileLink",rotation1.getMobileLink());
-                list.add(map);
-            });
+            List list = new ArrayList();
+            if(rotations.size() > 0){
+                rotations.stream().forEach(rotation1 -> {
+                    Map map = new HashMap();
+                    map.put("address",rotation1.getPicDetail());
+                    map.put("pcLink",rotation1.getPicLink());
+                    map.put("mobileLink",rotation1.getMobileLink());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+
     }
 
     /**
@@ -82,21 +93,25 @@ public class HomePageController extends BaseFrontController {
      */
     @GetMapping("/rollMsg")
     public ResponseResult rollMsg(){
+        try{
+            RollMessage rollMessage = new RollMessage();
+            rollMessage.setIsShow(CustomerConstants.YES);
+            List<RollMessage> rollMessages = rollMessageService.selectRollMessageList(rollMessage);
 
-        RollMessage rollMessage = new RollMessage();
-        rollMessage.setIsShow(CustomerConstants.YES);
-        List<RollMessage> rollMessages = rollMessageService.selectRollMessageList(rollMessage);
-
-        List list = new ArrayList();
-        if(rollMessages.size() > 0){
-            rollMessages.stream().forEach(rollMessage1 -> {
-                Map map = new HashMap();
-                map.put("id",rollMessage1.getId());
-                map.put("content",rollMessage1.getRollContent());
-                list.add(map);
-            });
+            List list = new ArrayList();
+            if(rollMessages.size() > 0){
+                rollMessages.stream().forEach(rollMessage1 -> {
+                    Map map = new HashMap();
+                    map.put("id",rollMessage1.getId());
+                    map.put("content",rollMessage1.getRollContent());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
     /**
@@ -108,41 +123,47 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/news")
     public ResponseResult news(@RequestParam("currentNum") String currentNum,@RequestParam(value = "pageSize",required = false) String pageSize){
 
-        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
-            //默认初始页为0
-            currentNum = "1";
+        try{
+            if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
+                //默认初始页为0
+                currentNum = "1";
+            }
+
+            if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
+                pageSize = CustomerConstants.PAGE_SIZE;
+            }
+
+            //当前页初始值
+            int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+            int endNumber =  beginNumber + Integer.parseInt(pageSize);
+
+            News news2 = new News();
+            news2.getParams().put("News"," order by news_time desc limit "+beginNumber+"," + endNumber );
+            List<News> news = newsService.selectNewsList(news2);
+            List list = new ArrayList();
+            if(news.size() > 0){
+                news.stream().forEach(news1 -> {
+                    Map map = new HashMap();
+                    map.put("id",news1.getId());
+                    map.put("introduction",news1.getNewsIntroduction());
+                    map.put("pic",news1.getNewsPic());
+                    map.put("time",news1.getNewsTime());
+                    map.put("title",news1.getNewsTitle());
+                    list.add(map);
+                });
+            }
+
+            Map map = new HashMap();
+            int total = newsService.selectTotal();  //查询记录数
+            map.put("total",total);
+            map.put("pageSize",pageSize);
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
 
-        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
-            pageSize = CustomerConstants.PAGE_SIZE;
-        }
-
-        //当前页初始值
-        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
-        int endNumber =  beginNumber + Integer.parseInt(pageSize);
-
-        News news2 = new News();
-        news2.getParams().put("News"," order by news_time desc limit "+beginNumber+"," + endNumber );
-        List<News> news = newsService.selectNewsList(news2);
-        List list = new ArrayList();
-        if(news.size() > 0){
-            news.stream().forEach(news1 -> {
-                Map map = new HashMap();
-                map.put("id",news1.getId());
-                map.put("introduction",news1.getNewsIntroduction());
-                map.put("pic",news1.getNewsPic());
-                map.put("time",news1.getNewsTime());
-                map.put("title",news1.getNewsTitle());
-                list.add(map);
-            });
-        }
-
-        Map map = new HashMap();
-        int total = newsService.selectTotal();  //查询记录数
-        map.put("total",total);
-        map.put("pageSize",pageSize);
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
 
@@ -154,16 +175,22 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/newsDetail")
     public ResponseResult newsDetail(@RequestParam("id") String id){
 
-        News news = newsService.selectNewsById(Integer.parseInt(id));
+        try{
+            News news = newsService.selectNewsById(Integer.parseInt(id));
 
-        Map map = new HashMap();
-        map.put("id",news.getId());
-        map.put("introduction",news.getNewsIntroduction());
-        map.put("pic",news.getNewsPic());
-        map.put("time",news.getNewsTime());
-        map.put("title",news.getNewsTitle());
-        map.put("content",news.getNewsContent());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            Map map = new HashMap();
+            map.put("id",news.getId());
+            map.put("introduction",news.getNewsIntroduction());
+            map.put("pic",news.getNewsPic());
+            map.put("time",news.getNewsTime());
+            map.put("title",news.getNewsTitle());
+            map.put("content",news.getNewsContent());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
+
     }
 
     /**
@@ -175,27 +202,32 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/project")
     public ResponseResult project(@RequestParam(value = "currentNum",defaultValue = "1") String currentNum,@RequestParam(value = "pageSize",required = false,defaultValue = CustomerConstants.PAGE_SIZE) String pageSize){
 
-        //当前页初始值
-        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
-        int endNumber =  beginNumber + Integer.parseInt(pageSize);
+        try{
+            //当前页初始值
+            int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+            int endNumber =  beginNumber + Integer.parseInt(pageSize);
 
-        Project project1 = new Project();
-        project1.getParams().put("Project"," order by project_time desc limit "+beginNumber+"," + endNumber  );
-        List<Project> projects = projectService.selectProjectList(project1);
+            Project project1 = new Project();
+            project1.getParams().put("Project"," order by project_time desc limit "+beginNumber+"," + endNumber  );
+            List<Project> projects = projectService.selectProjectList(project1);
 
-        List list = new ArrayList();
-        if(projects.size() > 0){
-            projects.stream().forEach(project -> {
-                Map map = new HashMap();
-                map.put("id",project.getId());
-                map.put("introduction",project.getProjectIntroduction());
-                map.put("pic",project.getProjectPic());
-                map.put("time",project.getProjectTime());
-                map.put("title",project.getProjectTitle());
-                list.add(map);
-            });
+            List list = new ArrayList();
+            if(projects.size() > 0){
+                projects.stream().forEach(project -> {
+                    Map map = new HashMap();
+                    map.put("id",project.getId());
+                    map.put("introduction",project.getProjectIntroduction());
+                    map.put("pic",project.getProjectPic());
+                    map.put("time",project.getProjectTime());
+                    map.put("title",project.getProjectTitle());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
     /**
@@ -206,18 +238,23 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/projectDetail")
     public ResponseResult projectDetail(@RequestParam("id") String id){
 
-        Project project = projectService.selectProjectById(Integer.parseInt(id));
-        Map map = new HashMap();
-        map.put("id",project.getId());
-        map.put("introduction",project.getProjectIntroduction());
-        map.put("pic",project.getProjectPic());
-        map.put("time",project.getProjectTime());
-        map.put("title",project.getProjectTitle());
-        map.put("content",project.getProjectContent());
-        map.put("unitPrice",project.getUnitPrice());
-        map.put("projectOver",project.getProjectOver());
-        map.put("projectNumber",project.getProjectNumber());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        try{
+            Project project = projectService.selectProjectById(Integer.parseInt(id));
+            Map map = new HashMap();
+            map.put("id",project.getId());
+            map.put("introduction",project.getProjectIntroduction());
+            map.put("pic",project.getProjectPic());
+            map.put("time",project.getProjectTime());
+            map.put("title",project.getProjectTitle());
+            map.put("content",project.getProjectContent());
+            map.put("unitPrice",project.getUnitPrice());
+            map.put("projectOver",project.getProjectOver());
+            map.put("projectNumber",project.getProjectNumber());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
     /**
@@ -229,40 +266,45 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/notice")
     public ResponseResult notice(@RequestParam("currentNum") String currentNum,@RequestParam(value = "pageSize",required = false) String pageSize){
 
-        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
-            //默认初始页为1
-            currentNum = "1";
+        try{
+            if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,currentNum) ){
+                //默认初始页为1
+                currentNum = "1";
+            }
+
+            if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
+                pageSize = CustomerConstants.PAGE_SIZE;
+            }
+            //当前页初始值
+            int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
+            int endNumber =  beginNumber + Integer.parseInt(pageSize);
+
+            Notice notice = new Notice();
+            notice.getParams().put("Notice"," order by notice_time desc limit "+beginNumber+"," + endNumber );
+
+            List<Notice> notices = noticeService.selectNoticeList(notice);
+            List list = new ArrayList();
+            if(notices.size() > 0){
+                notices.stream().forEach(notice1 -> {
+                    Map map = new HashMap();
+                    map.put("id",notice1.getId());
+                    map.put("introduction",notice1.getNoticeIntroduction());
+                    map.put("time",notice1.getNoticeTime());
+                    map.put("title",notice1.getNoticeTitle());
+                    list.add(map);
+                });
+            }
+
+            Map map = new HashMap();
+            int total = noticeService.selectTotal();  //查询记录数
+            map.put("total",total);
+            map.put("pageSize",pageSize);
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-
-        if(!ReUtil.isMatch(RegexUtils.INTEGER_REGEX,pageSize)) {
-            pageSize = CustomerConstants.PAGE_SIZE;
-        }
-        //当前页初始值
-        int beginNumber = (Integer.parseInt(currentNum)-1) * Integer.parseInt(pageSize);
-        int endNumber =  beginNumber + Integer.parseInt(pageSize);
-
-        Notice notice = new Notice();
-        notice.getParams().put("Notice"," order by notice_time desc limit "+beginNumber+"," + endNumber );
-
-        List<Notice> notices = noticeService.selectNoticeList(notice);
-        List list = new ArrayList();
-        if(notices.size() > 0){
-            notices.stream().forEach(notice1 -> {
-                Map map = new HashMap();
-                map.put("id",notice1.getId());
-                map.put("introduction",notice1.getNoticeIntroduction());
-                map.put("time",notice1.getNoticeTime());
-                map.put("title",notice1.getNoticeTitle());
-                list.add(map);
-            });
-        }
-
-        Map map = new HashMap();
-        int total = noticeService.selectTotal();  //查询记录数
-        map.put("total",total);
-        map.put("pageSize",pageSize);
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list,map);
     }
 
     /**
@@ -273,14 +315,19 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/noticeDetail")
     public ResponseResult noticeDetail(@RequestParam("id") String id){
 
-        Notice notice = noticeService.selectNoticeById(Integer.parseInt(id));
-        Map map = new HashMap();
-        map.put("id",notice.getId());
-        map.put("introduction",notice.getNoticeIntroduction());
-        map.put("time",notice.getNoticeTime());
-        map.put("title",notice.getNoticeTitle());
-        map.put("content",notice.getNoticeContent());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        try{
+            Notice notice = noticeService.selectNoticeById(Integer.parseInt(id));
+            Map map = new HashMap();
+            map.put("id",notice.getId());
+            map.put("introduction",notice.getNoticeIntroduction());
+            map.put("time",notice.getNoticeTime());
+            map.put("title",notice.getNoticeTitle());
+            map.put("content",notice.getNoticeContent());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
 
@@ -290,20 +337,25 @@ public class HomePageController extends BaseFrontController {
      */
     @GetMapping("/tradeExplainList")
     public ResponseResult tradeExplainList(){
-        TradeExplain tradeExplain = new TradeExplain();
+        try{
+            TradeExplain tradeExplain = new TradeExplain();
 
-        List<TradeExplain> tradeExplains = tradeExplainService.selectTradeExplainList(new TradeExplain());
-        List list = new ArrayList();
-        if(tradeExplains.size() > 0){
-            tradeExplains.stream().forEach(tradeExplain1 -> {
-                Map map = new HashMap();
-                map.put("title",tradeExplain1.getTitle());
-                map.put("content",tradeExplain1.getContent());
-                list.add(map);
-            });
+            List<TradeExplain> tradeExplains = tradeExplainService.selectTradeExplainList(new TradeExplain());
+            List list = new ArrayList();
+            if(tradeExplains.size() > 0){
+                tradeExplains.stream().forEach(tradeExplain1 -> {
+                    Map map = new HashMap();
+                    map.put("title",tradeExplain1.getTitle());
+                    map.put("content",tradeExplain1.getContent());
+                    list.add(map);
+                });
+            }
+
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
     }
 
     /**
@@ -314,16 +366,21 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/platPic")
     public ResponseResult platPic(@RequestParam(value = "type",defaultValue = "news") String type){
 
-        PlatData platData = platDataService.selectPlatDataList(new PlatData()).get(0);
-        Map map = new HashMap();
-        if(type.equalsIgnoreCase("news")){
-            map.put("pic",platData.getNewsBigPic());
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
-        }else if(type.equalsIgnoreCase("notice")){
-            map.put("pic",platData.getNoticeBigPic());
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+        try{
+            PlatData platData = platDataService.selectPlatDataList(new PlatData()).get(0);
+            Map map = new HashMap();
+            if(type.equalsIgnoreCase("news")){
+                map.put("pic",platData.getNewsBigPic());
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            }else if(type.equalsIgnoreCase("notice")){
+                map.put("pic",platData.getNoticeBigPic());
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            }
+            return ResponseResult.success();
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.success();
     }
 
     /**
@@ -332,20 +389,25 @@ public class HomePageController extends BaseFrontController {
      */
     @GetMapping("/contactUs")
     public ResponseResult contactUs() {
-        List list = new ArrayList();
-        Customer customer = new Customer();
-        customer.setCustomerType(CustomerType.PLAT.getCode());
-        List<Customer> customers = customerService.selectCustomerList(customer);
-        if (customers.size() > 0) {
-            customers.stream().forEach(customer1 -> {
-                Map map = new HashMap();
-                map.put("phone", customer1.getPhone());
-                map.put("address", customer1.getAddress());
-                map.put("email", customer1.getEmail());
-                list.add(map);
-            });
+        try{
+            List list = new ArrayList();
+            Customer customer = new Customer();
+            customer.setCustomerType(CustomerType.PLAT.getCode());
+            List<Customer> customers = customerService.selectCustomerList(customer);
+            if (customers.size() > 0) {
+                customers.stream().forEach(customer1 -> {
+                    Map map = new HashMap();
+                    map.put("phone", customer1.getPhone());
+                    map.put("address", customer1.getAddress());
+                    map.put("email", customer1.getEmail());
+                    list.add(map);
+                });
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
     }
 
     /**
@@ -356,31 +418,36 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/exchangeOrBuy")
     public ResponseResult exchangeOrBuy(@RequestParam("type") String type) {
 
-        List list = new ArrayList();
-        Customer customer = new Customer();
-        //兑换客服
-        if(type.equalsIgnoreCase("exchange")){
-            customer.setCustomerType(CustomerType.EXCHANGE.getCode());
-            List<Customer> customers = customerService.selectCustomerList(customer);
-            if (customers.size() > 0) {
-                customers.stream().forEach(customer1 -> {
-                    Map map = new HashMap();
-                    map.put("phone", customer1.getPhone());
-                    list.add(map);
-                });
+        try{
+            List list = new ArrayList();
+            Customer customer = new Customer();
+            //兑换客服
+            if(type.equalsIgnoreCase("exchange")){
+                customer.setCustomerType(CustomerType.EXCHANGE.getCode());
+                List<Customer> customers = customerService.selectCustomerList(customer);
+                if (customers.size() > 0) {
+                    customers.stream().forEach(customer1 -> {
+                        Map map = new HashMap();
+                        map.put("phone", customer1.getPhone());
+                        list.add(map);
+                    });
+                }
+            }else if(type.equalsIgnoreCase("buy")){
+                customer.setCustomerType(CustomerType.BUY.getCode());
+                List<Customer> customers = customerService.selectCustomerList(customer);
+                if (customers.size() > 0) {
+                    customers.stream().forEach(customer1 -> {
+                        Map map = new HashMap();
+                        map.put("phone", customer1.getPhone());
+                        list.add(map);
+                    });
+                }
             }
-        }else if(type.equalsIgnoreCase("buy")){
-            customer.setCustomerType(CustomerType.BUY.getCode());
-            List<Customer> customers = customerService.selectCustomerList(customer);
-            if (customers.size() > 0) {
-                customers.stream().forEach(customer1 -> {
-                    Map map = new HashMap();
-                    map.put("phone", customer1.getPhone());
-                    list.add(map);
-                });
-            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
     }
 
 
@@ -392,11 +459,16 @@ public class HomePageController extends BaseFrontController {
     @GetMapping("/transfer")
     public ResponseResult transfer(@RequestParam("id") Integer id) {
 
-        Transfer transfers = transferService.selectTransferById(id);
-        Map map = new HashMap();
-        map.put("title", transfers.getTitle());
-        map.put("content", transfers.getContent());
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS, map);
+        try{
+            Transfer transfers = transferService.selectTransferById(id);
+            Map map = new HashMap();
+            map.put("title", transfers.getTitle());
+            map.put("content", transfers.getContent());
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, map);
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
     /**
@@ -411,70 +483,75 @@ public class HomePageController extends BaseFrontController {
                                   @RequestParam("projectId") String projectId,
                                   @RequestParam("number") String number
     ){
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsMark().equals(CustomerConstants.NO)){
-            return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
-        }
-
-        Project project = projectService.selectProjectById(Integer.parseInt(projectId));
-        String unitPrice = project.getUnitPrice();
-        String maxNumber = project.getMaxNumber();
-        String minNumber = project.getMinNumber();
-        String projectNumber = project.getProjectNumber();  //项目总量
-        double projectOver = Double.parseDouble(project.getProjectOver());
-        if(projectOver == 0){
-            return ResponseResult.responseResult(ResponseEnum.PROJECT_EMPTY);
-        }
-
-        double mul2 = NumberUtil.mul(Double.parseDouble(projectNumber), (projectOver / 100));
-        //剩余的认购量
-        double sub = NumberUtil.sub(mul2,Double.parseDouble(number));
-        double mul1 = NumberUtil.mul(NumberUtil.div(sub,Double.parseDouble(projectNumber), CustomerConstants.ROUND_NUMBER), 100);
-        String percent = NumberUtil.roundStr(mul1, CustomerConstants.ROUND_NUMBER);
-        //数字不正确
-        if(!Pattern.matches(RegexUtils.INTEGER_REGEX,number) && !Pattern.matches(RegexUtils.DECIMAL_REGEX,number) ){
-            return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
-        }
-
-        if(Double.parseDouble(maxNumber) < Double.parseDouble(number)){
-            return ResponseResult.responseResult(ResponseEnum.MAX_BUY,maxNumber);
-        }
-        if(Double.parseDouble(minNumber) > Double.parseDouble(number)){
-            return ResponseResult.responseResult(ResponseEnum.MIN_BUY,minNumber);
-        }
-
-        double mul = NumberUtil.mul(Double.parseDouble(unitPrice), Double.parseDouble(number));     //认购总价
-        String hkdMoney = vipUser.getHkdMoney();
-        //hkd不足
-        if(NumberUtil.sub(Double.parseDouble(hkdMoney),mul) < 0) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
-        }
-
-        //应得的ssl和应扣的hkd
-        String s = NumberUtil.roundStr(String.valueOf(NumberUtil.add(vipUser.getSslMoney(), number)), CustomerConstants.ROUND_NUMBER);
-        String s1 = NumberUtil.roundStr(String.valueOf(NumberUtil.sub(Double.parseDouble(vipUser.getHkdMoney()), mul)), CustomerConstants.ROUND_NUMBER);
-        //更新用户信息
-        vipUser.setSslMoney(s);
-        vipUser.setHkdMoney(s1);
-
-        project.setProjectOver(percent);
-        int i1 = projectService.updateProject(project);
-        if(i1 > 0){
-            //更新用户信息
-            int i = vipUserService.updateVipUser(vipUser);
-            if(i > 0){
-                VipTrade vipTrade = new VipTrade();
-                vipTrade.setVipTrade(TradeType.BACK_BUY.getCode());     //平台购买
-                vipTrade.setVipId(vipUser.getId());
-                vipTrade.setTradeTime(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM));
-                vipTrade.setTradeNumber(number);
-                vipTradeService.insertVipTrade(vipTrade);
+        try{
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
+
+            if(vipUser.getIsMark().equals(CustomerConstants.NO)){
+                return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
+            }
+
+            Project project = projectService.selectProjectById(Integer.parseInt(projectId));
+            String unitPrice = project.getUnitPrice();
+            String maxNumber = project.getMaxNumber();
+            String minNumber = project.getMinNumber();
+            String projectNumber = project.getProjectNumber();  //项目总量
+            double projectOver = Double.parseDouble(project.getProjectOver());
+            if(projectOver == 0){
+                return ResponseResult.responseResult(ResponseEnum.PROJECT_EMPTY);
+            }
+
+            double mul2 = NumberUtil.mul(Double.parseDouble(projectNumber), (projectOver / 100));
+            //剩余的认购量
+            double sub = NumberUtil.sub(mul2,Double.parseDouble(number));
+            double mul1 = NumberUtil.mul(NumberUtil.div(sub,Double.parseDouble(projectNumber), CustomerConstants.ROUND_NUMBER), 100);
+            String percent = NumberUtil.roundStr(mul1, CustomerConstants.ROUND_NUMBER);
+            //数字不正确
+            if(!Pattern.matches(RegexUtils.INTEGER_REGEX,number) && !Pattern.matches(RegexUtils.DECIMAL_REGEX,number) ){
+                return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
+            }
+
+            if(Double.parseDouble(maxNumber) < Double.parseDouble(number)){
+                return ResponseResult.responseResult(ResponseEnum.MAX_BUY,maxNumber);
+            }
+            if(Double.parseDouble(minNumber) > Double.parseDouble(number)){
+                return ResponseResult.responseResult(ResponseEnum.MIN_BUY,minNumber);
+            }
+
+            double mul = NumberUtil.mul(Double.parseDouble(unitPrice), Double.parseDouble(number));     //认购总价
+            String hkdMoney = vipUser.getHkdMoney();
+            //hkd不足
+            if(NumberUtil.sub(Double.parseDouble(hkdMoney),mul) < 0) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
+            }
+
+            //应得的ssl和应扣的hkd
+            String s = NumberUtil.roundStr(String.valueOf(NumberUtil.add(vipUser.getSslMoney(), number)), CustomerConstants.ROUND_NUMBER);
+            String s1 = NumberUtil.roundStr(String.valueOf(NumberUtil.sub(Double.parseDouble(vipUser.getHkdMoney()), mul)), CustomerConstants.ROUND_NUMBER);
+            //更新用户信息
+            vipUser.setSslMoney(s);
+            vipUser.setHkdMoney(s1);
+
+            project.setProjectOver(percent);
+            int i1 = projectService.updateProject(project);
+            if(i1 > 0){
+                //更新用户信息
+                int i = vipUserService.updateVipUser(vipUser);
+                if(i > 0){
+                    VipTrade vipTrade = new VipTrade();
+                    vipTrade.setVipTrade(TradeType.BACK_BUY.getCode());     //平台购买
+                    vipTrade.setVipId(vipUser.getId());
+                    vipTrade.setTradeTime(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD_HH_MM));
+                    vipTrade.setTradeNumber(number);
+                    vipTradeService.insertVipTrade(vipTrade);
+                }
+            }
+            return ResponseResult.success();
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResponseResult.error();
         }
-        return ResponseResult.success();
     }
 }

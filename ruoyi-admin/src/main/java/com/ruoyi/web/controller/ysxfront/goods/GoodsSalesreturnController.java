@@ -97,25 +97,26 @@ public class GoodsSalesreturnController extends BaseFrontController {
     @ResponseBody
     public ResponseResult addRefundLogistics(@RequestParam("orderNumber") String orderNumber, @RequestParam("refundCompany") String refundCompany, @RequestParam("refundLogistics") String refundLogistics) {
 
-        GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
-        goodsSalesreturn1.setRefundCompany(refundCompany);
-        goodsSalesreturn1.setRefundLogistics(refundLogistics);
-        goodsSalesreturn1.setRefundStatus("8");
-        int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn1);
-        if (i > 0) {
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+        try{
+            GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+            goodsSalesreturn1.setRefundCompany(refundCompany);
+            goodsSalesreturn1.setRefundLogistics(refundLogistics);
+            goodsSalesreturn1.setRefundStatus("8");
+            int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn1);
+            if (i > 0) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+            return ResponseResult.responseResult(ResponseEnum.FAIL);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-        return ResponseResult.responseResult(ResponseEnum.FAIL);
-
     }
 
     @PostMapping("/list")
     @ResponseBody
     public ResponseResult list(GoodsSalesreturn goodsSalesreturn) {
-
-
         List<GoodsSalesreturn> goodsSalesreturns = goodsSalesreturnService.selectGoodsSalesreturnList(goodsSalesreturn);
-
         return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsSalesreturns);
     }
 
@@ -132,75 +133,67 @@ public class GoodsSalesreturnController extends BaseFrontController {
     @PostMapping("/add")
     @ResponseBody
     public ResponseResult addSave(@RequestHeader("token") String token, int orderId, @RequestParam("ploadDocuments") String ploadDocuments, @RequestParam("refundWay") String refundWay, @RequestParam("refundReason") String refundReason, @RequestParam("efundInstructions") String efundInstructions) throws IOException {
-        // 校验登录状态
-        GoodsSalesreturn goodsSalesreturn = new GoodsSalesreturn();
-        goodsSalesreturn.setPloadDocuments(ploadDocuments);
-        goodsSalesreturn.setRefundWay(refundWay);
-        goodsSalesreturn.setEfundInstructions(efundInstructions);
-        goodsSalesreturn.setRefundReason(refundReason);
-        VipUser vipUser = userExist(token);
+        try{
+// 校验登录状态
+            GoodsSalesreturn goodsSalesreturn = new GoodsSalesreturn();
+            goodsSalesreturn.setPloadDocuments(ploadDocuments);
+            goodsSalesreturn.setRefundWay(refundWay);
+            goodsSalesreturn.setEfundInstructions(efundInstructions);
+            goodsSalesreturn.setRefundReason(refundReason);
+            VipUser vipUser = userExist(token);
 
-        if (vipUser == null) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            if (vipUser == null) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
+            //校验传参
+            if (null == token || "".equals(token)) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
+            }
+            Integer uid = vipUser.getId();
+            goodsSalesreturn.setUid(uid);
+            GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderId);
+            String orderNumber = goodsOrder.getOrderNumber();
+            goodsSalesreturn.setOrderNumber(orderNumber);
+            Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
+            goodsSalesreturn.setRefundNumber(goodsSoldNumber);
+            String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
+            goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount + "");
+            String goodsName = goodsOrder.getGoodsName();
+            goodsSalesreturn.setGoodsName(goodsName);
+            String goodsDetails = goodsOrder.getGoodsDetails();
+            goodsSalesreturn.setGoodsIntroduce(goodsDetails);
+            String goodsPrice = goodsOrder.getGoodsPrice();
+            goodsSalesreturn.setGoodsUnitPrice(goodsPrice + "");
+            String goodsPicture = goodsOrder.getGoodsPicture();
+            goodsSalesreturn.setGoodsImages(goodsPicture);
+            Integer goodsSoldNumber1 = goodsOrder.getGoodsSoldNumber();
+            goodsSalesreturn.setBuyNumber(goodsSoldNumber1);
+            goodsSalesreturn.setRefundTime(new Date());
+            Date createTime = goodsOrder.getCreateTime();
+            goodsSalesreturn.setOrderTime(createTime);
+            //生成退单号
+            String orderIdByTime = Order.getOrderIdByTime();
+            goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
+            if (goodsSalesreturn.getRefundWay().equals("1")) {
+                goodsSalesreturn.setRefundStatus("1");
+            } else {
+                goodsSalesreturn.setRefundStatus("2");
+            }
+
+            int i1 = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
+
+            if (i1 > 0) {
+                goodsOrder.setGoodsStatus("退款/售后");
+                goodsOrderService.updateGoodsOrder(goodsOrder);
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            } else {
+                return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-        //校验传参
-        if (null == token || "".equals(token)) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-        Integer uid = vipUser.getId();
-        goodsSalesreturn.setUid(uid);
 
-        GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderId);
-        String orderNumber = goodsOrder.getOrderNumber();
-        goodsSalesreturn.setOrderNumber(orderNumber);
-
-        Integer goodsSoldNumber = goodsOrder.getGoodsSoldNumber();
-        goodsSalesreturn.setRefundNumber(goodsSoldNumber);
-        String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
-        goodsSalesreturn.setRefundAmount(goodsOrderTotalAmount + "");
-
-        String goodsName = goodsOrder.getGoodsName();
-        goodsSalesreturn.setGoodsName(goodsName);
-
-        String goodsDetails = goodsOrder.getGoodsDetails();
-        goodsSalesreturn.setGoodsIntroduce(goodsDetails);
-
-        String goodsPrice = goodsOrder.getGoodsPrice();
-        goodsSalesreturn.setGoodsUnitPrice(goodsPrice + "");
-
-        String goodsPicture = goodsOrder.getGoodsPicture();
-        goodsSalesreturn.setGoodsImages(goodsPicture);
-
-        Integer goodsSoldNumber1 = goodsOrder.getGoodsSoldNumber();
-        goodsSalesreturn.setBuyNumber(goodsSoldNumber1);
-
-        goodsSalesreturn.setRefundTime(new Date());
-
-
-        Date createTime = goodsOrder.getCreateTime();
-        goodsSalesreturn.setOrderTime(createTime);
-        //生成退单号
-        String orderIdByTime = Order.getOrderIdByTime();
-        goodsSalesreturn.setRefundSerialNumber(orderIdByTime);
-
-
-        if (goodsSalesreturn.getRefundWay().equals("1")) {
-            goodsSalesreturn.setRefundStatus("1");
-        } else {
-            goodsSalesreturn.setRefundStatus("2");
-        }
-
-        int i1 = goodsSalesreturnService.insertGoodsSalesreturn(goodsSalesreturn);
-
-        if (i1 > 0) {
-            goodsOrder.setGoodsStatus("退款/售后");
-            goodsOrderService.updateGoodsOrder(goodsOrder);
-
-
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-        } else {
-            return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_ADDERROR);
-        }
     }
 
 
@@ -218,18 +211,20 @@ public class GoodsSalesreturnController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
         VipUser vipUser = userExist(token);
-
-
         if (vipUser == null) {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-        GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
-        if (null == goodsSalesreturn) {
-            return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_SELECTBYORADERNUMBERERROR);
-
+        try{
+            GoodsSalesreturn goodsSalesreturn = goodsSalesreturnService.selectGoodsSalesreturnByOrderNumber(orderNumber);
+            if (null == goodsSalesreturn) {
+                return ResponseResult.responseResult(ResponseEnum.GOODS_SALESRETURN_SELECTBYORADERNUMBERERROR);
+            }
+            return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsSalesreturn);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum.SUCCESS, goodsSalesreturn);
     }
 
 
@@ -243,59 +238,61 @@ public class GoodsSalesreturnController extends BaseFrontController {
     @ResponseBody
     public ResponseResult editSave(int orderID, GoodsSalesreturn goodsSalesreturn) {
         //检查是否已经退货
+        try{
+            GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
+            if (goodsSalesreturn1.getRefundStatus().equals("3") || goodsSalesreturn1.getRefundStatus().equals("4") || goodsSalesreturn1.getRefundStatus().equals("5") || goodsSalesreturn1.getRefundStatus().equals("6")) {
+                ResponseResult.responseResult(ResponseEnum.GOODS__OPERARETURNMANY_ERROR);
+            }
+            if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("1")) {
+                goodsSalesreturn.setRefundStatus("3");
+            } else if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("2")) {
+                goodsSalesreturn.setRefundStatus("4");
+            } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("1")) {
+                goodsSalesreturn.setRefundStatus("5");
+            } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("2")) {
+                goodsSalesreturn.setRefundStatus("6");
+            }
+            int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn);
 
-        GoodsSalesreturn goodsSalesreturn1 = goodsSalesreturnService.selectGoodsSalesreturnById(goodsSalesreturn.getId());
+            if (i > 0) {
+                if (goodsSalesreturn.getRefundStatus().equals("1")) {
 
+                    GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderID);
 
-        if (goodsSalesreturn1.getRefundStatus().equals("3") || goodsSalesreturn1.getRefundStatus().equals("4") || goodsSalesreturn1.getRefundStatus().equals("5") || goodsSalesreturn1.getRefundStatus().equals("6")) {
-            ResponseResult.responseResult(ResponseEnum.GOODS__OPERARETURNMANY_ERROR);
+                    String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
+                    //todo
 
-        }
-        if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("1")) {
-            goodsSalesreturn.setRefundStatus("3");
-        } else if (goodsSalesreturn.getRefundWay().equals("1") && goodsSalesreturn.getRefundStatus().equals("2")) {
-            goodsSalesreturn.setRefundStatus("4");
-        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("1")) {
-            goodsSalesreturn.setRefundStatus("5");
-        } else if (goodsSalesreturn.getRefundWay().equals("2") && goodsSalesreturn.getRefundStatus().equals("2")) {
-            goodsSalesreturn.setRefundStatus("6");
-        }
-        int i = goodsSalesreturnService.updateGoodsSalesreturn(goodsSalesreturn);
+                    VipUser vipUser1 = vipUserService.selectVipUserById(goodsOrder.getUid());
+                    String sslMoney = vipUser1.getSslMoney();
 
-        if (i > 0) {
-            if (goodsSalesreturn.getRefundStatus().equals("1")) {
+                    BigDecimal bigDecimal = new BigDecimal(sslMoney);
+                    BigDecimal bigDecimal1 = new BigDecimal(goodsOrderTotalAmount);
+                    BigDecimal addSsl = bigDecimal.add(bigDecimal1);
 
-                GoodsOrder goodsOrder = goodsOrderService.selectGoodsOrderById(orderID);
+                    String sslMony = addSsl.toString();
+                    vipUser1.setSslMoney(sslMony);
+                    int i1 = vipUserService.updateVipUser(vipUser1);
+                    if (i1 > 0) {
+                        String goodsName = goodsOrder.getGoodsName();
+                        Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
+                        Integer goodsSoldNumber = goods.getGoodsSoldNumber();
+                        goods.setGoodsSoldNumber(goodsSoldNumber - 1);
+                        goodsService.updateGoods(goods);
+                        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+                    }
+                    return ResponseResult.responseResult(ResponseEnum.GOODS__RETURNMANY_ERROR);
 
-                String goodsOrderTotalAmount = goodsOrder.getGoodsOrderTotalAmount();
-                //todo
-
-                VipUser vipUser1 = vipUserService.selectVipUserById(goodsOrder.getUid());
-                String sslMoney = vipUser1.getSslMoney();
-
-                BigDecimal bigDecimal = new BigDecimal(sslMoney);
-                BigDecimal bigDecimal1 = new BigDecimal(goodsOrderTotalAmount);
-                BigDecimal addSsl = bigDecimal.add(bigDecimal1);
-
-                String sslMony = addSsl.toString();
-                vipUser1.setSslMoney(sslMony);
-                int i1 = vipUserService.updateVipUser(vipUser1);
-                if (i1 > 0) {
-                    String goodsName = goodsOrder.getGoodsName();
-                    Goods goods = goodsService.selectGoodsByGoodsName(goodsName);
-                    Integer goodsSoldNumber = goods.getGoodsSoldNumber();
-                    goods.setGoodsSoldNumber(goodsSoldNumber - 1);
-                    goodsService.updateGoods(goods);
-                    return ResponseResult.responseResult(ResponseEnum.SUCCESS);
                 }
-                return ResponseResult.responseResult(ResponseEnum.GOODS__RETURNMANY_ERROR);
 
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
             }
 
-            return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            return ResponseResult.responseResult(ResponseEnum.GOODS__SALES_AUDITERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
 
-        return ResponseResult.responseResult(ResponseEnum.GOODS__SALES_AUDITERROR);
     }
 
     /**

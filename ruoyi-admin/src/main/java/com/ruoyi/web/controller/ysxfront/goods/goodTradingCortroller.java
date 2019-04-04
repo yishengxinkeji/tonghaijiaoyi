@@ -43,61 +43,59 @@ public class goodTradingCortroller extends BaseFrontController{
         if (null == token || "".equals(token) || null == orderTotalAmount || orderTotalAmount.length() == 0 || null == tradePassword || tradePassword.length() == 0 || orderId <= 0) {
             return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
         }
-
         // 校验登录状态
         VipUser vipUser = userExist(token);
 
         if (null == vipUser){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-
         }
 
-        Integer id = vipUser.getId();
-
-        VipUser vipUser1 = iVipUserService.selectVipUserById(id);
-        if (null == vipUser1){
-            return ResponseResult.responseResult(ResponseEnum.VIP_USER_NULL);
-        }
-        String tradePassword1 = vipUser1.getTradePassword();
-        if(null == tradePassword1 || "".equals(tradePassword)){
-            return ResponseResult.responseResult(ResponseEnum.GIIDS_TRADING_ERROR);
-        }
-
-        tradePassword = DigestUtils.md5Hex(tradePassword + vipUser1.getSalt());
-        if (tradePassword1.equals(tradePassword)){
-            String sslMoney = vipUser1.getSslMoney();
-
-            BigDecimal bigDecimal = new BigDecimal(sslMoney);
-            BigDecimal bigDecimal1 = new BigDecimal(orderTotalAmount);
-
-            BigDecimal subtract = bigDecimal.subtract(bigDecimal1);
-            int i = subtract.compareTo(new BigDecimal(0));
-            if (i < 0){
-             return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
+        try{
+            Integer id = vipUser.getId();
+            VipUser vipUser1 = iVipUserService.selectVipUserById(id);
+            if (null == vipUser1){
+                return ResponseResult.responseResult(ResponseEnum.VIP_USER_NULL);
             }
-            String ssh = subtract.toString();
-            vipUser1.setSslMoney(ssh);
-            int i1 = iVipUserService.updateVipUser(vipUser1);
+            String tradePassword1 = vipUser1.getTradePassword();
+            if(null == tradePassword1 || "".equals(tradePassword)){
+                return ResponseResult.responseResult(ResponseEnum.GIIDS_TRADING_ERROR);
+            }
 
-            if (i1 >  0) {
-                GoodsOrder goodsOrder = iGoodsOrderService.selectGoodsOrderById(orderId);
-                goodsOrder.setGoodsStatus("待发货");
-                int i2 = iGoodsOrderService.updateGoodsOrder(goodsOrder);
-                if (i2 > 0){
+            tradePassword = DigestUtils.md5Hex(tradePassword + vipUser1.getSalt());
+            if (tradePassword1.equals(tradePassword)){
+                String sslMoney = vipUser1.getSslMoney();
 
-                    //交易记录没写
-                    //TODO
-                    return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+                BigDecimal bigDecimal = new BigDecimal(sslMoney);
+                BigDecimal bigDecimal1 = new BigDecimal(orderTotalAmount);
+
+                BigDecimal subtract = bigDecimal.subtract(bigDecimal1);
+                int i = subtract.compareTo(new BigDecimal(0));
+                if (i < 0){
+                    return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
                 }
-                return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_UPLOADORDERSTATUSERROR);
+                String ssh = subtract.toString();
+                vipUser1.setSslMoney(ssh);
+                int i1 = iVipUserService.updateVipUser(vipUser1);
+
+                if (i1 >  0) {
+                    GoodsOrder goodsOrder = iGoodsOrderService.selectGoodsOrderById(orderId);
+                    goodsOrder.setGoodsStatus("待发货");
+                    int i2 = iGoodsOrderService.updateGoodsOrder(goodsOrder);
+                    if (i2 > 0){
+                        //交易记录没写
+                        //TODO
+                        return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+                    }
+                    return ResponseResult.responseResult(ResponseEnum.GOODS_ORDER_UPLOADORDERSTATUSERROR);
+                }
+                return ResponseResult.responseResult(ResponseEnum.VIP_USER_TRADPUPLOADSSLERROR);
             }
 
-            return ResponseResult.responseResult(ResponseEnum.VIP_USER_TRADPUPLOADSSLERROR);
-
+            return ResponseResult.responseResult(ResponseEnum.VIP_USER_TRADPASSWORDERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
         }
-
-        return ResponseResult.responseResult(ResponseEnum.VIP_USER_TRADPASSWORDERROR);
     }
-
 
 }

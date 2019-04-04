@@ -52,71 +52,29 @@ public class GoodsShareController extends BaseFrontController
 	@ResponseBody
 	public  ResponseResult share(@RequestHeader("token")String token){
 
-        // 校验登录状态
+	    try{
+            // 校验登录状态
 
-        if (null == token || "".equals(token)) {
-            return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
-        }
-
-        if (null == userExist(token)) {
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        List<Gift> gifts = giftService.selectGiftList(null);
-        Gift gift = gifts.get(0);
-        String dayGift = gift.getDayGift();
-
-
-        VipUser vipUser = userExist(token);
-
-        //校验传参
-        Integer id = vipUser.getId();
-        //用户首次分享
-        if (null == goodsShareService.selectGoodsShareByUid(id)) {
-
-            VipUser vipUser1 = iVipUserService.selectVipUserById(id);
-            String sslMoney = vipUser1.getSslMoney();
-
-            String ssl = dayGift;
-
-            BigDecimal bigDecimal = new BigDecimal(sslMoney);
-            BigDecimal bigDecimal1 = new BigDecimal(ssl);
-            BigDecimal addSsl = bigDecimal.add(bigDecimal1);
-
-            String sslMony = addSsl.toString();
-            vipUser1.setSslMoney(sslMony);
-            int i = iVipUserService.updateVipUser(vipUser1);
-            if (i > 0) {
-                GoodsShare goodsShare = new GoodsShare();
-                goodsShare.setUid(id);
-                goodsShare.setCreateTime(new Date());
-                goodsShare.setBounty(dayGift);
-                goodsShareService.insertGoodsShare(goodsShare);
-                String extensionCode = vipUser1.getExtensionCode();
-                Map<Object, Object> map = new TreeMap();
-                map.put("data",extensionCode);
-                return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+            if (null == token || "".equals(token)) {
+                return ResponseResult.responseResult(ResponseEnum.COODS_COLLECTION_PARAMETER);
             }
-            return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SSLEERROR);
-        }else {
 
-            GoodsShare goodsShare = goodsShareService.selectGoodsShareByUid(id);
-            Date createTime = goodsShare.getCreateTime();
+            if (null == userExist(token)) {
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
+            }
 
-            String s = new SimpleDateFormat("yyyy-MM-dd").format(createTime);
-            String s1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+            List<Gift> gifts = giftService.selectGiftList(null);
+            Gift gift = gifts.get(0);
+            String dayGift = gift.getDayGift();
 
-            if (s.equals(s1)){
-                //今日已经分享过
-                VipUser vipUser1 = iVipUserService.selectVipUserById(id);
-                String extensionCode = vipUser1.getExtensionCode();
-                Map<Object, Object> map = new TreeMap();
-                map.put("data",extensionCode);
 
-                return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SHARE,map);
-            }else{
-                //今日未分享
-                GoodsShare goodsShare1 = goodsShareService.selectGoodsShareById(1);
+            VipUser vipUser = userExist(token);
+
+            //校验传参
+            Integer id = vipUser.getId();
+            //用户首次分享
+            if (null == goodsShareService.selectGoodsShareByUid(id)) {
+
                 VipUser vipUser1 = iVipUserService.selectVipUserById(id);
                 String sslMoney = vipUser1.getSslMoney();
 
@@ -129,20 +87,67 @@ public class GoodsShareController extends BaseFrontController
                 String sslMony = addSsl.toString();
                 vipUser1.setSslMoney(sslMony);
                 int i = iVipUserService.updateVipUser(vipUser1);
-                if ( i > 0){
-                    GoodsShare goodsShare3 = new GoodsShare();
-                    goodsShare3.setUid(id);
-                    goodsShare3.setCreateTime(new Date());
+                if (i > 0) {
+                    GoodsShare goodsShare = new GoodsShare();
+                    goodsShare.setUid(id);
+                    goodsShare.setCreateTime(new Date());
                     goodsShare.setBounty(dayGift);
-                    goodsShareService.insertGoodsShare(goodsShare3);
-
+                    goodsShareService.insertGoodsShare(goodsShare);
                     String extensionCode = vipUser1.getExtensionCode();
                     Map<Object, Object> map = new TreeMap();
                     map.put("data",extensionCode);
                     return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
                 }
                 return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SSLEERROR);
+            }else {
+
+                GoodsShare goodsShare = goodsShareService.selectGoodsShareByUid(id);
+                Date createTime = goodsShare.getCreateTime();
+
+                String s = new SimpleDateFormat("yyyy-MM-dd").format(createTime);
+                String s1 = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+
+                if (s.equals(s1)){
+                    //今日已经分享过
+                    VipUser vipUser1 = iVipUserService.selectVipUserById(id);
+                    String extensionCode = vipUser1.getExtensionCode();
+                    Map<Object, Object> map = new TreeMap();
+                    map.put("data",extensionCode);
+
+                    return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SHARE,map);
+                }else{
+                    //今日未分享
+                    GoodsShare goodsShare1 = goodsShareService.selectGoodsShareById(1);
+                    VipUser vipUser1 = iVipUserService.selectVipUserById(id);
+                    String sslMoney = vipUser1.getSslMoney();
+
+                    String ssl = dayGift;
+
+                    BigDecimal bigDecimal = new BigDecimal(sslMoney);
+                    BigDecimal bigDecimal1 = new BigDecimal(ssl);
+                    BigDecimal addSsl = bigDecimal.add(bigDecimal1);
+
+                    String sslMony = addSsl.toString();
+                    vipUser1.setSslMoney(sslMony);
+                    int i = iVipUserService.updateVipUser(vipUser1);
+                    if ( i > 0){
+                        GoodsShare goodsShare3 = new GoodsShare();
+                        goodsShare3.setUid(id);
+                        goodsShare3.setCreateTime(new Date());
+                        goodsShare.setBounty(dayGift);
+                        goodsShareService.insertGoodsShare(goodsShare3);
+
+                        String extensionCode = vipUser1.getExtensionCode();
+                        Map<Object, Object> map = new TreeMap();
+                        map.put("data",extensionCode);
+                        return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
+                    }
+                    return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_SSLEERROR);
+                }
             }
+        }catch (Exception e){
+	        e.printStackTrace();
+	        return ResponseResult.error();
         }
 	}
 
@@ -153,13 +158,19 @@ public class GoodsShareController extends BaseFrontController
 	@PostMapping("/edit")
 	@ResponseBody
 	public ResponseResult editSave(GoodsShare goodsShare){
-		goodsShare.setId(1);
-		goodsShare.setUpdateTime(new Date());
-		int i = goodsShareService.updateGoodsShare(goodsShare);
+        try{
+            goodsShare.setId(1);
+            goodsShare.setUpdateTime(new Date());
+            int i = goodsShareService.updateGoodsShare(goodsShare);
 
-		if (i > 0 ) {
-			return ResponseResult.responseResult(ResponseEnum.SUCCESS);
-		}
-		return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_UPLODEERROR);
+            if (i > 0 ) {
+                return ResponseResult.responseResult(ResponseEnum.SUCCESS);
+            }
+            return ResponseResult.responseResult(ResponseEnum.GOODS_SHARE_UPLODEERROR);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseResult.error();
+        }
+
 	}
 }

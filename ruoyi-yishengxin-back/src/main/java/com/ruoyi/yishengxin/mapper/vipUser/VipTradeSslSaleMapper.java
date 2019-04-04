@@ -101,6 +101,7 @@ public interface VipTradeSslSaleMapper {
     @Select("select * from ysx_vip_trade_ssl_sale where ID=(select MAX(ID) from ysx_vip_trade_ssl_sale)")
     Map<String,String> selecByMaxId();
 
+
     /**
      *  交易中的数据按照单价分组统计数量
      * @return

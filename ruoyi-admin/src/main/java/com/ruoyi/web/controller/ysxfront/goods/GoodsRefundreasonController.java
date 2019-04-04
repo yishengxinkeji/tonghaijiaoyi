@@ -22,33 +22,32 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 
 /**
  * 退款原因 信息操作处理
- * 
+ *
  * @author ruoyi
  * @date 2019-03-19
  */
 @Controller
 @RequestMapping("/front/goodsRefundreason")
-public class GoodsRefundreasonController
-{
+public class GoodsRefundreasonController {
 
-	
-	@Autowired
-	private IGoodsRefundreasonService goodsRefundreasonService;
 
-	
-	/**
-	 * 查询退款原因列表
-	 */
+    @Autowired
+    private IGoodsRefundreasonService goodsRefundreasonService;
 
-	@PostMapping("/list")
-	@ResponseBody
-	public  ResponseResult list(@RequestHeader("token")String token,GoodsRefundreason goodsRefundreason){
+
+    /**
+     * 查询退款原因列表
+     */
+
+    @PostMapping("/list")
+    @ResponseBody
+    public ResponseResult list(@RequestHeader("token") String token, GoodsRefundreason goodsRefundreason) {
 
         List<GoodsRefundreason> list = goodsRefundreasonService.selectGoodsRefundreasonList(goodsRefundreason);
 
-		return ResponseResult.responseResult(ResponseEnum.SUCCESS,list);
+        return ResponseResult.responseResult(ResponseEnum.SUCCESS, list);
 
-	}
+    }
 
-	
+
 }

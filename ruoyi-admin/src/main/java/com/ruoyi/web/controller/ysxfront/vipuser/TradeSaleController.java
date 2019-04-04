@@ -323,6 +323,7 @@ public class TradeSaleController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
             }
         }catch (Exception e){
+            log.error(e.getMessage());
             e.printStackTrace();
             return ResponseResult.error();
         }
