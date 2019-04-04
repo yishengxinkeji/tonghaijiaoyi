@@ -133,8 +133,6 @@ public class VipBuyController extends BaseController
 		return prefix + "/buy";
 	}
 
-	//TODO 上传路径修改
-
 	/**
 	 * 上传兑换凭证
 	 */
