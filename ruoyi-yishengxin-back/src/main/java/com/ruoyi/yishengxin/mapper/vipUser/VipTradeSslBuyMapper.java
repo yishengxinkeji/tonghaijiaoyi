@@ -66,7 +66,7 @@ public interface VipTradeSslBuyMapper {
     public int deleteVipTradeBuyByIds(String[] ids);
 
     @Select("select ifNull(sum(buy_number),0) from ysx_vip_trade_ssl_buy where buy_status = 2 and buy_time between #{begin} and #{end}" )
-    int selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
+    double selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
 
     @Select("select ifNull(avg(unit_price),0) from ysx_vip_trade_ssl_buy where buy_time between #{beginOfDay} and #{endOfDay}")
     double selectAvgByDay(@Param("beginOfDay") DateTime beginOfDay,@Param("endOfDay") DateTime endOfDay);

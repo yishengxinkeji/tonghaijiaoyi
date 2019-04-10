@@ -65,5 +65,5 @@ public interface IVipTradeHkdBuyService
 
     void updateBuyNo(String id, String img) throws Exception;
 
-    int selectSum(DateTime beginOfDay, DateTime endOfDay);
+    double selectSum(DateTime beginOfDay, DateTime endOfDay);
 }

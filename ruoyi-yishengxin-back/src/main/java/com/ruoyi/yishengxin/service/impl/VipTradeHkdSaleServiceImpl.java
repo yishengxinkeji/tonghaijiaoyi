@@ -115,7 +115,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
     public int saleHkd(VipUser vipUser, String number, VipAccount vipAccount) {
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
-
+        String special = vipUser1.getSpecial();
         double hkdMoney = Double.parseDouble(vipUser1.getHkdMoney());
         double hkd = Double.parseDouble(vipUser1.getHkdMoney());
         double hkdCharge = 0.00;
@@ -125,7 +125,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         List<Trade> trades = tradeMapper.selectTradeList(new Trade());
         if (trades.size() > 0) {
             hkdCharge = Double.parseDouble(trades.get(0).getHkdCharge());
-            maxTradeDay = NumberUtil.mul(hkdMoney,Double.parseDouble(trades.get(0).getMaxHdkTradeDay())/100);
+            maxTradeDay = Double.parseDouble(trades.get(0).getMaxHdkTradeDay());
             maxTradeTime = NumberUtil.mul(hkdMoney,Double.parseDouble(trades.get(0).getMaxHdkTradeTime())/100);
         }
 
@@ -134,16 +134,17 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
             return 100;
         }
 
-        //查询该用户今日总共交易了多少ssl
-        double maxNumber = vipTradeHkdSaleMapper.selectHkdMaxNumberByDay(vipUser.getId());
-        if(maxNumber > maxTradeDay) {
-            //交易已达上限
-            return 200;
-        }
-
-        if(Double.parseDouble(number) > maxTradeTime ){
-            //单次交易已超上限
-            return 300;
+        if(special.equals(CustomerConstants.NO)){
+            //查询该用户今日总共交易了多少ssl
+            double maxNumber = vipTradeHkdSaleMapper.selectHkdMaxNumberByDay(vipUser.getId());
+            if((maxNumber+Double.parseDouble(number)) > maxTradeDay) {
+                //交易已达上限
+                return 200;
+            }
+            if(Double.parseDouble(number) > maxTradeTime ){
+                //单次交易已超上限
+                return 300;
+            }
         }
 
         //内扣手续费之后,实际卖的HKD是多少
@@ -243,7 +244,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      * @return
      */
     @Override
-    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+    public double selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeHkdSaleMapper.selectSum(beginOfDay,endOfDay);
     }
 
@@ -259,7 +260,6 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
         vipTradeHkdSale.setSaleNo(orderNo);
         VipTradeHkdSale vipTradeHkdSale1 = vipTradeHkdSaleMapper.selectVipTradeHkdSaleList(vipTradeHkdSale).get(0);
-
         VipUser vipUser = vipUserMapper.selectVipUserById(vipTradeHkdSale1.getVipId());
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
         //卖家实际花费的钱,保留两位小数
@@ -271,9 +271,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
         vipTradeHkdBuy.setBuyNo(orderNo);
         vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
 
-
         vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
-
         if(type.equals(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY)){
             //买家的问题
             vipTradeHkdBuy.setFailReason(CustomerConstants.TRADE_FAIL_BUY);

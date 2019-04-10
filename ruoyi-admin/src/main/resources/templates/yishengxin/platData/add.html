@@ -12,6 +12,18 @@
 					<input id="platAccount" name="platAccount" class="form-control" type="text">
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">交易开始时间：</label>
+				<div class="col-sm-8">
+					<input id="tradeBegin" name="tradeBegin" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">交易结束时间：</label>
+				<div class="col-sm-8">
+					<input id="tradeEnd" name="tradeEnd" class="form-control" type="text">
+				</div>
+			</div>
 
 			<div class="form-group">
 				<label class="col-sm-3 control-label">新闻资讯大图片：</label>
@@ -59,8 +71,9 @@
 		});
 
 
-		layui.use('upload', function(){
+		layui.use(['upload','laydate'], function(){
 			var upload = layui.upload;
+			var laydate = layui.laydate;
 
 			//执行实例
 			var news = upload.render({
@@ -90,6 +103,14 @@
 				,error: function(){
 					//请求异常回调
 				}
+			});
+			laydate.render({
+				elem: '#tradeBegin', //指定元素
+				type: 'time'
+			});
+			laydate.render({
+				elem: '#tradeEnd', //指定元素
+				type: 'time'
 			});
 		});
 

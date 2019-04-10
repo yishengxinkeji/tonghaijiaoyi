@@ -49,6 +49,11 @@ public enum ResponseEnum {
     IDENTIFY_REGEX("1303","身份证格式不正确"),
     IDCARD_NO_IDENTIFY("1304","身份未认证"),
     PROJECT_EMPTY("1305","项目已认购完"),
+    MESSAGE_ERROR("1306","验证码错误"),
+    MESSAGE_EXPIRE("1307","验证码过期"),
+    NOT_IN_TRADE_TIME("1308","今日交易时间已过"),
+    PROJECT_NO_START("1309","项目还未开始"),
+    PROJECT_END("1310","项目已经结束"),
 
 
 

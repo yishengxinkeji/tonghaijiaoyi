@@ -107,15 +107,17 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -179,16 +181,18 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and (sale_status=5 or sale_status=6) order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' and (sale_status=5 or sale_status=6) order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and (buy_status=5 or buy_status=6) order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' and (buy_status=5 or buy_status=6) order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -250,17 +254,19 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
             vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
             vipTradeHkdBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -322,17 +328,19 @@ public class TradeRecordController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
             vipTradeHkdSale.setSaleStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
             vipTradeHkdBuy.setBuyStatus(TradeStatus.FAIL.getCode());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -393,6 +401,8 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult tradeRecordList(@RequestHeader("token") String token){
 
         try {
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -401,7 +411,7 @@ public class TradeRecordController extends BaseFrontController {
             //交易明细
             VipTrade vipTrade = new VipTrade();
             vipTrade.setVipId(vipUser.getId());
-            vipTrade.getParams().put("tradeTime","order by trade_time desc");
+            vipTrade.getParams().put("tradeTime"," and trade_time between '"+beginDate+"' and '"+endDate+"' order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
             if(vipTrades.size() > 0){
                 vipTrades.stream().forEach(vipTrade1 -> {
@@ -419,27 +429,27 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc");
+            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc");
 
             List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc");
+            vipTradeSslSale.getParams().put("VipTradeSslSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
             vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_status=2 order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"'  and buy_status=2 order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
             if(vipTradeSslSales.size() > 0){
@@ -522,6 +532,8 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult tradeRecordBuy(@RequestHeader("token") String token) {
 
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -530,7 +542,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeSslBuy vipTradeSslBuy = new VipTradeSslBuy();
             vipTradeSslBuy.setVipId(vipUser.getId());
             vipTradeSslBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," order by buy_time desc");
+            vipTradeSslBuy.getParams().put("VipTradeSslBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc");
 
             List<VipTradeSslBuy> vipTradeSslBuys = vipTradeSslBuyService.selectVipTradeBuyList(vipTradeSslBuy);
 
@@ -538,7 +550,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setVipId(vipUser.getId());
             vipTradeHkdBuy.setBuyStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," order by buy_time desc ");
+            vipTradeHkdBuy.getParams().put("VipTradeHkdBuy"," and buy_time between '"+beginDate+"' and '"+endDate+"' order by buy_time desc ");
 
             List<VipTradeHkdBuy> vipTradeHkdBuys = vipTradeHkdBuyService.selectVipTradeHkdBuyList(vipTradeHkdBuy);
 
@@ -598,6 +610,8 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult tradeRecordSale(@RequestHeader("token") String token) {
 
         try{
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -606,14 +620,14 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslSale.getParams().put("VipTradeSslSale"," order by sale_time desc");
+            vipTradeSslSale.getParams().put("VipTradeSslSale"," and sale_time between "+beginDate+" and "+endDate+" order by sale_time desc");
 
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 
             VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();
             vipTradeHkdSale.setVipId(vipUser.getId());
             vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," order by sale_time desc");
+            vipTradeHkdSale.getParams().put("VipTradeHkdSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeHkdSale> vipTradeHkdSales = vipTradeHkdSaleService.selectVipTradeHkdSaleList(vipTradeHkdSale);
 
@@ -674,6 +688,8 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult tradeRecordOut(@RequestHeader("token") String token){
 
         try {
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -684,7 +700,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTrade vipTrade = new VipTrade();
             vipTrade.setVipId(vipUser.getId());
             vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
-            vipTrade.getParams().put("tradeTime"," order by trade_time desc");
+            vipTrade.getParams().put("tradeTime"," and trade_time between '"+beginDate+"' and '"+endDate+"' order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
             if(vipTrades.size() > 0){
                 vipTrades.stream().forEach(vipTrade1 -> {
@@ -701,7 +717,7 @@ public class TradeRecordController extends BaseFrontController {
 
 
             vipTrade.setVipTrade(TradeType.OUT_SSL.getCode());
-            vipTrade.getParams().put("tradeTime","order by trade_time desc");
+            vipTrade.getParams().put("tradeTime"," and trade_time between '"+beginDate+"' and '"+endDate+"' order by trade_time desc");
             List<VipTrade> vipTrades1 = vipTradeService.selectVipTradeList(vipTrade);
             if(vipTrades1.size() > 0){
                 vipTrades1.stream().forEach(vipTrade1 -> {
@@ -743,6 +759,8 @@ public class TradeRecordController extends BaseFrontController {
     public ResponseResult tradeRecordIn(@RequestHeader("token") String token){
 
         try {
+            String endDate = DateUtil.offsetDay(new Date(),1).toString(DateUtils.YYYY_MM_DD);
+            String beginDate = DateUtil.offsetDay(new Date(),-30).toString(DateUtils.YYYY_MM_DD);
             VipUser vipUser = userExist(token);
             if(vipUser == null){
                 return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -754,7 +772,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTrade vipTrade = new VipTrade();
             vipTrade.setVipId(vipUser.getId());
             vipTrade.setVipTrade(TradeType.IN_HKD.getCode());
-            vipTrade.getParams().put("tradeTime","order by trade_time desc");
+            vipTrade.getParams().put("tradeTime"," and trade_time between '"+beginDate+"' and '"+endDate+"' order by trade_time desc");
             List<VipTrade> vipTrades = vipTradeService.selectVipTradeList(vipTrade);
             if(vipTrades.size() > 0){
                 vipTrades.stream().forEach(vipTrade1 -> {
@@ -769,7 +787,7 @@ public class TradeRecordController extends BaseFrontController {
                 });
             }
             vipTrade.setVipTrade(TradeType.IN_SSL.getCode());
-            vipTrade.getParams().put("tradeTime","order by trade_time desc");
+            vipTrade.getParams().put("tradeTime"," and trade_time between '"+beginDate+"' and '"+endDate+"' order by trade_time desc");
             List<VipTrade> vipTrades1 = vipTradeService.selectVipTradeList(vipTrade);
             if(vipTrades1.size() > 0){
                 vipTrades1.stream().forEach(vipTrade1 -> {
@@ -1195,6 +1213,7 @@ public class TradeRecordController extends BaseFrontController {
         Map map = new HashMap();
         //查询最近交易成功的两条记录
         List<Map<String,String>> list = vipTradeSaleService.selectTwoLeast();
+        Map<String,String> mapSale = vipTradeSaleService.selectSumSaleNumber();
         try{
             if(list.size()  == 2){
                 //说明今日已经有交易了
@@ -1219,6 +1238,7 @@ public class TradeRecordController extends BaseFrontController {
                     map.put("percent","-100%");
                 }
             }
+            map.put("number",mapSale.get("sale_number"));
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }catch (Exception e){
             log.error(e.getMessage());

@@ -9,10 +9,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="platAccount"    column="plat_account"    />
         <result property="newsBigPic"    column="news_big_pic"    />
         <result property="noticeBigPic"    column="notice_big_pic"    />
+        <result property="tradeBegin"    column="trade_begin"    />
+        <result property="tradeEnd"    column="trade_end"    />
     </resultMap>
 	
 	<sql id="selectPlatDataVo">
-        select id, plat_account, news_big_pic, notice_big_pic from ysx_plat_data
+        select id, plat_account, news_big_pic, notice_big_pic,trade_begin,trade_end from ysx_plat_data
     </sql>
 	
     <select id="selectPlatDataList" parameterType="PlatData" resultMap="PlatDataResult">
@@ -22,6 +24,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
              <if test="platAccount != null  and platAccount != '' "> and plat_account = #{platAccount}</if>
              <if test="newsBigPic != null  and newsBigPic != '' "> and news_big_pic = #{newsBigPic}</if>
              <if test="noticeBigPic != null  and noticeBigPic != '' "> and notice_big_pic = #{noticeBigPic}</if>
+            <if test="tradeBegin != null  and tradeBegin != '' "> and trade_begin = #{tradeBegin}</if>
+            <if test="tradeEnd != null  and tradeEnd != '' "> and trade_end = #{tradeEnd}</if>
          </where>
     </select>
     
@@ -36,11 +40,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="platAccount != null  and platAccount != ''  ">plat_account,</if>
 			<if test="newsBigPic != null  and newsBigPic != ''  ">news_big_pic,</if>
 			<if test="noticeBigPic != null  and noticeBigPic != ''  ">notice_big_pic,</if>
+            <if test="tradeBegin != null  and tradeBegin != ''  ">trade_begin,</if>
+            <if test="tradeEnd != null  and tradeEnd != ''  ">trade_end,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="platAccount != null  and platAccount != ''  ">#{platAccount},</if>
 			<if test="newsBigPic != null  and newsBigPic != ''  ">#{newsBigPic},</if>
 			<if test="noticeBigPic != null  and noticeBigPic != ''  ">#{noticeBigPic},</if>
+            <if test="tradeBegin != null  and tradeBegin != ''  ">#{trade_begin},</if>
+            <if test="tradeEnd != null  and tradeEnd != ''  ">#{trade_end},</if>
          </trim>
     </insert>
 	 
@@ -50,6 +58,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="platAccount != null  and platAccount != ''  ">plat_account = #{platAccount},</if>
             <if test="newsBigPic != null  and newsBigPic != ''  ">news_big_pic = #{newsBigPic},</if>
             <if test="noticeBigPic != null  and noticeBigPic != ''  ">notice_big_pic = #{noticeBigPic},</if>
+            <if test="tradeBegin != null  and tradeBegin != ''  ">trade_begin = #{tradeBegin},</if>
+            <if test="tradeEnd != null  and tradeEnd != ''  ">trade_end = #{tradeEnd},</if>
         </trim>
         where id = #{id}
     </update>

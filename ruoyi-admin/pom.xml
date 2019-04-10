@@ -45,6 +45,71 @@
             <artifactId>ruoyi-framework</artifactId>
             <version>${ruoyi.version}</version>
         </dependency>
+
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/axis.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-codec-1.9.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-httpclient-3.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/commons-logging-1.2.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/dac0fe1d-91b2-3bbf-a6a1-2ffe059d461d.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/dom4j-1.6.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <artifactId>ruoyi</artifactId>
+            <groupId>com.ruoyi</groupId>
+            <version>3.2</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/json.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.10</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -54,6 +119,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
 					<fork>true</fork> <!-- 如果没有该配置，devtools不会生效 -->
+                    <includeSystemScope>true</includeSystemScope>
 				</configuration>
                 <executions>
                     <execution>
@@ -71,7 +137,7 @@
                     <failOnMissingWebXml>false</failOnMissingWebXml>
                     <warName>${artifactId}</warName>
                 </configuration>   
-		   </plugin>   
+		   </plugin>
         </plugins>
         <finalName>${artifactId}</finalName>
     </build>

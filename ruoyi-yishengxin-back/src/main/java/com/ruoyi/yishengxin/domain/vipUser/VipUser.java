@@ -101,4 +101,7 @@ public class VipUser extends BaseEntity {
 
     //身份证背面
     private String backImg;
+
+    //是否是特殊用户(Y,N)
+    private String special;
 }

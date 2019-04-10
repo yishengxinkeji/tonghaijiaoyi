@@ -45,6 +45,14 @@
 					</select>
 				</div>
 			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">特殊：</label>
+				<div class="col-sm-8">
+					<select id="special" class="form-control m-b" th:with="type=${@dict.getType('sys_yes_no')}">
+						<option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}" th:field="*{special}"></option>
+					</select>
+				</div>
+			</div>
 
 			<div class="form-group">
 				<label class="col-sm-3 control-label">真实姓名：</label>

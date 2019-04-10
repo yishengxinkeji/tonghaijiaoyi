@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
@@ -16,6 +18,7 @@ import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.domain.PlatData;
 import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -50,6 +53,8 @@ public class TradeBuyController extends BaseFrontController {
     private IVipUserService vipUserService;
     @Autowired
     private IVipAccountService accountService;
+    @Autowired
+    private IPlatDataService platDataService;
 
 
     /**
@@ -66,6 +71,30 @@ public class TradeBuyController extends BaseFrontController {
                                  @RequestParam("number") String number,
                                  @RequestParam("price") String price
                                  ){
+        List<PlatData> platData = platDataService.selectPlatDataList(new PlatData());
+        PlatData platData1 = null;
+        if(platData.size() >0 ){
+            platData1 = platData.get(0);
+        }
+
+        String tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 00:00:00";
+        String tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 23:59:59";
+        if(platData1 != null){
+            if(platData1.getTradeBegin() != null) {
+                tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeBegin();
+            }
+            if(platData1.getTradeEnd() != null) {
+                tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeEnd();
+            }
+        }
+
+        if( DateUtil.between(DateUtil.parseDateTime(tradeBegin),new Date(), DateUnit.SECOND,false) < 0 ||
+                DateUtil.between(new Date(),DateUtil.parseDateTime(tradeEnd), DateUnit.SECOND,false) < 0
+        ) {
+            //今日交易时间已过
+            return ResponseResult.responseResult(ResponseEnum.NOT_IN_TRADE_TIME);
+        }
+
         VipUser vipUser = userExist(token);
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
@@ -74,7 +103,6 @@ public class TradeBuyController extends BaseFrontController {
         if(vipUser.getIsMark().equals(CustomerConstants.NO)){
             return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
-
         if((!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,number) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,number))
                 || (!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,price) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,price))){
 
@@ -176,26 +204,28 @@ public class TradeBuyController extends BaseFrontController {
     @PostMapping("/cancelBuy")
     public ResponseResult cancelBuy(@RequestHeader("token") String token,@RequestParam("id") String id){
 
-        try{}catch (Exception e){
-
-        }
-        VipUser vipUser = userExist(token);
-        if(vipUser == null){
-            return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
-        }
-
-        if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
-            //用户已被冻结
-            return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
-        }
-
-        if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY) == null || RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("N")){
-            if(vipTradeBuyService.cancelBuy(vipUser,id) > 0){
-                return ResponseResult.success();
+        try{
+            VipUser vipUser = userExist(token);
+            if(vipUser == null){
+                return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
             }
-        }else if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
-            //表示任务正在进行中,所以暂时不能操作
-            return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
+
+            if(vipUser.getIsFrozen().equalsIgnoreCase(CustomerConstants.YES)){
+                //用户已被冻结
+                return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
+            }
+
+            if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY) == null || RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("N")){
+                if(vipTradeBuyService.cancelBuy(vipUser,id) > 0){
+                    return ResponseResult.success();
+                }
+            }else if(RedisUtils.get(CustomerConstants.TASK_STATUS_KEY).equals("Y")){
+                //表示任务正在进行中,所以暂时不能操作
+                return ResponseResult.responseResult(ResponseEnum.SYS_DEAL_TRADE);
+            }
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseResult.error();
         }
         return ResponseResult.error();
     }
@@ -214,6 +244,30 @@ public class TradeBuyController extends BaseFrontController {
                                  @RequestParam("id") String id,
                                  @RequestParam("number") String number,
                                  @RequestParam("tradeWord") String tradeWord){
+
+        List<PlatData> platData = platDataService.selectPlatDataList(new PlatData());
+        PlatData platData1 = null;
+        if(platData.size() >0 ){
+            platData1 = platData.get(0);
+        }
+
+        String tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 00:00:00";
+        String tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 23:59:59";
+        if(platData1 != null){
+            if(platData1.getTradeBegin() != null) {
+                tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeBegin();
+            }
+            if(platData1.getTradeEnd() != null) {
+                tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeEnd();
+            }
+        }
+
+        if( DateUtil.between(DateUtil.parseDateTime(tradeBegin),new Date(), DateUnit.SECOND,false) < 0 ||
+                DateUtil.between(new Date(),DateUtil.parseDateTime(tradeEnd), DateUnit.SECOND,false) < 0
+        ) {
+            //今日交易时间已过
+            return ResponseResult.responseResult(ResponseEnum.NOT_IN_TRADE_TIME);
+        }
 
         VipUser vipUser = userExist(token);
         if(vipUser == null){
@@ -253,7 +307,7 @@ public class TradeBuyController extends BaseFrontController {
                 return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
             }
 
-            RedisUtils.set(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+ order,order,120);
+            RedisUtils.set(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+ order,order,43200);
             return ResponseResult.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -363,7 +417,9 @@ public class TradeBuyController extends BaseFrontController {
             VipTradeHkdBuy vipTradeHkdBuy1 = vipTradeHkdBuyService.selectVipTradeHkdBuyById(Integer.parseInt(id));
             //删掉买订单的计时,更新卖订单计时
             RedisUtils.del(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo());
-            RedisUtils.set(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo(),vipTradeHkdBuy1.getBuyNo(),120);
+            RedisUtils.set(CustomerConstants.LISTEN_TRADE_SALE_PREFIX_KEY+vipTradeHkdBuy1.getBuyNo(),vipTradeHkdBuy1.getBuyNo(),86400);
+            //给卖家发短信,让其及时确认收货
+            sendMsg("2",vipTradeHkdBuy1.getSalePhone());
             return ResponseResult.success();
         }catch (Exception e){
             log.error(e.getMessage());

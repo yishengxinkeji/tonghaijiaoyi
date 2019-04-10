@@ -71,7 +71,7 @@ public interface VipTradeSslSaleMapper {
      * @param id
      * @return
      */
-    @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where vip_id=#{id} and to_days(sale_time) = to_days(now())")
+    @Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_ssl_sale where vip_id=#{id} and sale_status <> '4' and to_days(sale_time) = to_days(now())")
     public double selectSslMaxNumberByDay(Integer id);
 
     /**
@@ -90,7 +90,7 @@ public interface VipTradeSslSaleMapper {
      * @return
      */
     @Select("select ifNull(sum(charge_money),0) from ysx_vip_trade_ssl_sale where sale_time between #{begin} and #{end}" )
-    int selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
+    double selectSum(@Param("begin") DateTime begin,@Param("end") DateTime end);
 
     /**
      * 查询当天最近两条交易成功记录
@@ -108,4 +108,7 @@ public interface VipTradeSslSaleMapper {
      */
     @Select("select unit_price,ifnull(round(sum(sale_number),2),0) as sale_number from ysx_vip_trade_ssl_sale where sale_status='1' group by unit_price")
     List<Map<String,String>> selectSumNumberByUnitPrice();
+    //统计每天的ssl销量
+    @Select("SELECT ifnull(round(SUM(sale_number),2),0) as sale_number FROM ysx_vip_trade_ssl_sale where sale_status='2' and to_days(sale_time)=to_days(now())")
+    Map<String,String> selectSumSaleNumber();
 }

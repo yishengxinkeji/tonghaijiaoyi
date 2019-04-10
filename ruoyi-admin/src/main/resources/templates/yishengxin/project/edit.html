@@ -16,9 +16,15 @@
 				</div>
 			</div>
 			<div class="form-group">	
-				<label class="col-sm-3 control-label"> 项目时间 ：</label>
+				<label class="col-sm-3 control-label"> 项目开始时间 ：</label>
 				<div class="col-sm-8">
 					<input id="projectTime" name="projectTime" th:field="*{projectTime}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label"> 项目结束时间 ：</label>
+				<div class="col-sm-8">
+					<input id="projectEnd" name="projectEnd" class="form-control" type="text" th:field="*{projectEnd}">
 				</div>
 			</div>
 			<div class="form-group">
@@ -109,7 +115,12 @@
 				}
 			});
 			laydate.render({
-				elem: '#projectTime' //指定元素
+				elem: '#projectTime', //指定元素
+				type: 'datetime'
+			});
+			laydate.render({
+				elem: '#projectEnd', //指定元素
+				type: 'datetime'
 			});
 		});
 

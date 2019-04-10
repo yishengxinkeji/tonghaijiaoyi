@@ -76,7 +76,7 @@ public interface IVipTradeHkdSaleService
 	//取消挂售
 	int cancelSale(VipUser vipUser, String id);
 
-    int selectSum(DateTime beginOfDay, DateTime endOfDay);
+    double selectSum(DateTime beginOfDay, DateTime endOfDay);
 
 
 	/**

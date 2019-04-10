@@ -40,4 +40,6 @@ public class Project extends BaseEntity
 	private String projectNumber;
 	//认购余量
 	private String projectOver;
+	//项目结束时间
+	private String projectEnd;
 }

@@ -1,19 +1,32 @@
 package com.ruoyi.web.controller.ysxfront;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.ruoyi.common.config.Global;
+import com.ruoyi.common.constant.CustomerConstants;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.framework.web.base.BaseController;
+import com.ruoyi.web.controller.sms.SSLClient;
 import com.ruoyi.yishengxin.domain.vipUser.VipUser;
 import com.ruoyi.yishengxin.service.IVipUserService;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
+import org.apache.velocity.util.ArrayListWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * 前端控制器公共类
@@ -88,9 +101,45 @@ public class BaseFrontController extends BaseController {
         return false;
     }
 
+    /**
+     * 发送短信
+     * @param type 短信类型: 注册,买/卖 对应不同模版
+     * @param phone
+     * @throws Exception
+     */
+    public int sendMsg(String type,String phone) throws Exception {
+        String url = "https://dx.ipyy.net/sms.aspx";
+        String accountName="tonghai190408";							//改为实际账号名
+        String password="tonghai190408";								//改为实际发送密码
 
+        int i = RandomUtil.randomInt(1000,10000);
+        String text = "";
+        if(type.equals("1")){
+            //注册
+            text = String.format(CustomerConstants.REGISTER_MSG_TEMPLATE,String.valueOf(i));
+        }
+        if(type.equals("2")){
+            //卖家确认收货
+            String s = DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, DateUtil.offsetDay(new Date(), 1));
+            System.out.println(s);
+            text = String.format(CustomerConstants.CONFIRM_ORDER_TEMPLATE,s);
+        }
 
+        Map map = new HashMap();
+        map.put("action","send");
+        map.put("userid", "");
+        map.put("account", accountName);
+        map.put("password", password);
+        map.put("mobile", phone);       //多个手机号用逗号分隔
+        map.put("content", text);
+        map.put("sendTime", "");
+        map.put("extno", "");
 
-
-
+        HttpResponse execute = HttpRequest.post(url)
+                .header(Header.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8")
+                .timeout(10000)
+                .form(map)
+                .execute();
+        return i;
+    }
 }

@@ -58,9 +58,18 @@ public class VipUserLoginController extends BaseFrontController {
                                    @RequestParam(value = "inviCode",required = false) String inviCode) {
 
         try {
-            //跳过验证码环节
-            //TODO
-
+            //短信验证码
+            Object o = RedisUtils.get(phone);
+            if(o == null){
+                //验证码过期
+                return ResponseResult.responseResult(ResponseEnum.MESSAGE_EXPIRE);
+            }else{
+                String s = String.valueOf(o);
+                if( !s.equals(verification)){
+                    //验证码错误
+                    return ResponseResult.responseResult(ResponseEnum.MESSAGE_ERROR);
+                }
+            }
 
             //手机号码不正确
             if (!pattern.matcher(phone).matches()) {
@@ -68,7 +77,6 @@ public class VipUserLoginController extends BaseFrontController {
             }
 
             VipUser vipUser = new VipUser();
-
             vipUser.setPhone(phone);
             List<VipUser> vipUsers = vipUserService.selectVipUserList(vipUser);
             if (vipUsers.size() > 0) {
@@ -136,8 +144,22 @@ public class VipUserLoginController extends BaseFrontController {
             logger.error(e.getMessage());
             return ResponseResult.error();
         }
+    }
 
-
+    /**
+     * 发送短信
+     */
+    @PostMapping("/send")
+    public ResponseResult phoneMsg(@RequestParam("phone") String phone) {
+        try {
+            int i = sendMsg("1", phone);
+            RedisUtils.set(phone,i,5*60);
+            return ResponseResult.success();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            return ResponseResult.error();
+        }
     }
 
 
@@ -158,13 +180,22 @@ public class VipUserLoginController extends BaseFrontController {
                                          @RequestParam("type") String type){
 
         try{
-            //跳过验证码环节
-            //TODO
+            //短信验证码
+            Object o = RedisUtils.get(phone);
+            if(o == null){
+                //验证码过期
+                return ResponseResult.responseResult(ResponseEnum.MESSAGE_EXPIRE);
+            }else{
+                String s = String.valueOf(o);
+                if( !s.equals(verification)){
+                    //验证码过期
+                    return ResponseResult.responseResult(ResponseEnum.MESSAGE_ERROR);
+                }
+            }
 
             if(!password.equals(confirm)){
                 return ResponseResult.responseResult(ResponseEnum.PHONE_DIFFERENT_ERROR);
             }
-
 
             VipUser vipUser = new VipUser();
             vipUser.setPhone(phone);

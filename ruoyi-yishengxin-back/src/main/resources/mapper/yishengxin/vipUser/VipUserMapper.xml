@@ -32,9 +32,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="idCard"    column="id_card"    />
         <result property="frontImg"    column="front_img"    />
         <result property="backImg"    column="back_img"    />
+        <result property="special"    column="special"    />
     </resultMap>
 	<sql id="selectVipUserVo">
-        select id, phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day,
+        select id, special,phone, salt,new_receive, login_password, trade_password, avater, nickname, extension_code, recommend_code, money_code, invite_link, ssl_money, hkd_money, parent_code, is_frozen, max_trade_day,
          create_time,create_by,update_by,update_time,is_mark,back_img,real_name,id_card,front_img from ysx_vip_user
     </sql>
 	
@@ -67,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idCard != null  and idCard != '' "> and id_card = #{idCard}</if>
             <if test="frontImg != null  and frontImg != '' "> and front_img = #{frontImg}</if>
             <if test="backImg != null  and backImg != '' "> and back_img = #{backImg}</if>
+            <if test="special != null  and special != '' "> and special = #{special}</if>
          </where>
     </select>
 
@@ -115,6 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idCard != null  and idCard != ''  ">id_card,</if>
             <if test="frontImg != null  and frontImg != ''  ">front_img,</if>
             <if test="backImg != null  and backImg != ''  ">back_img,</if>
+            <if test="special != null  and special != ''  ">special,</if>
             create_time
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -140,6 +143,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idCard != null  and idCard != ''  ">#{idCard},</if>
             <if test="frontImg != null  and frontImg != ''  ">#{frontImg},</if>
             <if test="backImg != null  and backImg != ''  ">#{backImg},</if>
+            <if test="special != null  and special != ''  ">#{special},</if>
             sysdate()
          </trim>
     </insert>
@@ -170,6 +174,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="idCard != null  and idCard != ''  ">id_card = #{idCard},</if>
             <if test="frontImg != null  and frontImg != ''  ">front_img = #{frontImg},</if>
             <if test="backImg != null  and backImg != ''  ">back_img = #{backImg},</if>
+            <if test="special != null  and special != ''  ">special = #{special},</if>
             update_time = sysdate()
         </trim>
         <where>

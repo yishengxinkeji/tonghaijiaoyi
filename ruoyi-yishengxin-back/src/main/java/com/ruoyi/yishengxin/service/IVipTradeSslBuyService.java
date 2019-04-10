@@ -72,7 +72,7 @@ public interface IVipTradeSslBuyService
 	 * @param endOfDay
 	 * @return
 	 */
-    int selectSum(DateTime beginOfDay, DateTime endOfDay);
+    double selectSum(DateTime beginOfDay, DateTime endOfDay);
 
     double selectAvgByDay(DateTime beginOfDay, DateTime endOfDay);
 

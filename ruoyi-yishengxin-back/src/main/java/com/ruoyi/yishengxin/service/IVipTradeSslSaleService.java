@@ -64,7 +64,7 @@ public interface IVipTradeSslSaleService
 
     List<Map<String,String>> selectSale(DateTime beginOfDay, DateTime endOfDay);
 
-    int selectSum(DateTime beginOfDay, DateTime endOfDay);
+    double selectSum(DateTime beginOfDay, DateTime endOfDay);
 
 	/**
 	 * 查询最近两条成交记录
@@ -83,4 +83,10 @@ public interface IVipTradeSslSaleService
 	 * @return
 	 */
 	List<Map<String,String>> selectSumNumberByUnitPrice();
+
+	/**
+	 * 统计每天的销量
+	 * @return
+	 */
+    Map selectSumSaleNumber();
 }

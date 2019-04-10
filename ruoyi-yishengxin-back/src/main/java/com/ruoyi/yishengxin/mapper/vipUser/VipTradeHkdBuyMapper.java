@@ -65,5 +65,5 @@ public interface VipTradeHkdBuyMapper {
 	public int deleteVipTradeHkdBuyByIds(String[] ids);
 
 	@Select("select ifNull(sum(buy_number),0) from ysx_vip_trade_hkd_buy where buy_time between #{begin} and #{end}" )
-	int selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
+	double selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

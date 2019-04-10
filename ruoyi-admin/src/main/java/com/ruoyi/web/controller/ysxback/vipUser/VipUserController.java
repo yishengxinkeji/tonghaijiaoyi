@@ -160,6 +160,28 @@ public class VipUserController extends BaseController
 
 	}
 
+	/**
+	 * 特殊会员
+	 * @param
+	 * @return
+	 */
+	@Log(title = "特殊会员", businessType = BusinessType.SPECIAL)
+	@GetMapping("/special/{id}")
+	@ResponseBody
+	public AjaxResult special(@PathVariable String id){
+
+		VipUser vipUser_new = vipUserService.selectVipUserById(Integer.parseInt(id));
+		String special = vipUser_new.getSpecial();
+
+		if(special.equals(Constants.YES)){
+			vipUser_new.setSpecial(Constants.NO);
+		}
+		if(special.equals(Constants.NO)){
+			vipUser_new.setSpecial(Constants.YES);
+		}
+		return toAjax(vipUserService.updateVipUser(vipUser_new));
+	}
+
 
 	/**
 	 * 充值跳转

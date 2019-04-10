@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.system.SysProfileController;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.domain.Customer;
 import com.ruoyi.yishengxin.domain.PlatData;
 import com.ruoyi.yishengxin.domain.Trade;
 import com.ruoyi.yishengxin.domain.Transfer;
@@ -217,6 +218,7 @@ public class VipUserCenterController extends BaseFrontController {
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
 
+        String special = vipUser.getSpecial();      //是否是特殊会员
         if(vipUser.getIsMark().equals(CustomerConstants.NO)){
             return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
@@ -274,16 +276,19 @@ public class VipUserCenterController extends BaseFrontController {
                     //SSL币不足
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSLINSUFFICIENT);
                 }
-                if(Double.parseDouble(number) < minSslDeliverTime){
-                    //单次转出少于最小转出
-                    return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
-                }
 
-                vipTrade.setVipTrade(TradeType.OUT_SSL.getCode());
-                String tranDay = vipTradeService.selectTranByDay(vipTrade);
-                if(Double.parseDouble(tranDay) > maxSslDeliverDay){
-                    //今日交易已达上限
-                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                if(special.equals(CustomerConstants.NO)){
+                    if(Double.parseDouble(number) < minSslDeliverTime){
+                        //单次转出少于最小转出
+                        return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
+                    }
+
+                    vipTrade.setVipTrade(TradeType.OUT_SSL.getCode());
+                    String tranDay = vipTradeService.selectTranByDay(vipTrade);
+                    if((Double.parseDouble(tranDay)+Double.parseDouble(number)) > maxSslDeliverDay){
+                        //今日交易已达上限
+                        return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                    }
                 }
 
                 int i = vipUserService.tranSport(myVip,vipUsers.get(0),type,number,tranMoney);
@@ -296,15 +301,19 @@ public class VipUserCenterController extends BaseFrontController {
                     //HKD币不足
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_HKDINSUFFICIENT);
                 }
+                if(special.equals(CustomerConstants.NO)){
+                    if(Double.parseDouble(number) < minHkdDeliverTime){
+                        //单次转出少于最小转出
+                        return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
+                    }
+                    vipTrade.setVipTrade(TradeType.OUT_HKD.getCode());
+                    String tranDay = vipTradeService.selectTranByDay(vipTrade);
+                    if((Double.parseDouble(tranDay)+Double.parseDouble(number)) > maxHkdDeliverDay){
+                        //今日已达上限
+                        return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_DAY);
+                    }
+                }
 
-                if(Double.parseDouble(number) > maxHkdDeliverDay){
-                    //单次交易已达上限
-                    return ResponseResult.responseResult(ResponseEnum.MAX_TRADE_BY_TIME);
-                }
-                if(Double.parseDouble(number) < minHkdDeliverTime){
-                    //单次转出少于最小转出
-                    return ResponseResult.responseResult(ResponseEnum.MIN_TRADE_BY_TIME);
-                }
                 int i = vipUserService.tranSport(myVip,vipUsers.get(0),type,number,tranMoney);
                 if(i > 0){
                     return ResponseResult.success();

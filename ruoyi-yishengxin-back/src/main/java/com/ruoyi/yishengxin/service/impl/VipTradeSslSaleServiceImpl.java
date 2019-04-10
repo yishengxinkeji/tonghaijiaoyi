@@ -113,6 +113,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     public int saleSsl(VipUser vipUser, String number, String price) throws Exception{
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
+        String special = vipUser1.getSpecial();
         double sslMoney = Double.parseDouble(vipUser1.getSslMoney());       //客户当前的ssl
 
         double ssl = Double.parseDouble(vipUser1.getSslMoney());
@@ -125,7 +126,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
         List<Trade> trades = tradeMapper.selectTradeList(new Trade());
         if (trades.size() > 0) {
             sslCharge = Double.parseDouble(trades.get(0).getSslCharge());
-            maxTradeDay = NumberUtil.mul(sslMoney,Double.parseDouble(trades.get(0).getMaxSslTradeDay())/100) ;
+            maxTradeDay = Double.parseDouble(trades.get(0).getMaxSslTradeDay()) ;
             maxTradeTime = NumberUtil.mul(sslMoney,Double.parseDouble(trades.get(0).getMaxSslTradeTime())/100);
             maxPrice = Double.parseDouble(trades.get(0).getHigh());
             minPrice = Double.parseDouble(trades.get(0).getLow());
@@ -134,29 +135,29 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
 
         //查询该用户今日总共交易了多少ssl
         double maxNumber = vipTradeSslSaleMapper.selectSslMaxNumberByDay(vipUser.getId());
-        if(maxNumber > maxTradeDay) {
-            //交易已达上限
-            return 200;
-        }
+        if(special.equals(CustomerConstants.NO)){
+            if((maxNumber+Double.parseDouble(number)) > maxTradeDay) {
+                //交易已达上限
+                return 200;
+            }
+            if(Double.parseDouble(number) > maxTradeTime ){
+                //单次交易已超上限
+                return 300;
+            }
+            if(Double.parseDouble(price) < minPrice){
+                //单价太低
+                return 400;
+            }
 
-        if(Double.parseDouble(number) > maxTradeTime ){
-            //单次交易已超上限
-            return 300;
+            if(Double.parseDouble(price) > maxPrice){
+                //单价太高
+                return 500;
+            }
         }
 
         if (Double.parseDouble(number) > ssl) {
             //ssl余额不足
             return 100;
-        }
-
-        if(Double.parseDouble(price) < minPrice){
-            //单价太低
-            return 400;
-        }
-
-        if(Double.parseDouble(price) > maxPrice){
-            //单价太高
-            return 500;
         }
 
         //扣的手续费
@@ -218,7 +219,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
      * @return
      */
     @Override
-    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+    public double selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeSslSaleMapper.selectSum(beginOfDay,endOfDay);
     }
 
@@ -236,5 +237,10 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     @Override
     public List<Map<String,String>> selectSumNumberByUnitPrice() {
         return vipTradeSslSaleMapper.selectSumNumberByUnitPrice();
+    }
+
+    @Override
+    public Map selectSumSaleNumber() {
+        return vipTradeSslSaleMapper.selectSumSaleNumber();
     }
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.yishengxin.mapper.vipUser;
 
 import cn.hutool.core.date.DateTime;
+import com.ruoyi.common.enums.TradeStatus;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeHkdSale;
 import java.util.List;
 
@@ -69,7 +70,7 @@ public interface VipTradeHkdSaleMapper {
 	 * @param id
 	 * @return
 	 */
-	@Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where vip_id=#{id} and to_days(sale_time) = to_days(now())")
+	@Select("select ifnull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where vip_id=#{id} and sale_status <> '4' and to_days(sale_time) = to_days(now())")
 	double selectHkdMaxNumberByDay(Integer id);
 
 	/**
@@ -79,5 +80,5 @@ public interface VipTradeHkdSaleMapper {
 	 * @return
 	 */
 	@Select("select ifNull(sum(sale_number),0) from ysx_vip_trade_hkd_sale where sale_time between #{begin} and #{end}" )
-	int selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
+	double selectSum(@Param("begin") DateTime begin, @Param("end") DateTime end);
 }

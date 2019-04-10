@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
@@ -250,6 +251,8 @@ public class HomePageController extends BaseFrontController {
             map.put("unitPrice",project.getUnitPrice());
             map.put("projectOver",project.getProjectOver());
             map.put("projectNumber",project.getProjectNumber());
+            map.put("start",project.getProjectTime());
+            map.put("end",project.getProjectEnd());
             return ResponseResult.responseResult(ResponseEnum.SUCCESS,map);
         }catch (Exception e){
             logger.error(e.getMessage());
@@ -494,6 +497,18 @@ public class HomePageController extends BaseFrontController {
             }
 
             Project project = projectService.selectProjectById(Integer.parseInt(projectId));
+
+            String start = project.getProjectTime();
+            String end = project.getProjectEnd();
+            if( DateUtil.between(DateUtil.parseDateTime(start),new Date(), DateUnit.SECOND,false) < 0) {
+                //项目尚未开始
+                return ResponseResult.responseResult(ResponseEnum.PROJECT_NO_START);
+            }
+            if( DateUtil.between(DateUtil.parseDateTime(end),new Date(), DateUnit.SECOND,false) > 0) {
+                //项目已经结束
+                return ResponseResult.responseResult(ResponseEnum.PROJECT_END);
+            }
+
             String unitPrice = project.getUnitPrice();
             String maxNumber = project.getMaxNumber();
             String minNumber = project.getMinNumber();

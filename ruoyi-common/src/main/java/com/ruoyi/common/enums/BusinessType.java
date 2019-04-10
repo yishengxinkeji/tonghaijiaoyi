@@ -59,6 +59,10 @@ public enum BusinessType {
      * 冻结
      */
     FROZEN,
+    /**
+     * 特别会员
+     */
+    SPECIAL,
 
     /**
      * 充值

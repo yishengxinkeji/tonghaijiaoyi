@@ -74,6 +74,11 @@ public class CustomerConstants {
     public static final String TRADE_FAIL_BUY = "未上传打款凭证";
     public static final String TRADE_FAIL_SALE = "卖家未确认!";
 
+    //短信模版
+    public static final String CONFIRM_ORDER_TEMPLATE = "【TSSEH交易平台】请及时在%s时间内确认收款,否则可能会影响您的权益!";
+    public static final String REGISTER_MSG_TEMPLATE = "您的验证码是:%s。5分钟内有效【TSSEH交易平台】";
+
+
 
 
 

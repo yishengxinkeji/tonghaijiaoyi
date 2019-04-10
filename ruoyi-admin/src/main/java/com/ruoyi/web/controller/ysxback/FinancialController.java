@@ -72,12 +72,12 @@ public class FinancialController extends BaseController {
         double sslChargeSum = NumberUtil.add(sslSum,goodSum);
         double hkdChargeSum = NumberUtil.add(NumberUtil.mul(hkdSum, Double.parseDouble(hkdCharge)),exchangeSum);   //hkd交易手续费+兑换的hkd
 
-        modelMap.put("exchangeSum",exchangeSum);  //已提现
-        modelMap.put("divSum",divSum);  //可用资金
-        modelMap.put("waitExchange",waitExchange);  //待返资金
-        modelMap.put("sslChargeSum",sslChargeSum);  //ssl总资金
-        modelMap.put("hkdChargeSum",hkdChargeSum);  //hkd总资金
-        modelMap.put("buySum",buySum);      //现金入账总资金
+        modelMap.put("exchangeSum",NumberUtil.roundStr(exchangeSum,2));  //已提现
+        modelMap.put("divSum",NumberUtil.roundStr(divSum,2));  //可用资金
+        modelMap.put("waitExchange",NumberUtil.roundStr(waitExchange,2));  //待返资金
+        modelMap.put("sslChargeSum",NumberUtil.roundStr(sslChargeSum,2));  //ssl总资金
+        modelMap.put("hkdChargeSum",NumberUtil.roundStr(hkdChargeSum,2));  //hkd总资金
+        modelMap.put("buySum",NumberUtil.roundStr(buySum,2));      //现金入账总资金
 
         return prefix + "/financial";
     }

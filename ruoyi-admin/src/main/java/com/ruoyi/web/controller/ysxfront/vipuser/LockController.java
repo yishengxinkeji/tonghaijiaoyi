@@ -94,7 +94,8 @@ public class LockController extends BaseFrontController {
                     Map map = new HashMap();
                     map.put("time",vipLock1.getLockTime());
                     map.put("number",vipLock1.getLockNumber());
-                    map.put("profit",NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber())));
+                    //map.put("profit",NumberUtil.sub(Double.parseDouble(vipLock1.getLockProfit()),Double.parseDouble(vipLock1.getLockNumber())));
+                    map.put("profit",vipLock1.getLockProfit());
                     map.put("id",vipLock1.getId());
                     list.add(map);
                 });

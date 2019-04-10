@@ -750,7 +750,7 @@ public class VipTradeSslBuyServiceImpl implements IVipTradeSslBuyService {
      * @return
      */
     @Override
-    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+    public double selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeSslBuyMapper.selectSum(beginOfDay,endOfDay);
     }
 

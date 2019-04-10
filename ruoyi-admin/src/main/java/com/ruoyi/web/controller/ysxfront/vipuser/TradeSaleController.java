@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.ysxfront.vipuser;
 
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.ReUtil;
@@ -14,6 +16,7 @@ import com.ruoyi.common.utils.RegexUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.util.RedisUtils;
 import com.ruoyi.web.controller.ysxfront.BaseFrontController;
+import com.ruoyi.yishengxin.domain.PlatData;
 import com.ruoyi.yishengxin.domain.vipUser.*;
 import com.ruoyi.yishengxin.service.*;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -47,6 +50,8 @@ public class TradeSaleController extends BaseFrontController {
     private IVipUserService vipUserService;
     @Autowired
     private IVipAccountService accountService;
+    @Autowired
+    private IPlatDataService platDataService;
 
 
 
@@ -68,7 +73,8 @@ public class TradeSaleController extends BaseFrontController {
         if(vipUser == null){
             return ResponseResult.responseResult(ResponseEnum.VIP_TOKEN_FAIL);
         }
-
+        //是否是特殊会员
+        String special = vipUser.getSpecial();
         if(vipUser.getIsMark().equals(CustomerConstants.NO)){
             return ResponseResult.responseResult(ResponseEnum.IDCARD_NO_IDENTIFY);
         }
@@ -82,6 +88,31 @@ public class TradeSaleController extends BaseFrontController {
             //数字格式不正确
             return ResponseResult.responseResult(ResponseEnum.NUMBER_TRANCT_ERROR);
         }
+
+        List<PlatData> platData = platDataService.selectPlatDataList(new PlatData());
+        PlatData platData1 = null;
+        if(platData.size() >0 ){
+            platData1 = platData.get(0);
+        }
+
+        String tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 00:00:00";
+        String tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " 23:59:59";
+        if(platData1 != null){
+            if(platData1.getTradeBegin() != null) {
+                tradeBegin = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeBegin();
+            }
+            if(platData1.getTradeEnd() != null) {
+                tradeEnd = DateUtil.format(new Date(),DateUtils.YYYY_MM_DD) + " " + platData1.getTradeEnd();
+            }
+        }
+
+        if( DateUtil.between(DateUtil.parseDateTime(tradeBegin),new Date(), DateUnit.SECOND,false) < 0 ||
+                DateUtil.between(new Date(),DateUtil.parseDateTime(tradeEnd), DateUnit.SECOND,false) < 0
+        ) {
+            //今日交易时间已过
+            return ResponseResult.responseResult(ResponseEnum.NOT_IN_TRADE_TIME);
+        }
+
         if(type.equalsIgnoreCase("SSL")){
             if(!ReUtil.isMatch(RegexUtils.DECIMAL_REGEX,price) && !ReUtil.isMatch(RegexUtils.INTEGER_REGEX,price)) {
                 //数字格式不正确
@@ -91,10 +122,10 @@ public class TradeSaleController extends BaseFrontController {
 
         try{
             if(type.equalsIgnoreCase(CustomerConstants.SSL)){
-                if(Double.parseDouble(number) < 100){
+                /*if(Double.parseDouble(number) < 100){
                     //挂售ssl最低100起
                     return ResponseResult.responseResult(ResponseEnum.VIP_USER_SSL_NOT_ENOUGH);
-                }
+                }*/
 
                 int i = vipTradeSaleService.saleSsl(vipUser,number,price);
                 if(i == 100){
@@ -130,9 +161,11 @@ public class TradeSaleController extends BaseFrontController {
                     return ResponseResult.responseResult(ResponseEnum.VIP_ACCOUNT_NO_DEFAULT);
                 }
 
-                //交易的hkd需要是100的整数倍
-                if(Double.parseDouble(number) < 100 || Double.parseDouble(number) % 100 != 0){
-                    return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
+                if(special.equals(CustomerConstants.NO)){
+                    //交易的hkd需要是100的整数倍
+                    if(Double.parseDouble(number) < 100 || Double.parseDouble(number) % 100 != 0){
+                        return ResponseResult.responseResult(ResponseEnum.HKD_MULTIPLE_100);
+                    }
                 }
 
                int i = vipTradeHkdSaleService.saleHkd(vipUser,number,vipAccounts.get(0));
@@ -167,7 +200,7 @@ public class TradeSaleController extends BaseFrontController {
     public ResponseResult saleSslList(@RequestHeader(value = "token",required = false,defaultValue = "") String token,
                                       @RequestParam(value = "type",required = false,defaultValue = "") String type){
 
-        List list = new ArrayList();
+        List<Map<String,String>> list = new ArrayList();
 
         if(type.equalsIgnoreCase(TradeType.SALE_SSL.getCode())){
             //查的是ssl售卖列表
@@ -184,13 +217,19 @@ public class TradeSaleController extends BaseFrontController {
                 });
             }
 
-            Collections.sort(list, new Comparator<Map<String, Object>>() {
-                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                    String name1 = String.valueOf(o1.get("price"));
-                    String name2 = String.valueOf(o2.get("price"));
-                    return name2.compareTo(name1);
+            Collections.sort(list, (o1,o2)->{
+                double d1=Double.valueOf(String.valueOf(o1.get("price")));
+                double d2=Double.valueOf(String.valueOf(o2.get("price")));
+                double result=d1-d2;
+                if (result==0) {
+                    return 0;
                 }
+                if (result>0) {
+                    return 1;
+                }
+                return -1;
             });
+
         }else if(type.equalsIgnoreCase(TradeType.SALE_HKD.getCode())){
             //查的是hkd列表
             //查的是hkd列表
@@ -211,8 +250,8 @@ public class TradeSaleController extends BaseFrontController {
                 });
             }
 
-            Collections.sort(list, new Comparator<Map<String, Object>>() {
-                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+            Collections.sort(list, new Comparator<Map<String, String>>() {
+                public int compare(Map<String, String> o1, Map<String, String> o2) {
                     String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
                     String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
                     return name2.compareTo(name1);
@@ -261,13 +300,14 @@ public class TradeSaleController extends BaseFrontController {
                     list.add(map);
                 });
             }
-            Collections.sort(list, new Comparator<Map<String, Object>>() {
-                public int compare(Map<String, Object> o1, Map<String, Object> o2) {
+            Collections.sort(list, new Comparator<Map<String, String>>() {
+                public int compare(Map<String, String> o1, Map<String, String> o2) {
                     String name1 = String.valueOf(DateUtils.parseDate(o1.get("time")).getTime());
                     String name2 = String.valueOf(DateUtils.parseDate(o2.get("time")).getTime());
                     return name2.compareTo(name1);
                 }
             });
+
         }
 
         List list1 = new ArrayList();

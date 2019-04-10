@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.NumberUtil;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.framework.util.ShiroUtils;
 import com.ruoyi.yishengxin.domain.vipUser.VipTradeSslBuy;
@@ -168,20 +169,20 @@ public class VipTradeSslSaleController extends BaseController
 
 		}
 
-		int sslBuy = vipTradeSslBuyService.selectSum(begin,end);
-		int sslSale = vipTradeSslSaleService.selectSum(begin,end);
-		int hkdBuy = vipTradeHkdBuyService.selectSum(begin,end);
-		int hkdSale = vipTradeHkdSaleService.selectSum(begin,end);
+		double sslBuy = vipTradeSslBuyService.selectSum(begin,end);
+		double sslSale = vipTradeSslSaleService.selectSum(begin,end);
+		double hkdBuy = vipTradeHkdBuyService.selectSum(begin,end);
+		double hkdSale = vipTradeHkdSaleService.selectSum(begin,end);
 
 		//由于买和卖其实交易成功的订单是一样的,所以只用统计一种就行(单价和 / 条数)
 		double avg = vipTradeSslBuyService.selectAvgByDay(DateUtil.beginOfDay(new Date()),DateUtil.endOfDay(new Date()));
 
 		AjaxResult ajaxResult = new AjaxResult();
-		ajaxResult.put("sslBuy",sslBuy);
-		ajaxResult.put("sslSale",sslSale);
-		ajaxResult.put("hkdBuy",hkdBuy);
-		ajaxResult.put("hkdSale",hkdSale);
-		ajaxResult.put("avg",avg);
+		ajaxResult.put("sslBuy",NumberUtil.roundStr(sslBuy,2));
+		ajaxResult.put("sslSale",NumberUtil.roundStr(sslSale,2));
+		ajaxResult.put("hkdBuy",NumberUtil.roundStr(hkdBuy,2));
+		ajaxResult.put("hkdSale",NumberUtil.roundStr(hkdSale,2));
+		ajaxResult.put("avg",NumberUtil.roundStr(avg,2));
 		return ajaxResult;
 	}
 

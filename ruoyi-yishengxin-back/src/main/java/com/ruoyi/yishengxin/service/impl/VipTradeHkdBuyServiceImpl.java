@@ -243,7 +243,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
      * @return
      */
     @Override
-    public int selectSum(DateTime beginOfDay, DateTime endOfDay) {
+    public double selectSum(DateTime beginOfDay, DateTime endOfDay) {
         return vipTradeHkdBuyMapper.selectSum(beginOfDay,endOfDay);
     }
 }
