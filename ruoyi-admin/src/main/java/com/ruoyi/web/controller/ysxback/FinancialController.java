@@ -54,7 +54,7 @@ public class FinancialController extends BaseController {
         //总资金(兑换-购买的差价)
         double buySum = vipBuyService.selectSum();    //购买总金额
         double exchangeSum = vipExchangeService.selectSumByIfExchage("2");   //兑换总金额  --已提现
-        double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
+        double divSum = NumberUtil.sub(buySum,exchangeSum);    //兑换的价差 -- 可用资金
         double waitExchange = vipExchangeService.selectSumByIfExchage("1");  //当前未兑换的现金总和 -- 待返资金
 
         //2019年一直到以后的今天,ssl手续费总和
@@ -107,7 +107,7 @@ public class FinancialController extends BaseController {
         }
         buySum = vipBuyService.selectSumByTime("2",begin,end);
         exchangeSum = vipExchangeService.selectSumByIfExchageAndTime("2",begin,end);
-        double divSum = NumberUtil.sub(exchangeSum,buySum);    //兑换的价差 -- 可用资金
+        double divSum = NumberUtil.sub(buySum,exchangeSum);    //兑换的价差 -- 可用资金
         AjaxResult ajaxResult = new AjaxResult();
         ajaxResult.put("buySum",buySum);
         ajaxResult.put("exchangeSum",exchangeSum);
