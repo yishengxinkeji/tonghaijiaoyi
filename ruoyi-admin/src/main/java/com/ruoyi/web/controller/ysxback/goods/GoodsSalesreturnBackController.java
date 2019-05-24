@@ -129,7 +129,7 @@ public class GoodsSalesreturnBackController extends BaseController
 		String ploadDocuments = goodsSalesreturn.getPloadDocuments();
 		if(null == ploadDocuments) {
 			List list = new ArrayList<>();
-			String 	path = "http://122.114.239.176:"+"/home/noPictures.gif";
+			String 	path = "http://tsseh.com:"+"/home/noPictures.gif";
 			Picture picture = new Picture(path);
 			list.add(picture);
 

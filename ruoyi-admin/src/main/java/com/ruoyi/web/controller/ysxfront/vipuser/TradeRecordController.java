@@ -620,7 +620,7 @@ public class TradeRecordController extends BaseFrontController {
             VipTradeSslSale vipTradeSslSale = new VipTradeSslSale();
             vipTradeSslSale.setVipId(vipUser.getId());
             vipTradeSslSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-            vipTradeSslSale.getParams().put("VipTradeSslSale"," and sale_time between "+beginDate+" and "+endDate+" order by sale_time desc");
+            vipTradeSslSale.getParams().put("VipTradeSslSale"," and sale_time between '"+beginDate+"' and '"+endDate+"' order by sale_time desc");
 
             List<VipTradeSslSale> vipTradeSslSales = vipTradeSaleService.selectVipTradeSaleList(vipTradeSslSale);
 

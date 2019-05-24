@@ -20,14 +20,14 @@ public enum ResponseEnum {
     NUMBER_TOO_MAX("1015","数字太大"),
     NUMBER_TOO_LOSS("1016","不能为负数"),
     VIP_USER_TRADPUPLOADSSLERROR("1092","支付修改ssl错误"),
-    VIP_USER_SSLINSUFFICIENT("1093","SSL币不足"),
+    VIP_USER_SSLINSUFFICIENT("1093","SSL资产不足"),
     VIP_USER_TRADPASSWORDERROR("1094","支付密码错误"),
     VIP_USER_NULL("1095","用户不存在"),
     VIP_USER_NULLDEFAULTADDRESS("1096","没有默认收货地址错误"),
     VIP_USER_REMOVEADDRESS("1097","删除收货地址错误"),
     VIP_USER_EDITADDRESS("1098","修改收货地址错误"),
     VIP_USER_ADDADDRESS("1099","添加收货地址错误"),
-    VIP_USER_HKDINSUFFICIENT("1100","HKD币不足"),
+    VIP_USER_HKDINSUFFICIENT("1100","HKD资产不足"),
     VIP_ACCOUNT_NO_DEFAULT("1101","缺少默认收款账户"),
     VIP_USER_SSL_NOT_ENOUGH("1102","挂售SSL最低100"),
     SYS_DEAL_TRADE("1103","系统正在操作交易列表,暂无法操作"),
@@ -54,6 +54,7 @@ public enum ResponseEnum {
     NOT_IN_TRADE_TIME("1308","今日交易时间已过"),
     PROJECT_NO_START("1309","项目还未开始"),
     PROJECT_END("1310","项目已经结束"),
+    PHONE_NOT_EXIST("1311","该手机号未注册"),
 
 
 

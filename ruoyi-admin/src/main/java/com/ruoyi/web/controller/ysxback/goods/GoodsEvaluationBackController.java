@@ -94,7 +94,7 @@ public class GoodsEvaluationBackController extends BaseController
 		String  evaluationImage= goodsEvaluation.getEvaluationImage();
 		if(null == evaluationImage) {
 			List list = new ArrayList<>();
-			String 	path = "http://122.114.239.176:"+"/home/noPictures.gif";
+			String 	path = "http://tsseh.com:"+"/home/noPictures.gif";
 			Picture picture = new Picture(path);
 			list.add(picture);
 

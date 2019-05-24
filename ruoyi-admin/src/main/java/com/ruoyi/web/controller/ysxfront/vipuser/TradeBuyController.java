@@ -294,19 +294,16 @@ public class TradeBuyController extends BaseFrontController {
             //不能与自己订单交易
             return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
         }
-
         try {
             String order = vipTradeHkdBuyService.buyHkd(vipUser,id,number);
             if("100".equals(order)){
                 //购买数量超出订单数量
                 return ResponseResult.responseResult(ResponseEnum.OVER_ORDER_TOP);
             }
-
             if("9999".equals(order)){
                 //不能购买自己的订单
                 return ResponseResult.responseResult(ResponseEnum.CAN_NOT_BUY_YOURSELF);
             }
-
             RedisUtils.set(CustomerConstants.LISTEN_TRADE_BUY_PREFIX_KEY+ order,order,43200);
             return ResponseResult.success();
         } catch (Exception e) {

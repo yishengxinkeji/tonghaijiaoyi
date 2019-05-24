@@ -37,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-02-26
  */
 @Service
-@Transactional
 public class VipUserServiceImpl implements IVipUserService {
     @Autowired
     private VipUserMapper vipUserMapper;
@@ -117,6 +116,7 @@ public class VipUserServiceImpl implements IVipUserService {
      * @param vipUser
      */
     @Override
+    @Transactional
     public void newReceiveGift(VipUser vipUser,String giftType,String giftNumber) {
         try{
             //更新资产及状态,同时将信息插入收益表中
@@ -157,6 +157,7 @@ public class VipUserServiceImpl implements IVipUserService {
      * @return
      */
     @Override
+    @Transactional
     public int tranSport(VipUser vip, VipUser toVip, String type, String number, double tranMoney) throws Exception{
 
         //需要插入两条交易记录表

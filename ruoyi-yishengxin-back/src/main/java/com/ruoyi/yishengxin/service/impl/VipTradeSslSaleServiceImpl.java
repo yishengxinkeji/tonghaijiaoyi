@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-06
  */
 @Service
-@Transactional
 public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     @Autowired
     private VipTradeSslSaleMapper vipTradeSslSaleMapper;
@@ -110,6 +109,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
     //保存交易订单
     //更新用户信息
     @Override
+    @Transactional
     public int saleSsl(VipUser vipUser, String number, String price) throws Exception{
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
@@ -191,6 +191,7 @@ public class VipTradeSslSaleServiceImpl implements IVipTradeSslSaleService {
      */
     //更新用户余额,更新订单状态
     @Override
+    @Transactional
     public int cancelSale(VipUser vipUser, String id) {
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
         VipTradeSslSale vipTradeSslSale = vipTradeSslSaleMapper.selectVipTradeSaleById(Integer.parseInt(id));

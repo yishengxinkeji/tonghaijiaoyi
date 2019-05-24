@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-07
  */
 @Service
-@Transactional
 public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
     @Autowired
     private VipTradeHkdBuyMapper vipTradeHkdBuyMapper;
@@ -104,6 +103,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
      * @return
      */
     @Override
+    @Transactional
     public String buyHkd(VipUser vipUser, String id, String number) throws Exception{
 
 
@@ -216,6 +216,7 @@ public class VipTradeHkdBuyServiceImpl implements IVipTradeHkdBuyService {
      * @throws Exception
      */
     @Override
+    @Transactional
     public void updateBuyNo(String id, String img) throws Exception {
 
         //订单

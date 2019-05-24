@@ -162,7 +162,11 @@
 					title : '买方头像',
 					align : 'center',
 					formatter: function(value, row, index) {
-						return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+						if(value != null){
+							return "<img src='"+value+"' style='width: 50px;height: 50px;'>";
+						}else {
+							return "";
+						}
 					}
 				},
 				{

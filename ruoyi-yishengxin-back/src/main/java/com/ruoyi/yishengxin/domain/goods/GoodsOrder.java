@@ -52,7 +52,7 @@ public class GoodsOrder extends BaseEntity
 	/** 备注 */
 	private String remark;
 
-	public void setId(Integer id) 
+	public void setId(Integer id)
 	{
 		this.id = id;
 	}

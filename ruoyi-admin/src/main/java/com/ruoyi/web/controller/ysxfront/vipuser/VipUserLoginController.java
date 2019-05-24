@@ -55,7 +55,7 @@ public class VipUserLoginController extends BaseFrontController {
     public ResponseResult register(@RequestParam("phone") String phone,
                                    @RequestParam("verification") String verification,
                                    @RequestParam("password") String password,
-                                   @RequestParam(value = "inviCode",required = false) String inviCode) {
+                                   @RequestParam(value = "inviCode",required = false,defaultValue = "-1") String inviCode) {
 
         try {
             //短信验证码
@@ -101,14 +101,14 @@ public class VipUserLoginController extends BaseFrontController {
                 FileUtil.mkdir(Global.getFrontPath());
             }
             //使用hutool生成一个默认的二维码,链接指向手机端 8081端口
-            String qrUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + exten);
+            String qrUrl = Global.getConfig("tonghaijiaoyi.QrCode") + "?invicode=" + exten;
             File file = QrCodeUtil.generate(qrUrl, 300, 300, FileUtil.file(Global.getFrontPath() + exten + ".jpg"));
             new_User.setExtensionCode(Global.getFrontPath() + file.getName());
 
             //钱包地址
             new_User.setMoneyCode(IdUtil.simpleUUID());
             //邀请链接,链接8080端口,指向pc端
-            String pcUrl = BaiduDwz.createShortUrl(Global.getConfig("tonghaijiaoyi.inviLink") + "?invicode=" + exten);
+            String pcUrl = Global.getConfig("tonghaijiaoyi.inviLink") + "?invicode=" + exten;
             new_User.setInviteLink(pcUrl);
 
             new_User.setHkdMoney("0");
@@ -125,7 +125,6 @@ public class VipUserLoginController extends BaseFrontController {
                     if (isFrozen.equals(CustomerConstants.YES)) {
                         return ResponseResult.responseResult(ResponseEnum.VIP_USER_FROZEN);
                     }
-
                     //父级邀请码
                     new_User.setParentCode(userList.get(0).getRecommendCode());
                 } else {
@@ -241,7 +240,7 @@ public class VipUserLoginController extends BaseFrontController {
         vipUser.setPhone(phone);
         List<VipUser> userList = vipUserService.selectVipUserList(vipUser);
         if(userList.size() == 0){
-            return ResponseResult.responseResult(ResponseEnum.PHONE_ERROR);
+            return ResponseResult.responseResult(ResponseEnum.PHONE_NOT_EXIST);
         }
         String salt = userList.get(0).getSalt();
         String pwd = DigestUtils.md5Hex(password + salt);

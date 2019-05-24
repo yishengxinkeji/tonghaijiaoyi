@@ -64,9 +64,9 @@ public class FinancialController extends BaseController {
 
         Trade trade = tradeService.selectTradeList(new Trade()).get(0);
         //ssl交易手续费
-        String sslCharge = trade.getSslCharge();
+        String sslCharge = trade.getSslCharge() == null ? "0" : trade.getSslCharge();
         //hkd交易手续费
-        String hkdCharge = trade.getHkdCharge();
+        String hkdCharge = trade.getHkdCharge() == null ? "0" : trade.getHkdCharge();
 
         //ssl总资金 = ssl手续费 + 商品购买花费
         double sslChargeSum = NumberUtil.add(sslSum,goodSum);

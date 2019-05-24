@@ -281,12 +281,9 @@ public class GoodsSalesreturnController extends BaseFrontController {
                         return ResponseResult.responseResult(ResponseEnum.SUCCESS);
                     }
                     return ResponseResult.responseResult(ResponseEnum.GOODS__RETURNMANY_ERROR);
-
                 }
-
                 return ResponseResult.responseResult(ResponseEnum.SUCCESS);
             }
-
             return ResponseResult.responseResult(ResponseEnum.GOODS__SALES_AUDITERROR);
         }catch (Exception e){
             e.printStackTrace();

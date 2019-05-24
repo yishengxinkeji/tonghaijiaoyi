@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-02-27
  */
 @Service
-@Transactional
 public class VipAddressServiceImpl implements IVipAddressService {
     @Autowired
     private VipAddressMapper vipAddressMapper;

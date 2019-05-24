@@ -47,8 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			<if test="platAccount != null  and platAccount != ''  ">#{platAccount},</if>
 			<if test="newsBigPic != null  and newsBigPic != ''  ">#{newsBigPic},</if>
 			<if test="noticeBigPic != null  and noticeBigPic != ''  ">#{noticeBigPic},</if>
-            <if test="tradeBegin != null  and tradeBegin != ''  ">#{trade_begin},</if>
-            <if test="tradeEnd != null  and tradeEnd != ''  ">#{trade_end},</if>
+            <if test="tradeBegin != null  and tradeBegin != ''  ">#{tradeBegin},</if>
+            <if test="tradeEnd != null  and tradeEnd != ''  ">#{tradeEnd},</if>
          </trim>
     </insert>
 	 

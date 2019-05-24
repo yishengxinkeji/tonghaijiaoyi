@@ -7,14 +7,14 @@ ruoyi:
   # 版权年份
   copyrightYear: 2019
   # 后台文件上传路径
-  profile: /home/
+  profile: /home/upFiles/
   # 获取ip地址开关
   addressEnabled: true
 
 # 开发环境配置
 server:
   # 服务端口
-  port: 80
+  port: 8080
   servlet:
     # 项目contextPath
     context-path: /
@@ -69,7 +69,7 @@ spring:
   #spring-redis的配置
   redis:
     run: true #是否开启 位于RedisUtils
-    host: localhost
+    host: 202.61.85.3
     port: 6379
     password:
     database: 0
@@ -153,18 +153,18 @@ gen:
 #通海交易前端注册链接,用于邀请二维码,跳转注册页面
 tonghaijiaoyi:
   #邀请链接,指向PC端,8080端口
-  inviLink: http://122.114.239.176:8080/dist/index.html#/register
+  inviLink: http://www.tsseh.com/#/register
   #二维码指向手机端, 8081端口
-  QrCode: http://122.114.239.176:8081/dist/index.html#/registernow
+  QrCode: http://www.tsseh.com:81/#/registernow
   #轮播图几个前缀
   #新闻
-  PREFIX_NEWS: http://122.114.239.176:8080/dist/index.html#/newsDetail?news_id=
+  PREFIX_NEWS: http://www.tsseh.com/#/newsDetail?news_id=
   #公告
-  PREFIX_NOTICE: http://122.114.239.176:8080/dist/index.html#/noticeDetail?notice_id=
+  PREFIX_NOTICE: http://www.tsseh.com/#/noticeDetail?notice_id=
   #项目
-  PREFIX_PROJECT: http://122.114.239.176:8080/dist/index.html#/projectView?project_id=
+  PREFIX_PROJECT: http://www.tsseh.com/#/projectView?project_id=
   #手机端项目
-  PREFIX_MOBILE_PROJECT: http://122.114.239.176:8081/dist/#/projectdetail?id=
+  PREFIX_MOBILE_PROJECT: http://www.tsseh.com:81/#/projectdetail?id=
   #手机端公告
-  PREFIX_MOBILE_NOTICE: http://122.114.239.176:8081/dist/#/noticeshell/noticedetail?id=
+  PREFIX_MOBILE_NOTICE: http://www.tsseh.com:81/#/noticeshell/noticedetail?id=
 

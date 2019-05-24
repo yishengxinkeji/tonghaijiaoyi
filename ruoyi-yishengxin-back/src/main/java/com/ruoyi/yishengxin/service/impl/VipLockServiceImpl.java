@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-08
  */
 @Service
-@Transactional
 public class VipLockServiceImpl implements IVipLockService {
     @Autowired
     private VipLockMapper vipLockMapper;
@@ -103,6 +102,7 @@ public class VipLockServiceImpl implements IVipLockService {
      */
     //插入lock,更新余额
     @Override
+    @Transactional
     public int vipLock(VipUser vipUser, VipLock vipLock) throws Exception {
         String lockNumber = vipLock.getLockNumber();
         String sslMoney = vipUser.getSslMoney();
@@ -123,6 +123,7 @@ public class VipLockServiceImpl implements IVipLockService {
      */
     //更新订单状态,扣除手续费,更新用户信息
     @Override
+    @Transactional
     public int interuptLock(VipUser vipUser, VipLock vipLock) {
 
         Trade trade = tradeMapper.selectTradeList(new Trade()).get(0);
@@ -145,6 +146,7 @@ public class VipLockServiceImpl implements IVipLockService {
      * 每天早上0点更新今日到期的锁仓数据
      */
     @Override
+    @Transactional
     public void updateTimerLock() {
         VipLock vipLock = new VipLock();
         vipLock.setLockExpire(DateUtil.format(new Date(), DateUtils.YYYY_MM_DD));

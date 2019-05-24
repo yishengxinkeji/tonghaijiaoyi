@@ -52,6 +52,7 @@
 	var editFlag = [[${@permission.hasPermi('yishengxin:goods:edit')}]];
 	var removeFlag = [[${@permission.hasPermi('yishengxin:goods:remove')}]];
 	var prefix = ctx + "yishengxin/goods";
+	var datas = [[${@dict.getType('goods_standUp_down')}]];
 
 	$(function() {
 		var options = {
@@ -69,49 +70,31 @@
 				{
 					field : 'id',
 					title : '商品id',
-
 				},
-
 				{
 					field : 'goodsName',
 					title : '商品名称',
-
 				},
-
-
-
 				{
 					field : 'goodsPrice',
 					title : '商品价格',
-
 				},
-
 				{
 					field : 'goodsInventory',
 					title : '商品库存',
-
 				},
 				{
 					field : 'goodsSoldNumber',
 					title : '商品售出量',
-
 				},
 				{
 					field : 'standUpAndDown',
 					title : '商品上下架',
-
 				},
 				{
 					field : 'serviceTel',
 					title : '客服电话',
-
 				},
-
-
-
-
-
-
 				{
 					title: '操作',
 					align: 'center',

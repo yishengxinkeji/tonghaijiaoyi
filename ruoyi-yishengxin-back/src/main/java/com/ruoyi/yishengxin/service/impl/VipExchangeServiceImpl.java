@@ -17,6 +17,7 @@ import com.ruoyi.yishengxin.mapper.vipUser.VipExchangeMapper;
 import com.ruoyi.yishengxin.domain.vipUser.VipExchange;
 import com.ruoyi.yishengxin.service.IVipExchangeService;
 import com.ruoyi.common.support.Convert;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 个人兑换 服务层实现
@@ -105,6 +106,7 @@ public class VipExchangeServiceImpl implements IVipExchangeService
 	 * @return
 	 */
 	@Override
+	@Transactional
 	public int exchange(VipExchange vipExchange) throws Exception{
 
 		String exchangeAmount = vipExchange.getExchangeAmount();

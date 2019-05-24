@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-02
  */
 @Service
-@Transactional
 public class VipAccountServiceImpl implements IVipAccountService 
 {
 	@Autowired

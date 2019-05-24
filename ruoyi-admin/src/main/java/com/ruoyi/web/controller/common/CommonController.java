@@ -31,7 +31,7 @@ public class CommonController {
     /**
      * 文件上传路径
      */
-    public static final String UPLOAD_PATH = "/profile/upload/";
+    public static final String UPLOAD_PATH = "/home/upFiles/upload/";
 
     @Autowired
     private ServerConfig serverConfig;

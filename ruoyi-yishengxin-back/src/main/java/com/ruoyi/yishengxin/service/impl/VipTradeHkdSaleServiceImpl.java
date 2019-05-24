@@ -32,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-07
  */
 @Service
-@Transactional
 public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
     @Autowired
     private VipTradeHkdSaleMapper vipTradeHkdSaleMapper;
@@ -44,11 +43,6 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
     @Autowired
     private TradeMapper tradeMapper;
 
-    @Autowired
-    private DistributionMapper distributionMapper;
-
-    @Autowired
-    private VipProfitDetailMapper vipProfitDetailMapper;
     /**
      * 查询挂卖HKD信息
      *
@@ -112,6 +106,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      * @return
      */
     @Override
+    @Transactional
     public int saleHkd(VipUser vipUser, String number, VipAccount vipAccount) {
         //查询其余额是否足够
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
@@ -178,16 +173,14 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      */
     //更新两个的订单状态,更新买家账户信息, 更新余额
     @Override
+    @Transactional
     public void confirmOrder(VipUser vipUser, String id) throws Exception {
 
         try{
             VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleMapper.selectVipTradeHkdSaleById(Integer.parseInt(id));
-
             //交易成功
             vipTradeHkdSale.setSaleStatus(TradeStatus.SUCCESS.getCode());
-
             vipTradeHkdSaleMapper.updateVipTradeHkdSale(vipTradeHkdSale);
-
             String orderNo = vipTradeHkdSale.getSaleNo();
             VipTradeHkdBuy vipTradeHkdBuy = new VipTradeHkdBuy();
             vipTradeHkdBuy.setBuyNo(orderNo);
@@ -221,6 +214,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      */
     //更新用户余额,更新订单状态
     @Override
+    @Transactional
     public int cancelSale(VipUser vipUser, String id) {
         VipUser vipUser1 = vipUserMapper.selectVipUserById(vipUser.getId());
         VipTradeHkdSale vipTradeHkdSale = vipTradeHkdSaleMapper.selectVipTradeHkdSaleById(Integer.parseInt(id));
@@ -255,6 +249,7 @@ public class VipTradeHkdSaleServiceImpl implements IVipTradeHkdSaleService {
      * @return
      */
     @Override
+    @Transactional
     public int updateOrderByNo(String orderNo,String type) throws Exception{
 
         VipTradeHkdSale vipTradeHkdSale = new VipTradeHkdSale();

@@ -30,7 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2019-03-13
  */
 @Service
-@Transactional
 public class VipAppealServiceImpl implements IVipAppealService {
     @Autowired
     private VipAppealMapper vipAppealMapper;
@@ -107,6 +106,7 @@ public class VipAppealServiceImpl implements IVipAppealService {
      * @throws Exception
      */
     @Override
+    @Transactional
     public int appeal(VipUser vipUser, VipAppeal vipAppeal) throws Exception{
         String orderId = vipAppeal.getOrderId();
         String orderType = vipAppeal.getOrderType();
